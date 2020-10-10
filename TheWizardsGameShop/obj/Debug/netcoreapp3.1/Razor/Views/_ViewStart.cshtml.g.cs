@@ -14,27 +14,20 @@ namespace AspNetCore
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
 #nullable restore
 #line 1 "C:\Projects\TheWizardsGameShop\TheWizardsGameShop\Views\_ViewImports.cshtml"
-using React.AspNet;
-
-#line default
-#line hidden
-#nullable disable
-#nullable restore
-#line 3 "C:\Projects\TheWizardsGameShop\TheWizardsGameShop\Views\_ViewImports.cshtml"
 using TheWizardsGameShop;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 4 "C:\Projects\TheWizardsGameShop\TheWizardsGameShop\Views\_ViewImports.cshtml"
+#line 2 "C:\Projects\TheWizardsGameShop\TheWizardsGameShop\Views\_ViewImports.cshtml"
 using TheWizardsGameShop.Models;
 
 #line default
 #line hidden
 #nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"7091c65830b0329e613be026ede8a57552863778", @"/Views/_ViewStart.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"c099291f9039a6f8cdde26e89927ece561af1524", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"7a2bfe9c4e986751cac8be6633112f7d012e9e3c", @"/Views/_ViewImports.cshtml")]
     public class Views__ViewStart : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
     {
         #pragma warning disable 1998

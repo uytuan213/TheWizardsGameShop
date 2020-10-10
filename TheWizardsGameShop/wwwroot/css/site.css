@@ -1,10 +1,22 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+:root {
+    --navbar-height: 60px;
+}
+
+.float-right {
+    float: right;
+}
+
 a.navbar-brand {
   white-space: normal;
   text-align: center;
   word-break: break-all;
+}
+
+a.navbar-brand img {
+    height: 50px;
 }
 
 /* Provide sufficient contrast against white background */
@@ -23,6 +35,12 @@ a {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+/* Header
+-------------------------------------------------- */
+
+/* Header
+-------------------------------------------------- */
 
 /* Sticky footer styles
 -------------------------------------------------- */
@@ -61,6 +79,7 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+  font-family: Jost;
 }
 .footer {
   position: absolute;
@@ -69,3 +88,4 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+

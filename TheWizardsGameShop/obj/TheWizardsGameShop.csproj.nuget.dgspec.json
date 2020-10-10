@@ -37,24 +37,6 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "dependencies": {
-            "JavaScriptEngineSwitcher.Extensions.MsDependencyInjection": {
-              "target": "Package",
-              "version": "[3.3.0, )"
-            },
-            "JavaScriptEngineSwitcher.V8": {
-              "target": "Package",
-              "version": "[3.5.5, )"
-            },
-            "JavaScriptEngineSwitcher.V8.Native.win-x64": {
-              "target": "Package",
-              "version": "[3.5.5, )"
-            },
-            "React.AspNet": {
-              "target": "Package",
-              "version": "[5.2.10, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",
