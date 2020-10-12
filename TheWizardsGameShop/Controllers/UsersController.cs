@@ -229,5 +229,14 @@ namespace TheWizardsGameShop.Controllers
             TempData["Message"] = "Login failed";
             return View(users);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            HttpContext.Session.Remove("userId");
+            HttpContext.Session.Remove("userName");
+            HttpContext.Session.Remove("userRole");
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
