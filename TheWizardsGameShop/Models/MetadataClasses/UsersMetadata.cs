@@ -16,7 +16,7 @@ namespace TheWizardsGameShop.Models
         private const int PASSWORD_MIN_LENGTH = 8;
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var password = System.Text.Encoding.UTF8.GetString(PasswordHash);
+            var password = PasswordHash;
 
             if (!string.IsNullOrEmpty(Email))
             {
@@ -52,7 +52,7 @@ namespace TheWizardsGameShop.Models
 
         [Display(Name = "Password")]
         [Required]
-        public byte[] PasswordHash { get; set; }
+        public string PasswordHash { get; set; }
 
         [Display(Name = "First Name")]
         [Required]

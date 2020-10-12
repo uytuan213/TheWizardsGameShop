@@ -249,8 +249,7 @@ namespace TheWizardsGameShop.Models
 
                 entity.Property(e => e.PasswordHash)
                     .IsRequired()
-                    .HasMaxLength(32)
-                    .IsFixedLength();
+                    .HasMaxLength(256);
 
                 entity.Property(e => e.Phone)
                     .IsRequired()
