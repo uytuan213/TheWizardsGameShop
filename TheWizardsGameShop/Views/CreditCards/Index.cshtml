@@ -1,59 +1,40 @@
 ﻿@model IEnumerable<TheWizardsGameShop.Models.CreditCard>
 
-@{
-    ViewData["Title"] = "Index";
-}
+@{ ViewData["Title"] = "Credit Cards"; }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CreditCardNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ExpiryDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cvc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CardHolder)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreditCardNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ExpiryDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cvc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CardHolder)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Email)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CreditCardId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CreditCardId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CreditCardId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="page contents" id="pageCreditCards">
+    <div class="page-header page-header-full flex-center">
+        <h1>Credit Cards</h1>
+    </div>
+    <p class="page-submenu">
+        <a asp-controller="Users" asp-action="Menu" class="item">&lt; Back to Menu</a>
+    </p>
+    <div class="page-body">
+        <div class="list">
+            <a asp-action="Create" class="item clickable add flex-center">
+                <span class="material-icons">add_circle</span>
+                <p>Add Card</p>
+            </a>
+            @foreach (var item in Model)
+            {
+<div class="item">
+    <p>
+        @Html.DisplayFor(modelItem => item.CreditCardNumber)
+    </p>
+    <p>
+        @Html.DisplayFor(modelItem => item.ExpiryDate)
+    </p>
+    <p>
+        @Html.DisplayFor(modelItem => item.Cvc)
+    </p>
+    <p>
+        @Html.DisplayFor(modelItem => item.CardHolder)
+    </p>
+    <p class="item-options">
+        <a asp-action="Edit" asp-route-id="@item.CreditCardId" class="option"><span class="material-icons">edit</span> Edit</a>
+        <a asp-action="Delete" asp-route-id="@item.CreditCardId" class="option"><span class="material-icons">delete</span> Delete</a>
+    </p>
+</div>}
+        </div>
+    </div>
+</div>

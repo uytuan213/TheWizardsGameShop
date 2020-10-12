@@ -76,7 +76,7 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,UserName,PasswordHash,FirstName,LastName,Phone,Email,Gender,ReceivePromotionalEmails")] Users users)
+        public async Task<IActionResult> Create([Bind("UserId,UserName,PasswordHash,FirstName,Dob,LastName,Phone,Email,Gender,ReceivePromotionalEmails")] Users users)
         {
             if (ModelState.IsValid)
             {
@@ -110,7 +110,7 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,UserName,PasswordHash,FirstName,LastName,Phone,Email,Gender,ReceivePromotionalEmails")] Users users)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,UserName,PasswordHash,FirstName,Dob,LastName,Phone,Email,Gender,ReceivePromotionalEmails")] Users users)
         {
             if (id != users.UserId)
             {

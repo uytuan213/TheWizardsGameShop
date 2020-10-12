@@ -479,35 +479,41 @@ input[type=text].form-control.narrow:last-of-type {
     margin: 0 auto var(--spacing-xxs) auto;
 }
 
-/* Addresses Page */
-#pageAddresses .page-header {
+/* Addresses, Credit Cards Page */
+#pageAddresses .page-header,
+#pageCreditCards .page-header {
     background-color: var(--color-brand);
     background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255,255,255,0.2));
     color: white;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-#pageAddresses .list {
+#pageAddresses .list,
+#pageCreditCards .list {
     margin: -1%;
 }
 
-#pageAddresses .list .item {
+#pageAddresses .list .item,
+#pageCreditCards .list .item {
     width: 31.33%;
     margin: 1%;
 }
 
-#pageAddresses .list .item.add {
+#pageAddresses .list .item.add,
+#pageCreditCards .list .item.add {
     border-style: dashed;
     border-width: 2px;
     font-size: 1.25em;
     text-align: center;
 }
 
-#pageAddresses .list .item.add p {
+#pageAddresses .list .item.add p,
+#pageCreditCards .list .item.add p {
     width: 100%;
 }
 
-#pageAddresses .list .item.add .material-icons {
+#pageAddresses .list .item.add .material-icons,
+#pageCreditCards .list .item.add .material-icons {
     display: block;
     font-size: 2.5em;
     color: var(--color-brand);
