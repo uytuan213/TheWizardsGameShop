@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheWizardsGameShop.Models;
 
 namespace TheWizardsGameShop.Controllers
@@ -76,9 +77,14 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,UserName,PasswordHash,FirstName,Dob,LastName,Phone,Email,Gender,ReceivePromotionalEmails")] Users users)
+        public async Task<IActionResult> Create(string passwordConfirm, [Bind("UserId,UserName,PasswordHash,FirstName,Dob,LastName,Phone,Email,Gender,ReceivePromotionalEmails")] Users users)
         {
-            if (ModelState.IsValid)
+            users.PasswordHash = System.Text.Encoding.UTF8.GetBytes(users.PasswordHash)
+            if (users.PasswordHash != null && passwordConfirm != System.Text.Encoding.UTF8.GetString(users.PasswordHash))
+            {
+                TempData["PasswordConfirmMessage"] = "Password does not match.";
+            }
+            else if (ModelState.IsValid)
             {
                 _context.Add(users);
                 await _context.SaveChangesAsync();

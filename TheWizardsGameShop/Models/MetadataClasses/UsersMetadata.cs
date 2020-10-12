@@ -16,7 +16,7 @@ namespace TheWizardsGameShop.Models
         private const int PASSWORD_MIN_LENGTH = 8;
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var password = System.Text.Encoding.UTF8.GetString(PasswordHash);
+            string password = System.Text.Encoding.UTF8.GetString(PasswordHash);
 
             if (!string.IsNullOrEmpty(Email))
             {
@@ -33,7 +33,7 @@ namespace TheWizardsGameShop.Models
 
             if (!ValidationHelper.PasswordValidation(password))
             {
-                yield return new ValidationResult("Password has to at least contain a number and a capital character!");
+                yield return new ValidationResult("Password must contain at least one number, one lowercase and one uppercase letter.");
             }
 
             yield return ValidationResult.Success;
@@ -52,6 +52,8 @@ namespace TheWizardsGameShop.Models
 
         [Display(Name = "Password")]
         [Required]
+        //[MinLength(8)]
+        //[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$", ErrorMessage = "Password must contain at least one number, one lowercase and one uppercase letter.")]
         public byte[] PasswordHash { get; set; }
 
         [Display(Name = "First Name")]
