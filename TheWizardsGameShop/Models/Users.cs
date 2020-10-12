@@ -18,6 +18,7 @@ namespace TheWizardsGameShop.Models
         public string UserName { get; set; }
         public byte[] PasswordHash { get; set; }
         public string FirstName { get; set; }
+        public DateTime? Dob { get; set; }
         public string LastName { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }

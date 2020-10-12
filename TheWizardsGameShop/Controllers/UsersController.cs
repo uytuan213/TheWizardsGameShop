@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +32,7 @@ namespace TheWizardsGameShop.Controllers
         }
 
         // GET: User/Login
+        [HttpGet]
         public IActionResult Login()
         {
             return View();
@@ -172,6 +174,38 @@ namespace TheWizardsGameShop.Controllers
         private bool UsersExists(int id)
         {
             return _context.Users.Any(e => e.UserId == id);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetUser([Bind("Username, PasswordHash")] Users user)
+        {
+            // If user already logged in
+            if (HttpContext.Session.GetInt32("userId") != null)
+            {
+                return RedirectToAction("index", "home");
+            }
+            /*var username = Request.Query["username"].FirstOrDefault();
+            var password = Request.Query["password"].FirstOrDefault();*/
+            var username = user.UserName;
+            var password = System.Text.Encoding.UTF8.GetString(user.PasswordHash);
+            if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+            {
+                var userResult = _context.Users.Where(u => u.UserName.Equals(username) && u.PasswordHash.Equals(password)).FirstOrDefault();
+
+                // User logged in
+                if (userResult != null)
+                {
+                    var role = _context.UserRole.Where(us => us.UserId.Equals(userResult.UserId)).FirstOrDefault().Role;
+                    HttpContext.Session.SetInt32("userId", userResult.UserId);
+                    HttpContext.Session.SetString("username", userResult.UserName);
+                    HttpContext.Session.SetString("userRole", role.RoleName);
+                    HttpContext.Session.SetString("loggedInTime", DateTime.Now.ToString());
+
+                    return RedirectToAction("index", "home");
+                }
+            }
+            // User login failed or usernam/password empty
+            return View("login", "users");
         }
     }
 }

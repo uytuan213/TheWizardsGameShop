@@ -33,7 +33,7 @@ namespace TheWizardsGameShop.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Data Source=prog3050.daehwa.ca;Initial Catalog=TheWizardsGameShop;User ID=sa;Password=TheWizards!");
+                optionsBuilder.UseSqlServer("Data Source=prog3050.daehwa.ca;Initial Catalog=TheWizardsGameShop;Persist Security Info=True;User ID=sa;Password=TheWizards!");
             }
         }
 
@@ -41,8 +41,6 @@ namespace TheWizardsGameShop.Models
         {
             modelBuilder.Entity<Address>(entity =>
             {
-                entity.Property(e => e.AddressId).ValueGeneratedNever();
-
                 entity.Property(e => e.City)
                     .IsRequired()
                     .HasMaxLength(256);
@@ -72,8 +70,6 @@ namespace TheWizardsGameShop.Models
 
             modelBuilder.Entity<CreditCard>(entity =>
             {
-                entity.Property(e => e.CreditCardId).ValueGeneratedNever();
-
                 entity.Property(e => e.CardHolder)
                     .IsRequired()
                     .HasMaxLength(256);
@@ -100,8 +96,6 @@ namespace TheWizardsGameShop.Models
 
             modelBuilder.Entity<Game>(entity =>
             {
-                entity.Property(e => e.GameId).ValueGeneratedNever();
-
                 entity.Property(e => e.GameDigitalPath)
                     .IsRequired()
                     .HasMaxLength(256);
@@ -133,8 +127,6 @@ namespace TheWizardsGameShop.Models
 
             modelBuilder.Entity<GameCategory>(entity =>
             {
-                entity.Property(e => e.GameCategoryId).ValueGeneratedNever();
-
                 entity.Property(e => e.GameCategory1)
                     .IsRequired()
                     .HasColumnName("GameCategory")
@@ -143,8 +135,6 @@ namespace TheWizardsGameShop.Models
 
             modelBuilder.Entity<GameImage>(entity =>
             {
-                entity.Property(e => e.GameImageId).ValueGeneratedNever();
-
                 entity.Property(e => e.GameImagePath)
                     .IsRequired()
                     .HasMaxLength(256);
@@ -210,8 +200,6 @@ namespace TheWizardsGameShop.Models
             {
                 entity.HasKey(e => e.RoleId);
 
-                entity.Property(e => e.RoleId).ValueGeneratedNever();
-
                 entity.Property(e => e.RoleName)
                     .IsRequired()
                     .HasMaxLength(256);
@@ -239,7 +227,9 @@ namespace TheWizardsGameShop.Models
             {
                 entity.HasKey(e => e.UserId);
 
-                entity.Property(e => e.UserId).ValueGeneratedNever();
+                entity.Property(e => e.Dob)
+                    .HasColumnName("DOB")
+                    .HasColumnType("date");
 
                 entity.Property(e => e.Email)
                     .IsRequired()

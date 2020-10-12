@@ -29,6 +29,10 @@ namespace TheWizardsGameShop
             services.AddMvc();
             var connection = @"Data Source=prog3050.daehwa.ca;Initial Catalog=TheWizardsGameShop;Persist Security Info=True;User ID=sa;Password=TheWizards!";
             services.AddDbContext<TheWizardsGameShopContext>(options => options.UseSqlServer(connection));
+
+            // Add support for session variable
+            services.AddDistributedMemoryCache();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +54,9 @@ namespace TheWizardsGameShop
             app.UseRouting();
 
             app.UseAuthorization();
+
+            // initial session
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
