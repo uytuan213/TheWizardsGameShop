@@ -72,11 +72,13 @@ hr {
 }
 
 h1 {
+    padding: var(--spacing-s) 0;
     font-size: 2.5em;
     font-weight: 600;
 }
 
 h2 {
+    padding: var(--spacing-xs) 0;
     font-size: 1.75em;
     font-weight: 600;
 }
@@ -85,12 +87,8 @@ h5 {
     font-size: 0.9em;
 }
 
-h1, h2 {
-    margin: var(--spacing-xs) 0;
-}
-
 h3, h4, h5, p {
-    margin: var(--spacing-xxs) 0;
+    padding: var(--spacing-xxs) 0;
 }
 
 table {
@@ -359,6 +357,10 @@ form.narrow {
     margin: var(--spacing-s) 0;
 }
 
+.form-buttons {
+    margin-top: var(--spacing);
+}
+
 .control-label {
     display: block;
     margin-bottom: var(--spacing-xxs);
@@ -402,11 +404,24 @@ input[type=text].form-control.narrow:last-of-type {
     padding-bottom: 200px;
 }
 
+.home-header h1 {
+    background: -webkit-linear-gradient(white 20%, var(--color-background) 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    font-size: 3em;
+}
+
 #pageHome section {
     margin-bottom: var(--spacing-xl);
 }
 
 #pageHome section h2 {
+    background: -webkit-linear-gradient(var(--color-brand) 20%, var(--color-text-lighter) 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+
     margin-bottom: var(--spacing);
 }
 

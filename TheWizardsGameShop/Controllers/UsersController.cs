@@ -18,11 +18,22 @@ namespace TheWizardsGameShop.Controllers
             _context = context;
         }
 
-        // GET: User
-        public async Task<IActionResult> Menu()
+        // GET: User/Menu
+        public IActionResult Menu()
         {
-            var theWizardsGameShopContext = _context.Users.Include(u => u.GenderNavigation);
-            return View(await theWizardsGameShopContext.ToListAsync());
+            return View();
+        }
+
+        // GET: User/ResetPassword
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        // GET: User/Login
+        public IActionResult Login()
+        {
+            return View();
         }
 
         // GET: User
