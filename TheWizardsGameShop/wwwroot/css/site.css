@@ -3,6 +3,7 @@
     --header-height: 60px;
     --nav-height: 40px;
     --footer-height: 60px;
+    --page-header-height: 200px;
     --spacing-xxs: 6px;
     --spacing-xs: 10px;
     --spacing-s: 15px;
@@ -72,6 +73,11 @@ hr {
 
 h1 {
     font-size: 2.5em;
+    font-weight: 600;
+}
+
+h2 {
+    font-size: 1.75em;
     font-weight: 600;
 }
 
@@ -201,6 +207,7 @@ tr:last-of-type td {
     display: inline-block;
     border: var(--border);
     border-radius: var(--border-radius);
+    padding: var(--spacing-xs) var(--spacing-s);
     position: relative;
 }
 
@@ -307,13 +314,13 @@ body {
 
 .page-header {
     border-bottom: var(--border);
-    padding: var(--spacing-xl) 0;
     margin: 0 var(--spacing-xl);
+    height: var(--page-header-height);
 }
 
 .page-header.page-header-full {
-    /* border-bottom: none; */
-    padding: var(--spacing-xl);
+    border-bottom: none;
+    padding: 0 var(--spacing-xl);
     margin: 0;
 }
 
@@ -322,12 +329,12 @@ body {
     font-size: 1.125em;
 }
 
-.page-body {
-    padding: var(--spacing-xl);
+.page-submenu {
+    padding: var(--spacing-s) var(--spacing-xl) 0 var(--spacing-xl);
 }
 
-.page-submenu {
-
+.page-body {
+    padding: var(--spacing-xl);
 }
 
 /* Form */
@@ -382,7 +389,44 @@ input[type=text].form-control.narrow:last-of-type {
     background-color: var(--color-background);
 }
 
+/* Home Page */
+.home-header {
+    background-image: url('../images/galaxy.jpg');
+    background-size: cover;
+    background-position: center top;
+    background-attachment: fixed;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    height: 500px;
+    margin-bottom: -200px;
+    padding-bottom: 200px;
+}
+
+#pageHome section {
+    margin-bottom: var(--spacing-xl);
+}
+
+#pageHome section h2 {
+    margin-bottom: var(--spacing);
+}
+
+#pageHome .list {
+    margin: -1%;
+}
+
+#pageHome .list .item {
+    width: 31.33%;
+    margin: 1%;
+}
+
 /* My Account Page */
+#pageMyAccount .page-header {
+    background-color: var(--color-brand);
+    background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255,255,255,0.2));
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
 #pageMyAccount .list {
     margin: -1%;
 }
@@ -394,10 +438,10 @@ input[type=text].form-control.narrow:last-of-type {
     padding: var(--spacing) var(--spacing-s);
 }
 
-    #pageMyAccount .list .item p {
-        width: 100%;
-        font-size: 1.5em;
-    }
+#pageMyAccount .list .item p {
+    width: 100%;
+    font-size: 1.5em;
+}
 
 #pageMyAccount .list .item h5 {
     width: 100%;
@@ -413,6 +457,13 @@ input[type=text].form-control.narrow:last-of-type {
 }
 
 /* Addresses Page */
+#pageAddresses .page-header {
+    background-color: var(--color-brand);
+    background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255,255,255,0.2));
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
 #pageAddresses .list {
     margin: -1%;
 }
@@ -420,7 +471,6 @@ input[type=text].form-control.narrow:last-of-type {
 #pageAddresses .list .item {
     width: 31.33%;
     margin: 1%;
-    padding: var(--spacing-xs) var(--spacing-s);
 }
 
 #pageAddresses .list .item.add {
