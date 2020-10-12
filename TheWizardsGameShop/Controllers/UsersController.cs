@@ -86,6 +86,7 @@ namespace TheWizardsGameShop.Controllers
             }
             else if (ModelState.IsValid)
             {
+                users.PasswordHash = HashHelper.ComputeHash(users.PasswordHash);
                 _context.Add(users);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -193,7 +194,7 @@ namespace TheWizardsGameShop.Controllers
             /*var username = Request.Query["username"].FirstOrDefault();
             var password = Request.Query["password"].FirstOrDefault();*/
             var username = user.UserName;
-            var password = System.Text.Encoding.UTF8.GetString(user.PasswordHash);
+            var password = user.PasswordHash;
             if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
             {
                 var userResult = _context.Users.Where(u => u.UserName.Equals(username) && u.PasswordHash.Equals(password)).FirstOrDefault();
