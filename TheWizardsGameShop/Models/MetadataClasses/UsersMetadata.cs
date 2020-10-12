@@ -16,7 +16,6 @@ namespace TheWizardsGameShop.Models
         private const int PASSWORD_MIN_LENGTH = 8;
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            TheWizardsGameShopContext _context = new TheWizardsGameShopContext();
             var password = System.Text.Encoding.UTF8.GetString(PasswordHash);
 
             if (!string.IsNullOrEmpty(Email))
@@ -36,23 +35,15 @@ namespace TheWizardsGameShop.Models
             {
                 yield return new ValidationResult("Password has to at least contain a number and a capital character!");
             }
-        }
 
-        public static string PostalCodeFormat(string value)
-        {
-            if (value == null)
-                return null;
-            if (value.Trim().Length == 6)
-            {
-                value = value.Insert(3, " ");
-            }
-            return value.ToUpper();
+            yield return ValidationResult.Success;
         }
     }
 
     public class UsersMetadata
     {
-        [Key] [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
 
         [Display(Name ="Username")]
