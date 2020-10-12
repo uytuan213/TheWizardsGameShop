@@ -191,7 +191,7 @@ namespace TheWizardsGameShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([Bind("UserName, PasswordHash")] Users user)
+        public async Task<IActionResult> Login([Bind("UserName, PasswordHash")] Users users)
         {
             // If user already logged in
             if (HttpContext.Session.GetInt32("userId") != null)
@@ -200,19 +200,23 @@ namespace TheWizardsGameShop.Controllers
             }
             /*var username = Request.Query["username"].FirstOrDefault();
             var password = Request.Query["password"].FirstOrDefault();*/
-            var username = user.UserName;
-            var password = user.PasswordHash;
+            var username = users.UserName;
+            var password = users.PasswordHash;
+            var passwordHash = HashHelper.ComputeHash(password);
             if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
             {
-                var userResult = _context.Users.Where(u => u.UserName.Equals(username) && u.PasswordHash.Equals(password)).FirstOrDefault();
+                var userResult = _context.Users.Where(u => u.UserName.Equals(username)).FirstOrDefault();
+                var isMatch = userResult != null && userResult.PasswordHash.Equals(passwordHash);
 
                 // User logged in
-                if (userResult != null)
+                if (isMatch)
                 {
-                    var role = _context.UserRole.Where(us => us.UserId.Equals(userResult.UserId)).FirstOrDefault().Role;
+                    var role = _context.UserRole.Where(us => us.UserId.Equals(userResult.UserId)).FirstOrDefault();
                     HttpContext.Session.SetInt32("userId", userResult.UserId);
                     HttpContext.Session.SetString("userName", userResult.UserName);
-                    HttpContext.Session.SetString("userRole", role.RoleName);
+                    if (role != null) {
+                        HttpContext.Session.SetString("userRole", role.Role.RoleName);
+                            }
                     HttpContext.Session.SetString("loggedInTime", DateTime.Now.ToString());
 
                     TempData["Message"] = "Login successful";
@@ -223,7 +227,7 @@ namespace TheWizardsGameShop.Controllers
             // User login failed or usernam/password empty
 
             TempData["Message"] = "Login failed";
-            return View("Login", "Users");
+            return View(users);
         }
     }
 }
