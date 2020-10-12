@@ -11,18 +11,18 @@
 *.userprefs
 
 # Build results
-**/[Dd]ebug/
-**/[Dd]ebugPublic/
-**/[Rr]elease/
-**/[Rr]eleases/
-**/x64/
-**/x86/
-**/build/
-**/bld/
-**/bin/
-**/Bin/
-**/obj/
-**/Obj/
+/TheWizardsGameShop/[Dd]ebug/
+/TheWizardsGameShop/[Dd]ebugPublic/
+/TheWizardsGameShop/[Rr]elease/
+/TheWizardsGameShop/[Rr]eleases/
+/TheWizardsGameShop/x64/
+/TheWizardsGameShop/x86/
+/TheWizardsGameShop/build/
+/TheWizardsGameShop/bld/
+/TheWizardsGameShop/bin/
+/TheWizardsGameShop/Bin/
+/TheWizardsGameShop/obj/
+/TheWizardsGameShop/Obj/
 
 # Visual Studio 2015 cache/options directory
 .vs/
