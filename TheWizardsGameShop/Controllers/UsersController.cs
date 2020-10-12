@@ -32,13 +32,6 @@ namespace TheWizardsGameShop.Controllers
             return View();
         }
 
-        // GET: User/Login
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
-
         // GET: User
         public async Task<IActionResult> Index()
         {
@@ -79,7 +72,7 @@ namespace TheWizardsGameShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string passwordConfirm, [Bind("UserId,UserName,PasswordHash,FirstName,Dob,LastName,Phone,Email,Gender,ReceivePromotionalEmails")] Users users)
         {
-            if (users.PasswordHash != null && passwordConfirm != users.PasswordHash)
+            if (!string.IsNullOrEmpty(users.PasswordHash) && passwordConfirm != users.PasswordHash)
             {
                 TempData["PasswordConfirmMessage"] = "Password does not match.";
             }
@@ -182,8 +175,15 @@ namespace TheWizardsGameShop.Controllers
             return _context.Users.Any(e => e.UserId == id);
         }
 
+        // GET: User/Login
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
         [HttpPost]
-        public async Task<IActionResult> GetUser([Bind("Username, PasswordHash")] Users user)
+        public async Task<IActionResult> Login([Bind("Username, PasswordHash")] Users user)
         {
             // If user already logged in
             if (HttpContext.Session.GetInt32("userId") != null)
