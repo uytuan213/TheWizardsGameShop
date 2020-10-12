@@ -374,16 +374,19 @@ form.narrow {
     padding: var(--spacing-xxs) var(--spacing-s);
 }
 
-input[type=text].form-control {
+input[type=text].form-control,
+input[type=password].form-control {
     width: 100%;
 }
 
-input[type=text].form-control.narrow {
+input[type=text].form-control.narrow,
+input[type=password].form-control.narrow {
     width: 60%;
     margin-right: 2%;
 }
 
-input[type=text].form-control.narrow:last-of-type {
+input[type=text].form-control.narrow:last-of-type,
+input[type=password].form-control.narrow:last-of-type {
     margin-right: 0;
 }
 

@@ -79,8 +79,7 @@ namespace TheWizardsGameShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string passwordConfirm, [Bind("UserId,UserName,PasswordHash,FirstName,Dob,LastName,Phone,Email,Gender,ReceivePromotionalEmails")] Users users)
         {
-            users.PasswordHash = System.Text.Encoding.UTF8.GetBytes(users.PasswordHash)
-            if (users.PasswordHash != null && passwordConfirm != System.Text.Encoding.UTF8.GetString(users.PasswordHash))
+            if (users.PasswordHash != null && passwordConfirm != users.PasswordHash)
             {
                 TempData["PasswordConfirmMessage"] = "Password does not match.";
             }
