@@ -7,46 +7,44 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Jost">
     <link href='https://fonts.googleapis.com/css?family=Product+Sans' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css2" />
+    <link rel="stylesheet" href="~/css/reset.css" />
+    <link rel="stylesheet" href="~/css/sanitize.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <header>
-        <nav class="nav contents">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/logo.png" title="The Wizards' Game Shop" alt="The Wizards' Game Shop"/></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Browse</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">Cart</a>
-                        </li>
-                        
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav float-right flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
-                        </li>
-                    </ul>
-                </div>
+    <header class="flex-center">
+        <nav class="nav contents flex-center-vertical">
+            <a class="nav-logo" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/logo.png" title="The Wizards' Game Shop" alt="The Wizards' Game Shop" /></a>
+            <ul class="nav-menu flex-center-vertical">
+                <li>
+                    <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Games" asp-action="Index">Browse</a>
+                </li>
+            </ul>
+            <ul class="nav-menu absolute-right">
+                <li>
+                    <a asp-area="" asp-controller="Users" asp-action="Menu">My Account</a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Users" asp-action="Index">Logout</a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Users" asp-action="Index">Login</a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Users" asp-action="Create">Sign Up</a>
+                </li>
+            </ul>
         </nav>
     </header>
-    <div class="contents">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <main role="main">
+        @RenderBody()
+    </main>
 
     <footer class="border-top footer text-muted">
         <div class="container">

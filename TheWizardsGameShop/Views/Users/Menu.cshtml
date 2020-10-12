@@ -1,0 +1,31 @@
+﻿@{ ViewData["Title"] = "My Account"; }
+
+<div class="page contents" id="pageMyAccount">
+    <div class="page-header page-header-full text-center">
+        <h1>My Account</h1>
+    </div>
+    <div class="page-body">
+        <div class="list">
+            <a asp-action="Edit" class="item clickable flex-center">
+                <span class="material-icons">person</span>
+                <p>Profile</p>
+                <h5>Edit personal info such as name, phone number, and email address</h5>
+            </a>
+            <a asp-controller="Addresses" asp-action="Index" class="item clickable flex-center">
+                <span class="material-icons">place</span>
+                <p>Addresses</p>
+                <h5>Manage addresses for credit cards and orders</h5>
+            </a>
+            <a asp-controller="CreditCards" asp-action="Index" class="item clickable flex-center">
+                <span class="material-icons">credit_card</span>
+                <p>Credit Cards</p>
+                <h5>Manage credit cards for orders</h5>
+            </a>
+            <a asp-action="Index" class="item clickable flex-center">
+                <span class="material-icons">receipt</span>
+                <p>Order History</p>
+                <h5>View your order history</h5>
+            </a>
+        </div>
+    </div>
+</div>

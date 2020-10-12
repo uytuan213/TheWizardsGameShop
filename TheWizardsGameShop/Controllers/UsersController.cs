@@ -19,6 +19,13 @@ namespace TheWizardsGameShop.Controllers
         }
 
         // GET: User
+        public async Task<IActionResult> Menu()
+        {
+            var theWizardsGameShopContext = _context.Users.Include(u => u.GenderNavigation);
+            return View(await theWizardsGameShopContext.ToListAsync());
+        }
+
+        // GET: User
         public async Task<IActionResult> Index()
         {
             var theWizardsGameShopContext = _context.Users.Include(u => u.GenderNavigation);
