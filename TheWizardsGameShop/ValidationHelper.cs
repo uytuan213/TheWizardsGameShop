@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -22,6 +24,31 @@ namespace TheWizardsGameShop
             if (string.IsNullOrEmpty(str))
                 return true;
             Regex pattern = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+            return pattern.IsMatch(str.Trim());
+        }
+
+        /// <summary>
+        /// Check if password has upper case, number
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static Boolean PasswordValidation(string str)
+        {
+            if (string.IsNullOrEmpty(str) || (str.Any(char.IsUpper) && str.Any(char.IsNumber)))
+            {
+                return false;
+            }
+            return true;
+            
+        }
+
+        public static Boolean PhoneValidation(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                return false;
+            }
+            Regex pattern = new Regex(@"\D*([2-9]\d{2})(\D*)([2-9]\d{2})(\D*)(\d{4})\D*");
             return pattern.IsMatch(str.Trim());
         }
     }

@@ -13,9 +13,11 @@ namespace TheWizardsGameShop.Models
     [ModelMetadataType(typeof(UsersMetadata))]
     public partial class Users : IValidatableObject
     {
+        private const int PASSWORD_MIN_LENGTH = 8;
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             TheWizardsGameShopContext _context = new TheWizardsGameShopContext();
+            var password = System.Text.Encoding.UTF8.GetString(PasswordHash);
 
             if (!string.IsNullOrEmpty(Email))
             {
@@ -23,6 +25,16 @@ namespace TheWizardsGameShop.Models
                 {
                     yield return new ValidationResult("Email invalid!");
                 }
+            }
+
+            if (password.Length < 8)
+            {
+                yield return new ValidationResult("The minimum length of the password is 8 characters");
+            }
+
+            if (!ValidationHelper.PasswordValidation(password))
+            {
+                yield return new ValidationResult("Password has to at least contain a number and a capital character!");
             }
         }
 
@@ -64,6 +76,8 @@ namespace TheWizardsGameShop.Models
         public string LastName { get; set; }
 
         [Display(Name = "Phone number")]
+        [Required]
+        [RegularExpression (@"\D*([2-9]\d{2})(\D*)([2-9]\d{2})(\D*)(\d{4})\D*", ErrorMessage = "Phone number invalid!")]
         public string Phone { get; set; }
 
         [Display(Name = "Email")]
