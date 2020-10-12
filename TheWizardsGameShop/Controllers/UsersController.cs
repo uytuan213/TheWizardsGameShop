@@ -183,12 +183,12 @@ namespace TheWizardsGameShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([Bind("Username, PasswordHash")] Users user)
+        public async Task<IActionResult> Login([Bind("UserName, PasswordHash")] Users user)
         {
             // If user already logged in
             if (HttpContext.Session.GetInt32("userId") != null)
             {
-                return RedirectToAction("index", "home");
+                return RedirectToAction("Index", "Home");
             }
             /*var username = Request.Query["username"].FirstOrDefault();
             var password = Request.Query["password"].FirstOrDefault();*/
@@ -203,15 +203,19 @@ namespace TheWizardsGameShop.Controllers
                 {
                     var role = _context.UserRole.Where(us => us.UserId.Equals(userResult.UserId)).FirstOrDefault().Role;
                     HttpContext.Session.SetInt32("userId", userResult.UserId);
-                    HttpContext.Session.SetString("username", userResult.UserName);
+                    HttpContext.Session.SetString("userName", userResult.UserName);
                     HttpContext.Session.SetString("userRole", role.RoleName);
                     HttpContext.Session.SetString("loggedInTime", DateTime.Now.ToString());
 
-                    return RedirectToAction("index", "home");
+                    TempData["Message"] = "Login successful";
+
+                    return RedirectToAction("Index", "Home");
                 }
             }
             // User login failed or usernam/password empty
-            return View("login", "users");
+
+            TempData["Message"] = "Login failed";
+            return View("Login", "Users");
         }
     }
 }
