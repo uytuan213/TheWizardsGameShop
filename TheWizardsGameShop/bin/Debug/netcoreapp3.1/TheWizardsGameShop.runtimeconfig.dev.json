@@ -1,8 +1,0 @@
-{
-  "runtimeOptions": {
-    "additionalProbingPaths": [
-      "C:\\Users\\storyd\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\storyd\\.nuget\\packages"
-    ]
-  }
-}
