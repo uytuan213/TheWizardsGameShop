@@ -48,7 +48,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: Addresses/Create
         public IActionResult Create()
         {
-            ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceCode");
+            ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceName");
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email");
             return View();
         }
@@ -66,7 +66,7 @@ namespace TheWizardsGameShop.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceCode", address.ProvinceCode);
+            ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceName", address.ProvinceCode);
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email", address.UserId);
             return View(address);
         }
