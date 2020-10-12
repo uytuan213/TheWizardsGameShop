@@ -72,16 +72,24 @@ namespace TheWizardsGameShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string passwordConfirm, [Bind("UserId,UserName,PasswordHash,FirstName,Dob,LastName,Phone,Email,Gender,ReceivePromotionalEmails")] Users users)
         {
+            Boolean isValid = true;
+
             if (!string.IsNullOrEmpty(users.PasswordHash) && passwordConfirm != users.PasswordHash)
             {
+                isValid = false;
                 TempData["PasswordConfirmMessage"] = "Password does not match.";
             }
-            else if (ModelState.IsValid)
+            if (_context.Users.Where(u => u.UserName.Equals(users.UserName)).Any())
+            {
+                isValid = false;
+                TempData["UserExistedMessage"] = "Username is used by another user.";
+            }
+            if (isValid && ModelState.IsValid)
             {
                 users.PasswordHash = HashHelper.ComputeHash(users.PasswordHash);
                 _context.Add(users);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("index", "home");
             }
             ViewData["Gender"] = new SelectList(_context.Gender, "Gender1", "Gender1", users.Gender);
             return View(users);
