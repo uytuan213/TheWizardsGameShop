@@ -23,7 +23,7 @@
                 <div class="form-group">
                     <label asp-for="UserName" class="control-label"></label>
                     <input asp-for="UserName" class="form-control narrow" autocomplete="off" />
-                    <span asp-validation-for="UserName" class="text-danger"></span>
+                    <span asp-validation-for="UserName" class="text-danger">@TempData["UserExistedMessage"]</span>
                 </div>
                 <div class="form-group">
                     <label asp-for="PasswordHash" class="control-label"></label>
