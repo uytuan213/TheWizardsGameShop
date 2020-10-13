@@ -392,8 +392,11 @@ namespace TheWizardsGameShop.Controllers
                 //Send email
                 EmailHelper.SendEmail(userMailboxAddress, subject, bodyBuilder);
 
-                TempData["Message"] = "The reset password email has been sent to your email address";
+                TempData["Message"] = "The reset password email has been sent to your email address.";
                 return RedirectToAction("login", "users");
+            } else
+            {
+                TempData["Message"] = "Username does not exist.";
             }
 
             return View();
