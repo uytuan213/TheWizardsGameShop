@@ -34,7 +34,7 @@ namespace TheWizardsGameShop
         /// <returns></returns>
         public static Boolean PasswordValidation(string str)
         {
-            if (string.IsNullOrEmpty(str) || !str.Any(char.IsUpper) || !str.Any(char.IsNumber))
+            if (string.IsNullOrEmpty(str) || !str.Any(char.IsLower) || !str.Any(char.IsUpper) || !str.Any(char.IsNumber))
             {
                 return false;
             }

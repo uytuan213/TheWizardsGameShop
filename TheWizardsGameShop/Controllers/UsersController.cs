@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -422,11 +424,6 @@ namespace TheWizardsGameShop.Controllers
             return View();
         }
 
-        private bool ValidatePassword(string password)
-        {
-            return true;
-        }
-
         [HttpPost]
         public async Task<IActionResult> ChangePassword(string newPassword, string newPasswordConfirm, [Bind("UserId, PasswordHash")] Users users)
         {
@@ -444,7 +441,15 @@ namespace TheWizardsGameShop.Controllers
             {
                 if (newPassword == newPasswordConfirm)
                 {
-                    if (ValidatePassword(newPassword))
+                    if (newPassword.Length < 8)
+                    {
+                        TempData["Message"] = "Password must be at least 8 characters.";
+                    }
+                    else if (!ValidationHelper.PasswordValidation(newPassword))
+                    {
+                        
+                        TempData["Message"] = "Password must contain at least one number, one lowercase and one uppercase letter.";
+                    } else
                     {
                         userResult.PasswordHash = HashHelper.ComputeHash(newPassword);
                         _context.Update(userResult);
@@ -454,9 +459,6 @@ namespace TheWizardsGameShop.Controllers
                         HttpContext.Session.SetString("modalTitle", "Password changed");
                         HttpContext.Session.SetString("modalMessage", "Your password has been changed successfully.");
                         return RedirectToAction(nameof(Menu));
-                    } else
-                    {
-                        TempData["Message"] = "dd";
                     }
                 } else
                 {
