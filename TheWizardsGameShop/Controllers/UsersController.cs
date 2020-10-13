@@ -225,6 +225,19 @@ namespace TheWizardsGameShop.Controllers
 
             var username = users.UserName;
             var password = users.PasswordHash;
+
+            // Check empty
+            if (string.IsNullOrEmpty(username))
+            {
+                TempData["Message"] = "Please enter username.";
+                return View(users);
+            }
+            if (string.IsNullOrEmpty(password))
+            {
+                TempData["Message"] = "Please enter password.";
+                return View(users);
+            }
+
             var passwordHash = HashHelper.ComputeHash(password);
             if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
             {
@@ -248,8 +261,8 @@ namespace TheWizardsGameShop.Controllers
                 }
             }
 
-            // User login failed or usernam/password empty
-            TempData["Message"] = "Login failed";
+            // User login failed
+            TempData["Message"] = "Login failed. Please check username and password.";
 
             //Update login attempts in session if failed
             var loginAttempts = HttpContext.Session.GetInt32("loginAttempts");
@@ -260,7 +273,7 @@ namespace TheWizardsGameShop.Controllers
             else
             {
                 HttpContext.Session.SetString("isBlock", DateTime.Now.ToString());
-                TempData["StartBlockingMessage"] = $"You have failed to login {LIMIT_LOGIN_ATTEMPT} time";
+                TempData["Message"] = $"Login is temporarily blocked after {LIMIT_LOGIN_ATTEMPT} failed attempt(s). Please contact customer support.";
             }
 
             return View(users);
