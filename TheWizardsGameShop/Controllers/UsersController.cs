@@ -98,7 +98,7 @@ namespace TheWizardsGameShop.Controllers
         {
             Boolean isValid = true;
 
-            if (!string.IsNullOrEmpty(users.PasswordHash) && passwordConfirm != users.PasswordHash)
+            if (string.IsNullOrEmpty(users.PasswordHash) || passwordConfirm != users.PasswordHash)
             {
                 isValid = false;
                 TempData["PasswordConfirmMessage"] = "Password does not match.";
@@ -371,9 +371,10 @@ namespace TheWizardsGameShop.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public async Task<IActionResult> ResetPassword(string email)
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(string userName)
         {
-            var user = _context.Users.Where(u => u.Email.Equals(email)).FirstOrDefault();
+            var user = _context.Users.Where(u => u.UserName.Equals(userName)).FirstOrDefault();
             if (user != null)
             {
                 var randomPassword = GenerateRandomPassword();
@@ -386,13 +387,12 @@ namespace TheWizardsGameShop.Controllers
                 BodyBuilder bodyBuilder = PrepareResetEmailBody(randomPassword);
 
                 //Create MailboxAddress for user
-                //MailboxAddress userMailboxAddress = new MailboxAddress($"{user.FirstName} {user.LastName}", user.Email);
-                MailboxAddress userMailboxAddress = new MailboxAddress($"{user.FirstName} {user.LastName}", "uytuan213@gmail.com");
-                
+                MailboxAddress userMailboxAddress = new MailboxAddress($"{user.FirstName} {user.LastName}", user.Email);
+
                 //Send email
                 EmailHelper.SendEmail(userMailboxAddress, subject, bodyBuilder);
 
-                TempData["resetPasswordMessage"] = "The reset password email is sent to your email address";
+                TempData["Message"] = "The reset password email has been sent to your email address";
                 return RedirectToAction("login", "users");
             }
 
