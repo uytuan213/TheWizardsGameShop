@@ -272,25 +272,51 @@ header {
 
 .nav-menu li {
     display: inline-block;
+    margin-right: 2px;
 }
 
-    .nav-menu li a {
-        display: inline-block;
-        padding: 10px 15px;
-        border-radius: var(--border-radius-max);
-        text-decoration: none;
-    }
+.nav-menu li:last-child {
+    margin-right: 0;
+}
+
+.nav-menu li a {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: var(--border-radius-max);
+    text-decoration: none;
+}
 
 .nav-menu li a:hover {
     background-color: rgba(32, 29, 90, 0.07);
 }
 
+.nav-menu li a.primary, .nav-menu li a.primary:hover {
+    background-color: var(--color-brand);
+    color: white;
+}
+
+.nav-menu li a.account {
+    padding: 0;
+    margin-right: var(--spacing-xs);
+}
+
+.nav-menu li a.account:hover {
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+.nav-menu li a.account .material-icons {
+    color: var(--color-brand);
+    font-size: 2em;
+    margin-right: 8px;
+}
+
 
 /* Footer */
 html {
-  position: relative;
-  min-height: 100%;
-  background-image: url('../images/bg.png');
+    position: relative;
+    min-height: 100%;
+    background-image: url('../images/bg.png');
 }
 
 body {

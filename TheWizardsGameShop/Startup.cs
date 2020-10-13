@@ -32,7 +32,9 @@ namespace TheWizardsGameShop
 
             // Add support for session variable
             services.AddDistributedMemoryCache();
+            services.AddMvc().AddSessionStateTempDataProvider();
             services.AddSession();
+            services.AddHttpContextAccessor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -27,7 +27,7 @@ namespace TheWizardsGameShop.Models
                 }
             }
 
-            if (password.Length < 8)
+            if (password.Length < PASSWORD_MIN_LENGTH)
             {
                 yield return new ValidationResult("The minimum length of the password is 8 characters");
             }
@@ -43,17 +43,21 @@ namespace TheWizardsGameShop.Models
 
     public class UsersMetadata
     {
+        private const int USERNAME_MIN_LENGTH = 5;
+        private const int PASSWORD_MIN_LENGTH = 8;
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
 
         [Display(Name ="Username")]
         [Required]
+        [MinLength(USERNAME_MIN_LENGTH, ErrorMessage = "Username must be at least 5 characters.")]
         public string UserName { get; set; }
 
         [Display(Name = "Password")]
         [Required]
-        [MinLength(8, ErrorMessage = "Password must be at least 8 characters.")]
+        [MinLength(PASSWORD_MIN_LENGTH, ErrorMessage = "Password must be at least 8 characters.")]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{1,}$", ErrorMessage = "Password must contain at least one number, one lowercase and one uppercase letter.")]
         public string PasswordHash { get; set; }
 

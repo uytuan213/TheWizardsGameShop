@@ -187,6 +187,11 @@ namespace TheWizardsGameShop.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            // If user already logged in
+            if (HttpContext.Session.GetInt32("userId") != null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -198,8 +203,7 @@ namespace TheWizardsGameShop.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            /*var username = Request.Query["username"].FirstOrDefault();
-            var password = Request.Query["password"].FirstOrDefault();*/
+
             var username = users.UserName;
             var password = users.PasswordHash;
             var passwordHash = HashHelper.ComputeHash(password);
@@ -224,9 +228,9 @@ namespace TheWizardsGameShop.Controllers
                     return RedirectToAction("Index", "Home");
                 }
             }
-            // User login failed or usernam/password empty
+            // User login failed
 
-            TempData["Message"] = "Login failed";
+            TempData["Message"] = "Please check your username and password.";
             return View(users);
         }
     }

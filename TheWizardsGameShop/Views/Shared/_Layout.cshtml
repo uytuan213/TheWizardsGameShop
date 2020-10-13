@@ -1,4 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{ 
+    var session = HttpContextAccessor.HttpContext.Session;
+    var isLoggedIn = session.GetInt32("userId") != null;
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -27,19 +35,25 @@
                     <a asp-area="" asp-controller="Games" asp-action="Index">Browse</a>
                 </li>
             </ul>
-            <ul class="nav-menu absolute-right">
-                <li>
-                    <a asp-area="" asp-controller="Users" asp-action="Menu">My Account</a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="Users" asp-action="Logout">Logout</a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="Users" asp-action="Login">Login</a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="Users" asp-action="Create">Sign Up</a>
-                </li>
+            <ul class="nav-menu flex-center-vertical absolute-right">
+                @if (isLoggedIn)
+                {
+                    <li>
+                        <a asp-area="" asp-controller="Users" asp-action="Menu" class="account flex-center-vertical"><span class="material-icons">account_circle</span>@session.GetString("userName")</a>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="Users" asp-action="Logout">Logout</a>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a asp-area="" asp-controller="Users" asp-action="Login">Login</a>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="Users" asp-action="Create">Sign Up</a>
+                    </li>
+                }
             </ul>
         </nav>
     </header>
