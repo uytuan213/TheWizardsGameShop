@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -421,8 +422,13 @@ namespace TheWizardsGameShop.Controllers
             return View();
         }
 
+        private bool ValidatePassword(string password)
+        {
+            return true;
+        }
+
         [HttpPost]
-        public async Task<IActionResult> ChangePassword(string newPassword, [Bind("UserId, PasswordHash")] Users users)
+        public async Task<IActionResult> ChangePassword(string newPassword, string newPasswordConfirm, [Bind("UserId, PasswordHash")] Users users)
         {
             var userResult = _context.Users
                 .Where(u => u.UserId.Equals(users.UserId))
@@ -436,17 +442,32 @@ namespace TheWizardsGameShop.Controllers
             // Password correct
             if (isMatch)
             {
-                userResult.PasswordHash = HashHelper.ComputeHash(newPassword);
-                _context.Update(userResult);
-                await _context.SaveChangesAsync();
+                if (newPassword == newPasswordConfirm)
+                {
+                    if (ValidatePassword(newPassword))
+                    {
+                        userResult.PasswordHash = HashHelper.ComputeHash(newPassword);
+                        _context.Update(userResult);
+                        await _context.SaveChangesAsync();
 
-                TempData["Message"] = "";
-                HttpContext.Session.SetString("modalTitle", "Password changed");
-                HttpContext.Session.SetString("modalMessage", "Your password has been changed successfully.");
-                return RedirectToAction(nameof(Menu));
+                        TempData["Message"] = "";
+                        HttpContext.Session.SetString("modalTitle", "Password changed");
+                        HttpContext.Session.SetString("modalMessage", "Your password has been changed successfully.");
+                        return RedirectToAction(nameof(Menu));
+                    } else
+                    {
+                        TempData["Message"] = "dd";
+                    }
+                } else
+                {
+                    TempData["Message"] = "Confirm New Password not match";
+                }
+            } else
+            {
+                TempData["Message"] = "Current password is incorrect";
             }
 
-            TempData["Message"] = "Current password is incorrect";
+            ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             return View();
         }
         private string GenerateRandomPassword()

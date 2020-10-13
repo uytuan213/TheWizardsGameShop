@@ -51,6 +51,7 @@ namespace TheWizardsGameShop.Models
     public class UsersMetadata
     {
         private const int USERNAME_MIN_LENGTH = 5;
+        private const int USERNAME_MAX_LENGTH = 20;
         private const int PASSWORD_MIN_LENGTH = 8;
 
         [Key]
@@ -60,12 +61,13 @@ namespace TheWizardsGameShop.Models
         [Display(Name ="Username")]
         [Required]
         [MinLength(USERNAME_MIN_LENGTH, ErrorMessage = "Username must be at least 5 characters.")]
+        [MaxLength(USERNAME_MAX_LENGTH, ErrorMessage = "Username must be 20 characters max.")]
         public string UserName { get; set; }
 
         [Display(Name = "Password")]
         // [Required]
+        [RegularExpression(@"^(.{0,7}|(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&]*)[a-zA-Z\d@$!%*#?&]{8,})$", ErrorMessage = "Password must contain at least one number, one lowercase and one uppercase letter.")]
         [MinLength(PASSWORD_MIN_LENGTH, ErrorMessage = "Password must be at least 8 characters.")]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{1,}$", ErrorMessage = "Password must contain at least one number, one lowercase and one uppercase letter.")]
         public string PasswordHash { get; set; }
 
         [Display(Name = "First Name")]
