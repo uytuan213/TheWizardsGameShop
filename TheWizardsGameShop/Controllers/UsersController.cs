@@ -113,10 +113,10 @@ namespace TheWizardsGameShop.Controllers
                 users.PasswordHash = HashHelper.ComputeHash(users.PasswordHash);
                 _context.Add(users);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("index", "home"); if (!IsLoggedIn())
-                {
-                    return RequireLogin(this);
-                }
+
+                CreateUserSession(users);
+
+                return RedirectToAction("index", "home");
             }
             ViewData["Gender"] = new SelectList(_context.Gender, "Gender1", "Gender1", users.Gender);
             return View(users);
@@ -306,13 +306,7 @@ namespace TheWizardsGameShop.Controllers
                 // User logged in
                 if (isMatch)
                 {
-                    var role = _context.UserRole.Where(us => us.UserId.Equals(userResult.UserId)).FirstOrDefault();
-                    HttpContext.Session.SetInt32("userId", userResult.UserId);
-                    HttpContext.Session.SetString("userName", userResult.UserName);
-                    if (role != null) {
-                        HttpContext.Session.SetString("userRole", role.Role.RoleName);
-                            }
-                    HttpContext.Session.SetString("loggedInTime", DateTime.Now.ToString());
+                    CreateUserSession(userResult);
 
                     TempData["Message"] = "";
 
@@ -375,6 +369,7 @@ namespace TheWizardsGameShop.Controllers
             {
                 var randomPassword = GenerateRandomPassword();
                 user.PasswordHash = HashHelper.ComputeHash(randomPassword);
+                _context.Update(user);
                 await _context.SaveChangesAsync();
 
                 //Prepare email to send to user
@@ -435,6 +430,18 @@ namespace TheWizardsGameShop.Controllers
             bodyBuilder.TextBody = $"Your password has been reset. Here is your new password: {newPassword}";
 
             return bodyBuilder;
+        }
+
+        private void CreateUserSession(Users user)
+        {
+            var role = _context.UserRole.Where(us => us.UserId.Equals(user.UserId)).FirstOrDefault();
+            HttpContext.Session.SetInt32("userId", user.UserId);
+            HttpContext.Session.SetString("userName", user.UserName);
+            if (role != null)
+            {
+                HttpContext.Session.SetString("userRole", role.Role.RoleName);
+            }
+            HttpContext.Session.SetString("loggedInTime", DateTime.Now.ToString());
         }
     }
 }
