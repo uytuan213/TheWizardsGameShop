@@ -41,8 +41,9 @@ namespace TheWizardsGameShop.Controllers
                 return RequireLogin(this);
             }
 
-            var theWizardsGameShopContext = _context.Address.Include(a => a.ProvinceCodeNavigation).Include(a => a.User);
-            return View(await theWizardsGameShopContext.ToListAsync());
+            var userId = HttpContext.Session.GetInt32("userId");
+            var userAddresses = _context.Address.Where(a => a.UserId.Equals(userId));
+            return View(await userAddresses.ToListAsync());
         }
 
         // GET: Addresses/Details/5
