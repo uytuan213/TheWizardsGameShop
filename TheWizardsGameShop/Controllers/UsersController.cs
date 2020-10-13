@@ -112,7 +112,13 @@ namespace TheWizardsGameShop.Controllers
             if (isValid && ModelState.IsValid)
             {
                 users.PasswordHash = HashHelper.ComputeHash(users.PasswordHash);
+                UserRole userRole = new UserRole();
+                
+                // Assign "Customer" role to the new user
+                userRole.Role = _context.Roles.Where(r => r.RoleName.Equals("Customer")).FirstOrDefault();
+                userRole.User = users;
                 _context.Add(users);
+                _context.Add(userRole);
                 await _context.SaveChangesAsync();
 
                 CreateUserSession(users);
