@@ -206,6 +206,9 @@ namespace TheWizardsGameShop.Controllers
                 if (t.TotalSeconds > TOTAL_WAIT_IN_SECOND)
                 {
                     HttpContext.Session.Remove("isBlock");
+
+                    //Reset loginAttempts in session
+                    HttpContext.Session.SetInt32("loginAttempts", 1);
                 }
                 else
                 {
