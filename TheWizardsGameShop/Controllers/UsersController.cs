@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using MimeKit;
 using TheWizardsGameShop.Models;
 
 namespace TheWizardsGameShop.Controllers
@@ -15,6 +18,7 @@ namespace TheWizardsGameShop.Controllers
     {
         private const int LIMIT_LOGIN_ATTEMPT = 3;
         private const int TOTAL_WAIT_IN_SECOND = 30;
+
         private readonly TheWizardsGameShopContext _context;
 
         public UsersController(TheWizardsGameShopContext context)
@@ -288,6 +292,75 @@ namespace TheWizardsGameShop.Controllers
             HttpContext.Session.Remove("userRole");
             HttpContext.Session.Remove("loggedInTime");
             return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<IActionResult> ResetPassword(string email)
+        {
+            var user = _context.Users.Where(u => u.Email.Equals(email)).FirstOrDefault();
+            if (user != null)
+            {
+                var randomPassword = GenerateRandomPassword();
+                user.PasswordHash = HashHelper.ComputeHash(randomPassword);
+                await _context.SaveChangesAsync();
+
+                //Prepare email to send to user
+                string subject = "Reset Password";
+                BodyBuilder bodyBuilder = PrepareResetEmailBody(randomPassword);
+
+                //Create MailboxAddress for user
+                //MailboxAddress userMailboxAddress = new MailboxAddress($"{user.FirstName} {user.LastName}", user.Email);
+                MailboxAddress userMailboxAddress = new MailboxAddress($"{user.FirstName} {user.LastName}", "uytuan213@gmail.com");
+                
+                //Send email
+                EmailHelper.SendEmail(userMailboxAddress, subject, bodyBuilder);
+
+                TempData["resetPasswordMessage"] = "The reset password email is sent to your email address";
+                return RedirectToAction("login", "users");
+            }
+
+            return View();
+        }
+
+        private string GenerateRandomPassword()
+        {
+            StringBuilder generatedPassword = new StringBuilder();
+            Random random = new Random();
+
+            bool digit = true;
+            bool lowercase = true;
+            bool uppercase = true;
+
+            while (generatedPassword.Length < Users.PASSWORD_MIN_LENGTH)
+            {
+                char c = (char)random.Next(49, 126);
+
+                generatedPassword.Append(c);
+
+                if (char.IsDigit(c))
+                    digit = false;
+                else if (char.IsLower(c))
+                    lowercase = false;
+                else if (char.IsUpper(c))
+                    uppercase = false;
+            }
+
+            if (digit)
+                generatedPassword.Append((char)random.Next(48, 58));
+            if (lowercase)
+                generatedPassword.Append((char)random.Next(97, 123));
+            if (uppercase)
+                generatedPassword.Append((char)random.Next(65, 91));
+
+            return generatedPassword.ToString();
+        }
+
+        private BodyBuilder PrepareResetEmailBody(string newPassword)
+        {
+            BodyBuilder bodyBuilder = new BodyBuilder();
+            bodyBuilder.HtmlBody = $"<h1>Reset password</h1><br><p>Your password has been reset. Here is your new password: {newPassword}</p>";
+            bodyBuilder.TextBody = $"Your password has been reset. Here is your new password: {newPassword}";
+
+            return bodyBuilder;
         }
     }
 }
