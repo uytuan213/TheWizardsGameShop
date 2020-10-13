@@ -195,6 +195,7 @@ namespace TheWizardsGameShop.Controllers
             return View();
         }
 
+        // POST: User/Login
         [HttpPost]
         public async Task<IActionResult> Login([Bind("UserName, PasswordHash")] Users users)
         {
@@ -228,18 +229,20 @@ namespace TheWizardsGameShop.Controllers
                     return RedirectToAction("Index", "Home");
                 }
             }
-            // User login failed
 
+            // User login failed
             TempData["Message"] = "Please check your username and password.";
             return View(users);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Logout()
+        // GET: User/Logout
+        [HttpGet]
+        public IActionResult Logout()
         {
             HttpContext.Session.Remove("userId");
             HttpContext.Session.Remove("userName");
             HttpContext.Session.Remove("userRole");
+            HttpContext.Session.Remove("loggedInTime");
             return RedirectToAction("Index", "Home");
         }
     }
