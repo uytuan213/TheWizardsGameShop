@@ -61,6 +61,8 @@ namespace TheWizardsGameShop.Models
 
         [Display(Name = "Postal code")]
         [Required]
+        [RegularExpression(@"^([ABCEGHJKLMNPRSTVXY]|[abceghjklmnprstvxy])\d([ABCEGHJKLMNPRSTVWXYZ]|[abceghjklmnprstvwxyz]) ?\d([ABCEGHJKLMNPRSTVWXYZ]|[abceghjklmnprstvwxyz])\d$", 
+            ErrorMessage = "Postal code invalid!")]
         public string PostalCode { get; set; }
 
         public virtual Province ProvinceCodeNavigation { get; set; }

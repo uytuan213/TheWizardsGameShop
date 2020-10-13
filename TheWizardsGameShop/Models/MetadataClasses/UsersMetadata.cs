@@ -62,7 +62,7 @@ namespace TheWizardsGameShop.Models
         [Required]
         [MinLength(USERNAME_MIN_LENGTH, ErrorMessage = "Username must be at least 5 characters.")]
         [MaxLength(USERNAME_MAX_LENGTH, ErrorMessage = "Username must be 20 characters max.")]
-        [RegularExpression(@"^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$", ErrorMessage = "Username must not have space and special characters")]
+        [RegularExpression(@"^(?=[a-zA-Z0-9._]{5,20}$)(?!.*[_.]{2})[^_.].*[^_.]$", ErrorMessage = "Username must have 5-20 characters, and have no space/special character")]
         public string UserName { get; set; }
 
         [Display(Name = "Password")]

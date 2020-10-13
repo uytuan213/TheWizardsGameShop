@@ -64,7 +64,8 @@ namespace TheWizardsGameShop.Controllers
         public async Task<IActionResult> Index()
         {
             var theWizardsGameShopContext = _context.Users.Include(u => u.GenderNavigation);
-            return View(await theWizardsGameShopContext.ToListAsync());
+            // return View(await theWizardsGameShopContext.ToListAsync());
+            return NotFound();
         }
 
         // GET: User/Details/5
