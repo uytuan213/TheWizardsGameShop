@@ -14,7 +14,7 @@ namespace TheWizardsGameShop.Models
     [ModelMetadataType(typeof(UsersMetadata))]
     public partial class Users : IValidatableObject
     {
-        private const int PASSWORD_MIN_LENGTH = 8;
+        public const int PASSWORD_MIN_LENGTH = 8;
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var password = PasswordHash;
