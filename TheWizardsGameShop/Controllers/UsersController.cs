@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MimeKit;
+using MimeKit.Encodings;
 using TheWizardsGameShop.Models;
 
 namespace TheWizardsGameShop.Controllers
@@ -399,6 +400,33 @@ namespace TheWizardsGameShop.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(string newPassword, [Bind("userId, passwordHash")] Users users)
+        {
+            var user = _context.Users
+                .Where(u => u.UserId.Equals(users.UserId) && u.PasswordHash.Equals(HashHelper.ComputeHash(users.PasswordHash)))
+                .FirstOrDefault();
+            // Wrong current password
+            if (user == null)
+            {
+                TempData["message"] = "Your current password is incorrect";
+                return View();
+            }
+
+            // Current password correct and we have the user
+            user.PasswordHash = HashHelper.ComputeHash(newPassword);
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+
+            TempData["message"] = "Your password has been changed";
+            return RedirectToAction(nameof(Menu));
+        }
         private string GenerateRandomPassword()
         {
             StringBuilder generatedPassword = new StringBuilder();
