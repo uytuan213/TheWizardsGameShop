@@ -412,29 +412,42 @@ namespace TheWizardsGameShop.Controllers
         [HttpGet]
         public IActionResult ChangePassword()
         {
+            if (!IsLoggedIn())
+            {
+                return RequireLogin(this);
+            }
+
+            ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> ChangePassword(string newPassword, [Bind("UserId, PasswordHash")] Users users)
         {
-            var user = _context.Users
-                .Where(u => u.UserId.Equals(users.UserId) && u.PasswordHash.Equals(HashHelper.ComputeHash(users.PasswordHash)))
+            var userResult = _context.Users
+                .Where(u => u.UserId.Equals(users.UserId))
                 .FirstOrDefault();
-            // Wrong current password
-            if (user == null)
+
+            var username = users.UserName;
+            var password = users.PasswordHash;
+            var passwordHash = HashHelper.ComputeHash(password);
+            var isMatch = userResult != null && userResult.PasswordHash.Equals(passwordHash);
+
+            // Password correct
+            if (isMatch)
             {
-                TempData["Message"] = "Current password is incorrect";
-                return View();
+                userResult.PasswordHash = HashHelper.ComputeHash(newPassword);
+                _context.Update(userResult);
+                await _context.SaveChangesAsync();
+
+                TempData["Message"] = "";
+                HttpContext.Session.SetString("modalTitle", "Password changed");
+                HttpContext.Session.SetString("modalMessage", "Your password has been changed successfully.");
+                return RedirectToAction(nameof(Menu));
             }
 
-            // Current password correct and we have the user
-            user.PasswordHash = HashHelper.ComputeHash(newPassword);
-            _context.Update(user);
-            await _context.SaveChangesAsync();
-
-            TempData["message"] = "Your password has been changed";
-            return RedirectToAction(nameof(Menu));
+            TempData["Message"] = "Current password is incorrect";
+            return View();
         }
         private string GenerateRandomPassword()
         {
