@@ -201,7 +201,7 @@ namespace TheWizardsGameShop.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AddressExists(int id)
+        public bool AddressExists(int id)
         {
             return _context.Address.Any(e => e.AddressId == id);
         }
