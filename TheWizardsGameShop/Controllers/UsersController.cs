@@ -13,6 +13,8 @@ namespace TheWizardsGameShop.Controllers
 {
     public class UsersController : Controller
     {
+        private const int LIMIT_LOGIN_ATTEMPT = 3;
+        private const int TOTAL_WAIT_IN_SECOND = 30;
         private readonly TheWizardsGameShopContext _context;
 
         public UsersController(TheWizardsGameShopContext context)
@@ -187,18 +189,31 @@ namespace TheWizardsGameShop.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            // If user already logged in
-            if (HttpContext.Session.GetInt32("userId") != null)
+            if (HttpContext.Session.GetInt32("loginAttempts") == null)
             {
-                return RedirectToAction("Index", "Home");
+                HttpContext.Session.SetInt32("loginAttempts", 1);
             }
             return View();
         }
 
-        // POST: User/Login
         [HttpPost]
         public async Task<IActionResult> Login([Bind("UserName, PasswordHash")] Users users)
         {
+            // If user is blocked because of going over the login attempts
+            if (HttpContext.Session.GetString("isBlock") != null)
+            {
+                TimeSpan t = DateTime.Parse(HttpContext.Session.GetString("isBlock")) - DateTime.Now;
+                if (t.TotalSeconds > TOTAL_WAIT_IN_SECOND)
+                {
+                    HttpContext.Session.Remove("isBlock");
+                }
+                else
+                {
+                    TempData["LoginBlockMessage"] = $"Please be back after {TOTAL_WAIT_IN_SECOND - t.TotalSeconds} seconds";
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
             // If user already logged in
             if (HttpContext.Session.GetInt32("userId") != null)
             {
@@ -230,8 +245,21 @@ namespace TheWizardsGameShop.Controllers
                 }
             }
 
-            // User login failed
-            TempData["Message"] = "Please check your username and password.";
+            // User login failed or usernam/password empty
+            TempData["Message"] = "Login failed";
+
+            //Update login attempts in session if failed
+            var loginAttempts = HttpContext.Session.GetInt32("loginAttempts");
+            if (loginAttempts < LIMIT_LOGIN_ATTEMPT)
+            {
+                HttpContext.Session.SetInt32("loginAttempts", (int)(++loginAttempts));
+            }
+            else
+            {
+                HttpContext.Session.SetString("isBlock", DateTime.Now.ToString());
+                TempData["StartBlockingMessage"] = $"You have failed to login {LIMIT_LOGIN_ATTEMPT} time";
+            }
+
             return View(users);
         }
 
