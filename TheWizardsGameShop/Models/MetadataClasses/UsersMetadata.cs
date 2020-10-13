@@ -82,7 +82,7 @@ namespace TheWizardsGameShop.Models
 
         [Display(Name = "Phone number")]
         [Required]
-        [RegularExpression (@"\D*([2-9]\d{2})(\D*)([2-9]\d{2})(\D*)(\d{4})\D*", ErrorMessage = "Phone number invalid!")]
+        [RegularExpression (@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}", ErrorMessage = "Phone number invalid!")]
         public string Phone { get; set; }
 
         [Display(Name = "Email")]
