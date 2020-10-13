@@ -355,7 +355,8 @@ body {
 }
 
 .page-submenu {
-    padding: var(--spacing-s) var(--spacing-xl) 0 var(--spacing-xl);
+    padding: 0;
+    margin-bottom: var(--spacing);
 }
 
 .page-body {
@@ -513,6 +514,14 @@ input[type=password].form-control.narrow:last-of-type {
 
 /* Sign Up Page */
 #pageSignUp .page-header {
+    background-color: var(--color-brand);
+    background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255,255,255,0.2));
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Profile Page */
+#pageProfile .page-header {
     background-color: var(--color-brand);
     background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255,255,255,0.2));
     color: white;

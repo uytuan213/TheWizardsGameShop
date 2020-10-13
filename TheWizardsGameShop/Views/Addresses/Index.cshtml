@@ -6,10 +6,10 @@
     <div class="page-header page-header-full flex-center">
         <h1>Addresses</h1>
     </div>
-    <p class="page-submenu">
-        <a asp-controller="Users" asp-action="Menu" class="item">&lt; Back to Menu</a>
-    </p>
     <div class="page-body">
+        <p class="page-submenu">
+            <a asp-controller="Users" asp-action="Menu" class="item">&lt; Back to Menu</a>
+        </p>
         <div class="list">
             <a asp-action="Create" class="item clickable add flex-center">
                 <span class="material-icons">add_circle</span>
@@ -17,25 +17,25 @@
             </a>
             @foreach (var item in Model)
             {
-<div class="item">
-    <p>
-        @Html.DisplayFor(modelItem => item.Street1)
-    </p>
-    <p>
-        @Html.DisplayFor(modelItem => item.Street2)
-    </p>
-    <p>
-        @Html.DisplayFor(modelItem => item.City), @Html.DisplayFor(modelItem => item.ProvinceCodeNavigation.ProvinceCode) @Html.DisplayFor(modelItem => item.PostalCode)
-    </p>
-    <p>
-        @Html.DisplayFor(modelItem => item.User.Email)
-    </p>
-    <p class="item-options">
-        <a asp-action="Edit" asp-route-id="@item.AddressId" class="option"><span class="material-icons">edit</span> Edit</a>
-        <a asp-action="Delete" asp-route-id="@item.AddressId" class="option" id="btn-delete-@item.AddressId" style="display: none;"><span class="material-icons">delete</span> Delete</a>
-        <a class="option" onclick="prompt('Delete Address', 'Are you sure to delete the address?', 'Delete', 'btn-delete-@item.AddressId');"><span class="material-icons">delete</span> Delete</a>
-    </p>
-</div>}
+    <div class="item">
+        <p>
+            @Html.DisplayFor(modelItem => item.Street1)
+        </p>
+        <p>
+            @Html.DisplayFor(modelItem => item.Street2)
+        </p>
+        <p>
+            @Html.DisplayFor(modelItem => item.City), @Html.DisplayFor(modelItem => item.ProvinceCodeNavigation.ProvinceCode) @Html.DisplayFor(modelItem => item.PostalCode)
+        </p>
+        <p>
+            @Html.DisplayFor(modelItem => item.User.Email)
+        </p>
+        <p class="item-options">
+            <a asp-action="Edit" asp-route-id="@item.AddressId" class="option"><span class="material-icons">edit</span> Edit</a>
+            <a asp-action="Delete" asp-route-id="@item.AddressId" class="option" id="btn-delete-@item.AddressId" style="display: none;"><span class="material-icons">delete</span> Delete</a>
+            <a class="option" onclick="prompt('Delete Address', 'Are you sure to delete the address?', 'Delete', 'btn-delete-@item.AddressId');"><span class="material-icons">delete</span> Delete</a>
+        </p>
+    </div>}
         </div>
     </div>
 </div>

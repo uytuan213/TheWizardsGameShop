@@ -100,9 +100,17 @@ namespace TheWizardsGameShop.Controllers
         // GET: User/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            var sessionUserId = HttpContext.Session.GetInt32("userId");
+            // Check if logged in and the param matches session
+            if (sessionUserId != null && (id == null || id == sessionUserId))
             {
-                return NotFound();
+                id = sessionUserId;
+            }
+            else 
+            {
+                HttpContext.Session.SetString("modalTitle", "Not authorized");
+                HttpContext.Session.SetString("modalMessage", "You are not authorized to access the page.");
+                return RedirectToAction("Index", "Home");
             }
 
             var users = await _context.Users.FindAsync(id);
@@ -287,6 +295,14 @@ namespace TheWizardsGameShop.Controllers
             HttpContext.Session.Remove("userName");
             HttpContext.Session.Remove("userRole");
             HttpContext.Session.Remove("loggedInTime");
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public IActionResult CloseModal()
+        {
+            HttpContext.Session.Remove("modalTitle");
+            HttpContext.Session.Remove("modalMessage");
             return RedirectToAction("Index", "Home");
         }
     }

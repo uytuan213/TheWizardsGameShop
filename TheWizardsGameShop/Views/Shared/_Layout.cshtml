@@ -4,6 +4,9 @@
 @{ 
     var session = HttpContextAccessor.HttpContext.Session;
     var isLoggedIn = session.GetInt32("userId") != null;
+    var showModal = !String.IsNullOrEmpty(session.GetString("modalTitle"));
+    var modalTitle = session.GetString("modalTitle");
+    var modalMessage = session.GetString("modalMessage");
 }
 
 <!DOCTYPE html>
@@ -79,6 +82,20 @@
             </p>
         </div>
     </div>
+
+    @if (showModal)
+    {
+        <div class="modal" id="cmodal">
+            <div class="modal-blocker" onclick="closeModal();"></div>
+            <div class="modal-window">
+                <h2 id="cmodal-title">@modalTitle</h2>
+                <p id="cmodal-message">@modalMessage</p>
+                <p class="modal-buttons" id="cmodal-buttons">
+                    <a class="btn btn-primary" id="cmodal-ok" asp-controller="Users" asp-action="CloseModal">OK</a>
+                </p>
+            </div>
+        </div>
+    }
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

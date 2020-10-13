@@ -6,10 +6,10 @@
     <div class="page-header page-header-full flex-center">
         <h1>Credit Cards</h1>
     </div>
-    <p class="page-submenu">
-        <a asp-controller="Users" asp-action="Menu" class="item">&lt; Back to Menu</a>
-    </p>
     <div class="page-body">
+        <p class="page-submenu">
+            <a asp-controller="Users" asp-action="Menu" class="item">&lt; Back to Menu</a>
+        </p>
         <div class="list">
             <a asp-action="Create" class="item clickable add flex-center">
                 <span class="material-icons">add_circle</span>
@@ -17,24 +17,24 @@
             </a>
             @foreach (var item in Model)
             {
-<div class="item">
-    <p>
-        @Html.DisplayFor(modelItem => item.CreditCardNumber)
-    </p>
-    <p>
-        @Html.DisplayFor(modelItem => item.ExpiryDate)
-    </p>
-    <p>
-        @Html.DisplayFor(modelItem => item.Cvc)
-    </p>
-    <p>
-        @Html.DisplayFor(modelItem => item.CardHolder)
-    </p>
-    <p class="item-options">
-        <a asp-action="Edit" asp-route-id="@item.CreditCardId" class="option"><span class="material-icons">edit</span> Edit</a>
-        <a asp-action="Delete" asp-route-id="@item.CreditCardId" class="option"><span class="material-icons">delete</span> Delete</a>
-    </p>
-</div>}
+    <div class="item">
+        <p>
+            @Html.DisplayFor(modelItem => item.CreditCardNumber)
+        </p>
+        <p>
+            @Html.DisplayFor(modelItem => item.ExpiryDate)
+        </p>
+        <p>
+            @Html.DisplayFor(modelItem => item.Cvc)
+        </p>
+        <p>
+            @Html.DisplayFor(modelItem => item.CardHolder)
+        </p>
+        <p class="item-options">
+            <a asp-action="Edit" asp-route-id="@item.CreditCardId" class="option"><span class="material-icons">edit</span> Edit</a>
+            <a asp-action="Delete" asp-route-id="@item.CreditCardId" class="option"><span class="material-icons">delete</span> Delete</a>
+        </p>
+    </div>}
         </div>
     </div>
 </div>
