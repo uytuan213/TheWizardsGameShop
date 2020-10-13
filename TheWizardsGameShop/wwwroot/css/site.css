@@ -38,14 +38,17 @@ body {
     line-height: 1.25em;
 }
 
-input {
+input,
+select {
     font-family: Jost, 'Segoe UI', Arial;
 }
 
 input[type=text],
 input[type=password],
-input[type=number] {
-    font-weight: 800;
+input[type=number],
+input[type=datetime-local],
+select {
+    font-weight: 600;
 }
 
 input::placeholder {
@@ -246,7 +249,8 @@ header {
     border-bottom: var(--border);
     position: sticky;
     top: 0;
-    background-color: rgba(255, 255, 255, 0.97);
+    background-color: rgba(255, 255, 255, 0.98);
+    z-index: 1;
 }
 
 .nav {
@@ -469,7 +473,15 @@ input[type=password].form-control.narrow:last-of-type {
     background-color: var(--color-background);
 }
 
+.form-control:disabled,
+input[type=text].form-control:read-only, 
+input[type=password].form-control:read-only, 
+input[type=number].form-control:read-only {
+    color: rgba(0, 0, 0, 0.5);
+}
+
 /* Home Page */
+
 .home-header {
     background-image: url('../images/galaxy.jpg');
     background-size: cover;

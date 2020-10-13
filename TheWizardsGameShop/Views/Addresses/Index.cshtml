@@ -33,7 +33,7 @@
         <p class="item-options">
             <a asp-action="Edit" asp-route-id="@item.AddressId" class="option"><span class="material-icons">edit</span> Edit</a>
             <a asp-action="Delete" asp-route-id="@item.AddressId" class="option" id="btn-delete-@item.AddressId" style="display: none;"><span class="material-icons">delete</span> Delete</a>
-            <a class="option" onclick="prompt('Delete Address', 'Are you sure to delete the address?', 'Delete', 'btn-delete-@item.AddressId');"><span class="material-icons">delete</span> Delete</a>
+            <a class="option" onclick="confirm('Delete Address', 'Are you sure to delete the address?', 'Delete', 'btn-delete-@item.AddressId');"><span class="material-icons">delete</span> Delete</a>
         </p>
     </div>}
         </div>

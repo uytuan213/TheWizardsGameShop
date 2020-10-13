@@ -18,6 +18,7 @@ namespace TheWizardsGameShop.Controllers
     {
         private const int LIMIT_LOGIN_ATTEMPT = 3;
         private const int TOTAL_WAIT_IN_SECOND = 30;
+        private const string NOT_LOGGED_IN_MESSAGE = "Please log in to proceed.";
 
         private readonly TheWizardsGameShopContext _context;
 
@@ -26,9 +27,26 @@ namespace TheWizardsGameShop.Controllers
             _context = context;
         }
 
+        private RedirectToActionResult RequireLogin(Controller controller)
+        {
+            string actionName = controller.ControllerContext.RouteData.Values["action"].ToString();
+            string controllerName = controller.ControllerContext.RouteData.Values["controller"].ToString();
+
+            TempData["LoginMessage"] = NOT_LOGGED_IN_MESSAGE;
+            TempData["RequestedActionName"] = actionName;
+            TempData["RequestedControllerName"] = controllerName;
+
+            return RedirectToAction("Login", "Users");
+        }
+
         // GET: User/Menu
         public IActionResult Menu()
         {
+            if (!IsLoggedIn())
+            {
+                return RequireLogin(this);
+            }
+
             return View();
         }
 
@@ -95,7 +113,10 @@ namespace TheWizardsGameShop.Controllers
                 users.PasswordHash = HashHelper.ComputeHash(users.PasswordHash);
                 _context.Add(users);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("index", "home");
+                return RedirectToAction("index", "home"); if (!IsLoggedIn())
+                {
+                    return RequireLogin(this);
+                }
             }
             ViewData["Gender"] = new SelectList(_context.Gender, "Gender1", "Gender1", users.Gender);
             return View(users);
@@ -104,13 +125,19 @@ namespace TheWizardsGameShop.Controllers
         // GET: User/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsLoggedIn())
+            {
+                return RequireLogin(this);
+            }
+
             var sessionUserId = HttpContext.Session.GetInt32("userId");
             // Check if logged in and the param matches session
-            if (sessionUserId != null && (id == null || id == sessionUserId))
+            if (IsLoggedIn() && id == null)
             {
                 id = sessionUserId;
             }
-            else 
+            
+            if (id != null && id != sessionUserId)
             {
                 HttpContext.Session.SetString("modalTitle", "Not authorized");
                 HttpContext.Session.SetString("modalMessage", "You are not authorized to access the page.");
@@ -122,6 +149,7 @@ namespace TheWizardsGameShop.Controllers
             {
                 return NotFound();
             }
+            ViewData["UserID"] = id.ToString();
             ViewData["Gender"] = new SelectList(_context.Gender, "Gender1", "Gender1", users.Gender);
             return View(users);
         }
@@ -133,6 +161,12 @@ namespace TheWizardsGameShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("UserId,UserName,PasswordHash,FirstName,Dob,LastName,Phone,Email,Gender,ReceivePromotionalEmails")] Users users)
         {
+            //if (id == null && IsLoggedIn())
+            //{
+            //    int sessionUserId = HttpContext.Session.GetInt32("userId");
+            //    id = sessionUserId;
+            //}
+            
             if (id != users.UserId)
             {
                 return NotFound();
@@ -197,6 +231,11 @@ namespace TheWizardsGameShop.Controllers
             return _context.Users.Any(e => e.UserId == id);
         }
 
+        private bool IsLoggedIn()
+        {
+            return HttpContext.Session.GetInt32("userId") != null;
+        }
+
         // GET: User/Login
         [HttpGet]
         public IActionResult Login()
@@ -209,12 +248,16 @@ namespace TheWizardsGameShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([Bind("UserName, PasswordHash")] Users users)
+        public async Task<IActionResult> Login(String? actionName, String? controllerName, [Bind("UserName, PasswordHash")] Users users)
         {
+            TempData["LoginMessage"] = NOT_LOGGED_IN_MESSAGE;
+            TempData["RequestedActionName"] = actionName;
+            TempData["RequestedControllerName"] = controllerName;
+
             // If user is blocked because of going over the login attempts
             if (HttpContext.Session.GetString("isBlock") != null)
             {
-                TimeSpan t = DateTime.Parse(HttpContext.Session.GetString("isBlock")) - DateTime.Now;
+                TimeSpan t = DateTime.Now - DateTime.Parse(HttpContext.Session.GetString("isBlock"));
                 if (t.TotalSeconds > TOTAL_WAIT_IN_SECOND)
                 {
                     HttpContext.Session.Remove("isBlock");
@@ -224,14 +267,18 @@ namespace TheWizardsGameShop.Controllers
                 }
                 else
                 {
-                    TempData["LoginBlockMessage"] = $"Please be back after {TOTAL_WAIT_IN_SECOND - t.TotalSeconds} seconds";
-                    return RedirectToAction("Index", "Home");
+                    TempData["Message"] = $"Please try again in {TOTAL_WAIT_IN_SECOND - t.TotalSeconds} second(s).";
+                    return View(users);
                 }
             }
 
             // If user already logged in
-            if (HttpContext.Session.GetInt32("userId") != null)
+            if (IsLoggedIn())
             {
+                if (!String.IsNullOrEmpty(actionName) && !String.IsNullOrEmpty(controllerName))
+                {
+                    return RedirectToAction(actionName, controllerName);
+                }
                 return RedirectToAction("Index", "Home");
             }
 
@@ -269,6 +316,10 @@ namespace TheWizardsGameShop.Controllers
 
                     TempData["Message"] = "";
 
+                    if (!String.IsNullOrEmpty(actionName) && !String.IsNullOrEmpty(controllerName))
+                    {
+                        return RedirectToAction(actionName, controllerName);
+                    }
                     return RedirectToAction("Index", "Home");
                 }
             }
@@ -300,6 +351,13 @@ namespace TheWizardsGameShop.Controllers
             HttpContext.Session.Remove("userRole");
             HttpContext.Session.Remove("loggedInTime");
             return RedirectToAction("Index", "Home");
+        }
+
+        // GET: User/Logout
+        [HttpGet]
+        public IActionResult NotLoggedIn()
+        {
+            return View();
         }
 
         [HttpGet]

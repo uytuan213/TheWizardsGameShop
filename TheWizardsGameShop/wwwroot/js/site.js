@@ -1,4 +1,4 @@
-﻿prompt = function (title, message, buttonValue, buttonTarget) {
+﻿confirm = function (title, message, buttonValue, buttonTarget) {
     $("#modal-title").html(title);
     $("#modal-message").html(message);
     //var buttons = "";
@@ -10,12 +10,23 @@
     
     //buttons += "<a onclick='closeModal();' class='btn'>" + Cancel + "</a>";
     //$("#modal-buttons").html(buttons);
-    $("#modal-ok").html(buttonValue);
     //$("#modal-ok").click(function () { $("#" + buttonTarget).click(); });
     //$("#modal-ok").attr("onclick", "$('#" + buttonTarget + "').click();");
+    $("#modal-ok").show();
+    $("#modal-ok").html(buttonValue);
     $("#modal-ok").attr("href", $("#" + buttonTarget).attr('href'));
     $("#modal-ok").attr("asp-route-id", $("#" + buttonTarget).attr('asp-route-id'));
     $("#modal-ok").attr("asp-action", $("#" + buttonTarget).attr('asp-action'));
+    $("#modal-close").removeClass("btn-primary");
+    $("#modal").show();
+}
+
+alert = function (title, message, buttonValue = "OK") {
+    $("#modal-title").html(title);
+    $("#modal-message").html(message);
+    $("#modal-ok").hide();
+    $("#modal-close").html(buttonValue);
+    $("#modal-close").addClass("btn-primary");
     $("#modal").show();
 }
 

@@ -13,6 +13,7 @@
             <form asp-action="Edit" class="narrow">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="AddressId" />
+                <input type="hidden" asp-for="UserId" />
                 <div class="form-group">
                     <label asp-for="Street1" class="control-label"></label>
                     <input asp-for="Street1" class="form-control" />
