@@ -127,7 +127,7 @@ namespace TheWizardsGameShop.Controllers
         }
 
         // GET: Addresses/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id == null)
             {
@@ -143,7 +143,9 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
 
-            return View(address);
+            await DeleteConfirmed(id);
+            return RedirectToAction(nameof(Index));
+            //return View(address);
         }
 
         // POST: Addresses/Delete/5

@@ -44,16 +44,18 @@ namespace TheWizardsGameShop.Models
 
         public int UserId { get; set; }
 
-        [Display(Name ="Street 1")]
+        [Display(Name ="Street Line 1")]
         [Required]
         public string Street1 { get; set; }
 
-        [Display(Name = "Street 2")]
+        [Display(Name = "Street Line 2")]
         public string Street2 { get; set; }
 
+        [Display(Name = "City")]
         [Required]
         public string City { get; set; }
 
+        [Display(Name = "Province")]
         [Required]
         public string ProvinceCode { get; set; }
 

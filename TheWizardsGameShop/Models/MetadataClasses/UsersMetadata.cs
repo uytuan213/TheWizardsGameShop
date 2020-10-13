@@ -82,7 +82,11 @@ namespace TheWizardsGameShop.Models
         [RegularExpression (@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Please enter a valid email")]
         [Required]
         public string Email { get; set; }
+
+        [Display(Name = "Gender")]
         public string Gender { get; set; }
+
+        [Display(Name = "I'd like to receive promotional emails")]
         public bool ReceivePromotionalEmails { get; set; }
 
         public virtual Gender GenderNavigation { get; set; }

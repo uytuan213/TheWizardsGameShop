@@ -224,7 +224,7 @@ namespace TheWizardsGameShop.Controllers
                             }
                     HttpContext.Session.SetString("loggedInTime", DateTime.Now.ToString());
 
-                    TempData["Message"] = "Login successful";
+                    TempData["Message"] = "";
 
                     return RedirectToAction("Index", "Home");
                 }
