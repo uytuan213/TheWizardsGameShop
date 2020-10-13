@@ -20,7 +20,11 @@
                     <label asp-for="UserName" class="control-label"></label>
                     <input asp-for="UserName" class="form-control" readonly />
                 </div>
-                <input type="hidden" asp-for="PasswordHash" />
+                <div class="form-group">
+                    <label asp-for="PasswordHash" class="control-label"></label>
+                    <input type="hidden" asp-for="PasswordHash" />
+                    <a asp-action="ChangePassword" class="btn">Change Password</a>
+                </div>
                 <div class="form-group">
                     <label asp-for="FirstName" class="control-label">Name</label>
                     <div class="flex-space-between">

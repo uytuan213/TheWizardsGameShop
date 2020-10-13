@@ -416,7 +416,7 @@ namespace TheWizardsGameShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangePassword(string newPassword, [Bind("userId, passwordHash")] Users users)
+        public async Task<IActionResult> ChangePassword(string newPassword, [Bind("UserId, PasswordHash")] Users users)
         {
             var user = _context.Users
                 .Where(u => u.UserId.Equals(users.UserId) && u.PasswordHash.Equals(HashHelper.ComputeHash(users.PasswordHash)))
@@ -424,7 +424,7 @@ namespace TheWizardsGameShop.Controllers
             // Wrong current password
             if (user == null)
             {
-                TempData["message"] = "Your current password is incorrect";
+                TempData["Message"] = "Current password is incorrect";
                 return View();
             }
 
