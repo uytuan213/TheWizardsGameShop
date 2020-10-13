@@ -233,5 +233,14 @@ namespace TheWizardsGameShop.Controllers
             TempData["Message"] = "Please check your username and password.";
             return View(users);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            HttpContext.Session.Remove("userId");
+            HttpContext.Session.Remove("userName");
+            HttpContext.Session.Remove("userRole");
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
