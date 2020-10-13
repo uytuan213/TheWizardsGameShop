@@ -17,7 +17,7 @@ namespace TheWizardsGameShop.Models
         public const int PASSWORD_MIN_LENGTH = 8;
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var password = PasswordHash;
+            bool isEdit = UserId == 0 ? false : true;
 
             if (!string.IsNullOrEmpty(Email))
             {
@@ -26,15 +26,22 @@ namespace TheWizardsGameShop.Models
                     yield return new ValidationResult("Email invalid!");
                 }
             }
-
-            if (password.Length < PASSWORD_MIN_LENGTH)
+            if (!isEdit)
             {
-                yield return new ValidationResult("The minimum length of the password is 8 characters");
-            }
+                if (string.IsNullOrEmpty(PasswordHash))
+                {
+                    yield return new ValidationResult("Password cannot be empty");
+                }
+                var password = PasswordHash;
+                if (password.Length < PASSWORD_MIN_LENGTH)
+                {
+                    yield return new ValidationResult("The minimum length of the password is 8 characters");
+                }
 
-            if (!ValidationHelper.PasswordValidation(password))
-            {
-                yield return new ValidationResult("Password must contain at least one number, one lowercase and one uppercase letter.");
+                if (!ValidationHelper.PasswordValidation(password))
+                {
+                    yield return new ValidationResult("Password must contain at least one number, one lowercase and one uppercase letter.");
+                }
             }
 
             yield return ValidationResult.Success;
@@ -56,7 +63,7 @@ namespace TheWizardsGameShop.Models
         public string UserName { get; set; }
 
         [Display(Name = "Password")]
-        [Required]
+        // [Required]
         [MinLength(PASSWORD_MIN_LENGTH, ErrorMessage = "Password must be at least 8 characters.")]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{1,}$", ErrorMessage = "Password must contain at least one number, one lowercase and one uppercase letter.")]
         public string PasswordHash { get; set; }

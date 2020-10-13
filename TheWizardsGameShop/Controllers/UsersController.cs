@@ -159,7 +159,7 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,UserName,PasswordHash,FirstName,Dob,LastName,Phone,Email,Gender,ReceivePromotionalEmails")] Users users)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,UserName,FirstName,Dob,LastName,Phone,Email,Gender,ReceivePromotionalEmails")] Users users)
         {
             //if (id == null && IsLoggedIn())
             //{
@@ -176,7 +176,16 @@ namespace TheWizardsGameShop.Controllers
             {
                 try
                 {
-                    _context.Update(users);
+                    var userToUpdate = _context.Users.Where(u => u.UserId.Equals(users.UserId)).FirstOrDefault();
+                    userToUpdate.FirstName = users.FirstName;
+                    userToUpdate.LastName = users.LastName;
+                    userToUpdate.Gender = users.Gender;
+                    userToUpdate.Email = users.Email;
+                    userToUpdate.Dob = users.Dob;
+                    userToUpdate.Phone = users.Phone;
+                    userToUpdate.ReceivePromotionalEmails = users.ReceivePromotionalEmails;
+
+                    _context.Update(userToUpdate);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -190,7 +199,7 @@ namespace TheWizardsGameShop.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Menu));
             }
             ViewData["Gender"] = new SelectList(_context.Gender, "Gender1", "Gender1", users.Gender);
             return View(users);
