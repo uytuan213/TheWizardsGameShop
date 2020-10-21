@@ -137,7 +137,10 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
 
-            return View(creditCard);
+
+            await DeleteConfirmed(Convert.ToInt32(id));
+            return RedirectToAction(nameof(Index));
+            //return View(creditCard);
         }
 
         // POST: CreditCards/Delete/5

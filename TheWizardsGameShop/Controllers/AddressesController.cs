@@ -164,7 +164,7 @@ namespace TheWizardsGameShop.Controllers
         }
 
         // GET: Addresses/Delete/5
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (!IsLoggedIn())
             {
@@ -185,7 +185,7 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
 
-            await DeleteConfirmed(id);
+            await DeleteConfirmed(Convert.ToInt32(id));
             return RedirectToAction(nameof(Index));
             //return View(address);
         }
