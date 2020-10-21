@@ -1,55 +1,46 @@
 ﻿@model TheWizardsGameShop.Models.CreditCard
 
-@{
-    ViewData["Title"] = "Create";
-}
+@{ ViewData["Title"] = "Add New Credit Card"; }
 
-<h1>Create</h1>
-
-<h4>CreditCard</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="CreditCardId" class="control-label"></label>
-                <input asp-for="CreditCardId" class="form-control" />
-                <span asp-validation-for="CreditCardId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreditCardNumber" class="control-label"></label>
-                <input asp-for="CreditCardNumber" class="form-control" />
-                <span asp-validation-for="CreditCardNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ExpiryDate" class="control-label"></label>
-                <input asp-for="ExpiryDate" class="form-control" />
-                <span asp-validation-for="ExpiryDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Cvc" class="control-label"></label>
-                <input asp-for="Cvc" class="form-control" />
-                <span asp-validation-for="Cvc" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CardHolder" class="control-label"></label>
-                <input asp-for="CardHolder" class="form-control" />
-                <span asp-validation-for="CardHolder" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="page contents" id="pageAddresses">
+    <div class="page-header page-header-full flex-center">
+        <h1>Addresses</h1>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="row page-body">
+        <div class="col-md-4">
+            <form asp-action="Create" class="narrow">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="UserId" class="control-label"></label>
+                    <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CreditCardNumber" class="control-label"></label>
+                    <input asp-for="CreditCardNumber" class="form-control" />
+                    <span asp-validation-for="CreditCardNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ExpiryDate" class="control-label"></label>
+                    <input asp-for="ExpiryDate" class="form-control" />
+                    <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Cvc" class="control-label"></label>
+                    <input asp-for="Cvc" class="form-control" />
+                    <span asp-validation-for="Cvc" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CardHolder" class="control-label"></label>
+                    <input asp-for="CardHolder" class="form-control" />
+                    <span asp-validation-for="CardHolder" class="text-danger"></span>
+                </div>
+                <div class="form-buttons text-center">
+                    <input type="submit" value="Add Credit Card" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 @section Scripts {

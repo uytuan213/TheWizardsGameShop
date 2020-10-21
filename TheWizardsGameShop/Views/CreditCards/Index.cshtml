@@ -32,7 +32,8 @@
         </p>
         <p class="item-options">
             <a asp-action="Edit" asp-route-id="@item.CreditCardId" class="option"><span class="material-icons">edit</span> Edit</a>
-            <a asp-action="Delete" asp-route-id="@item.CreditCardId" class="option"><span class="material-icons">delete</span> Delete</a>
+            <a asp-action="Delete" asp-route-id="@item.CreditCardId" class="option" id="btn-delete-@item.CreditCardId" style="display: none;"><span class="material-icons">delete</span> Delete</a>
+            <a class="option" onclick="confirm('Delete Credit Card', 'Are you sure to delete the credit card?', 'Delete', 'btn-delete-@item.CreditCardId');"><span class="material-icons">delete</span> Delete</a>
         </p>
     </div>}
         </div>
