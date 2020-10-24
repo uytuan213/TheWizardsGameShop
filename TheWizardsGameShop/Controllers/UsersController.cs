@@ -518,11 +518,12 @@ namespace TheWizardsGameShop.Controllers
         private void CreateUserSession(Users user)
         {
             var role = _context.UserRole.Where(us => us.UserId.Equals(user.UserId)).FirstOrDefault();
+            var roleName = _context.Roles.Where(r => r.RoleId.Equals(role.RoleId)).FirstOrDefault().RoleName;
             HttpContext.Session.SetInt32("userId", user.UserId);
             HttpContext.Session.SetString("userName", user.UserName);
-            if (role != null)
+            if (role != null && roleName != null)
             {
-                HttpContext.Session.SetString("userRole", role.Role.RoleName);
+                HttpContext.Session.SetString("userRole", roleName);
             }
             HttpContext.Session.SetString("loggedInTime", DateTime.Now.ToString());
         }
