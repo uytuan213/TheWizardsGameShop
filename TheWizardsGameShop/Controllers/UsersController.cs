@@ -111,7 +111,7 @@ namespace TheWizardsGameShop.Controllers
             if (_context.Users.Where(u => u.UserName.Equals(users.UserName)).Any())
             {
                 isValid = false;
-                TempData["UserExistedMessage"] = "Username is used by another user.";.
+                TempData["UserExistedMessage"] = "Username is used by another user.";
             }
             if (isValid && ModelState.IsValid)
             {
@@ -385,17 +385,19 @@ namespace TheWizardsGameShop.Controllers
         [HttpPost]
         public async Task<IActionResult> ResetPassword(string userName)
         {
+            string link = $"{Environment.GetEnvironmentVariable("BASE_URL")}/Users/ResetPassword";
             var user = _context.Users.Where(u => u.UserName.Equals(userName)).FirstOrDefault();
             if (user != null)
             {
-                var randomPassword = GenerateRandomPassword();
-                user.PasswordHash = HashHelper.ComputeHash(randomPassword);
-                _context.Update(user);
-                await _context.SaveChangesAsync();
+                // Generate a random password
+                //var randomPassword = GenerateRandomPassword();
+                //user.PasswordHash = HashHelper.ComputeHash(randomPassword);
+                //_context.Update(user);
+                //await _context.SaveChangesAsync();
 
-                //Prepare email to send to user
+                //Prepare email to send user
                 string subject = "Reset Password";
-                BodyBuilder bodyBuilder = PrepareResetEmailBody(randomPassword);
+                BodyBuilder bodyBuilder = PrepareResetEmailBody(link);
 
                 //Create MailboxAddress for user
                 MailboxAddress userMailboxAddress = new MailboxAddress($"{user.FirstName} {user.LastName}", user.Email);
@@ -506,11 +508,11 @@ namespace TheWizardsGameShop.Controllers
             return generatedPassword.ToString();
         }
 
-        private BodyBuilder PrepareResetEmailBody(string newPassword)
+        private BodyBuilder PrepareResetEmailBody(string link)
         {
             BodyBuilder bodyBuilder = new BodyBuilder();
-            bodyBuilder.HtmlBody = $"<h1>Reset password</h1><br><p>Your password has been reset. Here is your new password: {newPassword}</p>";
-            bodyBuilder.TextBody = $"Your password has been reset. Here is your new password: {newPassword}";
+            bodyBuilder.HtmlBody = $"<h1>Reset password</h1><br><p>You have requested a password reset. Please click the following link: <a href='{link}'>{link}<a></p>";
+            bodyBuilder.TextBody = $"You have requested a password reset. Please go to this page and enter your new password: {link}";
 
             return bodyBuilder;
         }
