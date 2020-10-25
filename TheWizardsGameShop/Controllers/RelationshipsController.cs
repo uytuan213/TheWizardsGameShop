@@ -48,8 +48,8 @@ namespace TheWizardsGameShop.Controllers
         // GET: Relationships/Create
         public IActionResult Create()
         {
-            ViewData["UserId1"] = new SelectList(_context.Users, "UserId", "Email");
-            ViewData["UserId2"] = new SelectList(_context.Users, "UserId", "Email");
+            ViewData["UserId1"] = new SelectList(_context.WizardsUser, "UserId", "Email");
+            ViewData["UserId2"] = new SelectList(_context.WizardsUser, "UserId", "Email");
             return View();
         }
 
@@ -66,8 +66,8 @@ namespace TheWizardsGameShop.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId1"] = new SelectList(_context.Users, "UserId", "Email", relationship.UserId1);
-            ViewData["UserId2"] = new SelectList(_context.Users, "UserId", "Email", relationship.UserId2);
+            ViewData["UserId1"] = new SelectList(_context.WizardsUser, "UserId", "Email", relationship.UserId1);
+            ViewData["UserId2"] = new SelectList(_context.WizardsUser, "UserId", "Email", relationship.UserId2);
             return View(relationship);
         }
 
@@ -84,8 +84,8 @@ namespace TheWizardsGameShop.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId1"] = new SelectList(_context.Users, "UserId", "Email", relationship.UserId1);
-            ViewData["UserId2"] = new SelectList(_context.Users, "UserId", "Email", relationship.UserId2);
+            ViewData["UserId1"] = new SelectList(_context.WizardsUser, "UserId", "Email", relationship.UserId1);
+            ViewData["UserId2"] = new SelectList(_context.WizardsUser, "UserId", "Email", relationship.UserId2);
             return View(relationship);
         }
 
@@ -121,8 +121,8 @@ namespace TheWizardsGameShop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId1"] = new SelectList(_context.Users, "UserId", "Email", relationship.UserId1);
-            ViewData["UserId2"] = new SelectList(_context.Users, "UserId", "Email", relationship.UserId2);
+            ViewData["UserId1"] = new SelectList(_context.WizardsUser, "UserId", "Email", relationship.UserId1);
+            ViewData["UserId2"] = new SelectList(_context.WizardsUser, "UserId", "Email", relationship.UserId2);
             return View(relationship);
         }
 

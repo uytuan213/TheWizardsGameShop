@@ -66,6 +66,6 @@ namespace TheWizardsGameShop.Models
         public string PostalCode { get; set; }
 
         public virtual Province ProvinceCodeNavigation { get; set; }
-        public virtual Users User { get; set; }
+        public virtual WizardsUser User { get; set; }
     }
 }

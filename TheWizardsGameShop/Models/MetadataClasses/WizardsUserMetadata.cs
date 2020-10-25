@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 
 namespace TheWizardsGameShop.Models
 {
-    [ModelMetadataType(typeof(UsersMetadata))]
-    public partial class Users : IValidatableObject
+    [ModelMetadataType(typeof(WizardsUserMetadata))]
+    public partial class WizardsUser : IValidatableObject
     {
         public const int PASSWORD_MIN_LENGTH = 8;
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -48,7 +48,7 @@ namespace TheWizardsGameShop.Models
         }
     }
 
-    public class UsersMetadata
+    public class WizardsUserMetadata
     {
         private const int USERNAME_MIN_LENGTH = 5;
         private const int USERNAME_MAX_LENGTH = 20;

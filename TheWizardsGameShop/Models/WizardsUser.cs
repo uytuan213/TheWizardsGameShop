@@ -3,14 +3,18 @@ using System.Collections.Generic;
 
 namespace TheWizardsGameShop.Models
 {
-    public partial class Users
+    public partial class WizardsUser
     {
-        public Users()
+        public WizardsUser()
         {
             Address = new HashSet<Address>();
             CreditCard = new HashSet<CreditCard>();
+            FavoriteCategory = new HashSet<FavoriteCategory>();
+            FavoritePlatform = new HashSet<FavoritePlatform>();
+            Rating = new HashSet<Rating>();
             RelationshipUserId1Navigation = new HashSet<Relationship>();
             RelationshipUserId2Navigation = new HashSet<Relationship>();
+            Review = new HashSet<Review>();
             UserRole = new HashSet<UserRole>();
         }
 
@@ -28,8 +32,12 @@ namespace TheWizardsGameShop.Models
         public virtual Gender GenderNavigation { get; set; }
         public virtual ICollection<Address> Address { get; set; }
         public virtual ICollection<CreditCard> CreditCard { get; set; }
+        public virtual ICollection<FavoriteCategory> FavoriteCategory { get; set; }
+        public virtual ICollection<FavoritePlatform> FavoritePlatform { get; set; }
+        public virtual ICollection<Rating> Rating { get; set; }
         public virtual ICollection<Relationship> RelationshipUserId1Navigation { get; set; }
         public virtual ICollection<Relationship> RelationshipUserId2Navigation { get; set; }
+        public virtual ICollection<Review> Review { get; set; }
         public virtual ICollection<UserRole> UserRole { get; set; }
     }
 }

@@ -12,6 +12,6 @@ namespace TheWizardsGameShop.Models
         public string Cvc { get; set; }
         public string CardHolder { get; set; }
 
-        public virtual Users User { get; set; }
+        public virtual WizardsUser User { get; set; }
     }
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace TheWizardsGameShop.Models
 {
-    public partial class Roles
+    public partial class WizardsRole
     {
-        public Roles()
+        public WizardsRole()
         {
             UserRole = new HashSet<UserRole>();
         }

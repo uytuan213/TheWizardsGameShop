@@ -9,7 +9,7 @@ namespace TheWizardsGameShop.Models
         public int UserId2 { get; set; }
         public bool IsFamily { get; set; }
 
-        public virtual Users UserId1Navigation { get; set; }
-        public virtual Users UserId2Navigation { get; set; }
+        public virtual WizardsUser UserId1Navigation { get; set; }
+        public virtual WizardsUser UserId2Navigation { get; set; }
     }
 }

@@ -75,7 +75,7 @@ namespace TheWizardsGameShop.Controllers
             }
 
             ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceName");
-            //ViewData["UserId"] = new SelectList(_context.Users, "UserName", "Email");
+            //ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserName", "Email");
             ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             return View();
         }
@@ -95,7 +95,7 @@ namespace TheWizardsGameShop.Controllers
             }
             ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceName", address.ProvinceCode);
             
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email", address.UserId);
+            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", address.UserId);
             if (IsLoggedIn())
             {
                 ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
@@ -122,7 +122,7 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
             ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceCode", address.ProvinceCode);
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserName", address.UserId);
+            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "UserName", address.UserId);
             return View(address);
         }
 
@@ -159,7 +159,7 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceCode", address.ProvinceCode);
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email", address.UserId);
+            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", address.UserId);
             return View(address);
         }
 

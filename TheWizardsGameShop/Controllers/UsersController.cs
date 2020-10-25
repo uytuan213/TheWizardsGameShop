@@ -63,7 +63,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
-            var theWizardsGameShopContext = _context.Users.Include(u => u.GenderNavigation);
+            var theWizardsGameShopContext = _context.WizardsUser.Include(u => u.GenderNavigation);
             // return View(await theWizardsGameShopContext.ToListAsync());
             return NotFound();
         }
@@ -76,7 +76,7 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
 
-            var users = await _context.Users
+            var users = await _context.WizardsUser
                 .Include(u => u.GenderNavigation)
                 .FirstOrDefaultAsync(m => m.UserId == id);
             if (users == null)
@@ -99,7 +99,7 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string passwordConfirm, [Bind("UserId,UserName,PasswordHash,FirstName,Dob,LastName,Phone,Email,Gender,ReceivePromotionalEmails")] Users users)
+        public async Task<IActionResult> Create(string passwordConfirm, [Bind("UserId,UserName,PasswordHash,FirstName,Dob,LastName,Phone,Email,Gender,ReceivePromotionalEmails")] WizardsUser users)
         {
             Boolean isValid = true;
 
@@ -108,7 +108,7 @@ namespace TheWizardsGameShop.Controllers
                 isValid = false;
                 TempData["PasswordConfirmMessage"] = "Password does not match.";
             }
-            if (_context.Users.Where(u => u.UserName.Equals(users.UserName)).Any())
+            if (_context.WizardsUser.Where(u => u.UserName.Equals(users.UserName)).Any())
             {
                 isValid = false;
                 TempData["UserExistedMessage"] = "Username is used by another user.";
@@ -119,7 +119,7 @@ namespace TheWizardsGameShop.Controllers
                 UserRole userRole = new UserRole();
                 
                 // Assign "Customer" role to the new user
-                userRole.Role = _context.Roles.Where(r => r.RoleName.Equals("Customer")).FirstOrDefault();
+                userRole.Role = _context.WizardsRole.Where(r => r.RoleName.Equals("Customer")).FirstOrDefault();
                 userRole.User = users;
                 _context.Add(users);
                 _context.Add(userRole);
@@ -155,7 +155,7 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var users = await _context.Users.FindAsync(id);
+            var users = await _context.WizardsUser.FindAsync(id);
             if (users == null)
             {
                 return NotFound();
@@ -170,7 +170,7 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,UserName,FirstName,Dob,LastName,Phone,Email,Gender,ReceivePromotionalEmails")] Users users)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,UserName,FirstName,Dob,LastName,Phone,Email,Gender,ReceivePromotionalEmails")] WizardsUser users)
         {
             //if (id == null && IsLoggedIn())
             //{
@@ -187,7 +187,7 @@ namespace TheWizardsGameShop.Controllers
             {
                 try
                 {
-                    var userToUpdate = _context.Users.Where(u => u.UserId.Equals(users.UserId)).FirstOrDefault();
+                    var userToUpdate = _context.WizardsUser.Where(u => u.UserId.Equals(users.UserId)).FirstOrDefault();
                     userToUpdate.FirstName = users.FirstName;
                     userToUpdate.LastName = users.LastName;
                     userToUpdate.Gender = users.Gender;
@@ -224,7 +224,7 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
 
-            var users = await _context.Users
+            var users = await _context.WizardsUser
                 .Include(u => u.GenderNavigation)
                 .FirstOrDefaultAsync(m => m.UserId == id);
             if (users == null)
@@ -240,15 +240,15 @@ namespace TheWizardsGameShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var users = await _context.Users.FindAsync(id);
-            _context.Users.Remove(users);
+            var users = await _context.WizardsUser.FindAsync(id);
+            _context.WizardsUser.Remove(users);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool UsersExists(int id)
         {
-            return _context.Users.Any(e => e.UserId == id);
+            return _context.WizardsUser.Any(e => e.UserId == id);
         }
 
         private bool IsLoggedIn()
@@ -268,7 +268,7 @@ namespace TheWizardsGameShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(String? actionName, String? controllerName, [Bind("UserName, PasswordHash")] Users users)
+        public async Task<IActionResult> Login(String? actionName, String? controllerName, [Bind("UserName, PasswordHash")] WizardsUser users)
         {
             TempData["LoginMessage"] = NOT_LOGGED_IN_MESSAGE;
             TempData["RequestedActionName"] = actionName;
@@ -320,7 +320,7 @@ namespace TheWizardsGameShop.Controllers
             var passwordHash = HashHelper.ComputeHash(password);
             if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
             {
-                var userResult = _context.Users.Where(u => u.UserName.Equals(username)).FirstOrDefault();
+                var userResult = _context.WizardsUser.Where(u => u.UserName.Equals(username)).FirstOrDefault();
                 var isMatch = userResult != null && userResult.PasswordHash.Equals(passwordHash);
 
                 // User logged in
@@ -386,7 +386,7 @@ namespace TheWizardsGameShop.Controllers
         public async Task<IActionResult> ResetPassword(string userName)
         {
             string link = $"{Environment.GetEnvironmentVariable("BASE_URL")}/Users/ResetPassword";
-            var user = _context.Users.Where(u => u.UserName.Equals(userName)).FirstOrDefault();
+            var user = _context.WizardsUser.Where(u => u.UserName.Equals(userName)).FirstOrDefault();
             if (user != null)
             {
                 // Generate a random password
@@ -428,9 +428,9 @@ namespace TheWizardsGameShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangePassword(string newPassword, string newPasswordConfirm, [Bind("UserId, PasswordHash")] Users users)
+        public async Task<IActionResult> ChangePassword(string newPassword, string newPasswordConfirm, [Bind("UserId, PasswordHash")] WizardsUser users)
         {
-            var userResult = _context.Users
+            var userResult = _context.WizardsUser
                 .Where(u => u.UserId.Equals(users.UserId))
                 .FirstOrDefault();
 
@@ -484,7 +484,7 @@ namespace TheWizardsGameShop.Controllers
             bool lowercase = true;
             bool uppercase = true;
 
-            while (generatedPassword.Length < Users.PASSWORD_MIN_LENGTH)
+            while (generatedPassword.Length < WizardsUser.PASSWORD_MIN_LENGTH)
             {
                 char c = (char)random.Next(49, 126);
 
@@ -517,10 +517,10 @@ namespace TheWizardsGameShop.Controllers
             return bodyBuilder;
         }
 
-        private void CreateUserSession(Users user)
+        private void CreateUserSession(WizardsUser user)
         {
             var role = _context.UserRole.Where(us => us.UserId.Equals(user.UserId)).FirstOrDefault();
-            var roleName = _context.Roles.Where(r => r.RoleId.Equals(role.RoleId)).FirstOrDefault().RoleName;
+            var roleName = _context.WizardsRole.Where(r => r.RoleId.Equals(role.RoleId)).FirstOrDefault().RoleName;
             HttpContext.Session.SetInt32("userId", user.UserId);
             HttpContext.Session.SetString("userName", user.UserName);
             if (role != null && roleName != null)

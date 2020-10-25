@@ -7,11 +7,11 @@ namespace TheWizardsGameShop.Models
     {
         public Gender()
         {
-            Users = new HashSet<Users>();
+            WizardsUser = new HashSet<WizardsUser>();
         }
 
         public string Gender1 { get; set; }
 
-        public virtual ICollection<Users> Users { get; set; }
+        public virtual ICollection<WizardsUser> WizardsUser { get; set; }
     }
 }

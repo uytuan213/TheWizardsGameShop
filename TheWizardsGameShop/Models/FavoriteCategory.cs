@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace TheWizardsGameShop.Models
 {
-    public partial class UserRole
+    public partial class FavoriteCategory
     {
         public int UserId { get; set; }
-        public int RoleId { get; set; }
+        public short GameCategoryId { get; set; }
 
-        public virtual WizardsRole Role { get; set; }
+        public virtual GameCategory GameCategory { get; set; }
         public virtual WizardsUser User { get; set; }
     }
 }

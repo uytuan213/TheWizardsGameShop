@@ -47,7 +47,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: CreditCards/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email");
+            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email");
             return View();
         }
 
@@ -64,7 +64,7 @@ namespace TheWizardsGameShop.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email", creditCard.UserId);
+            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", creditCard.UserId);
             return View(creditCard);
         }
 
@@ -81,7 +81,7 @@ namespace TheWizardsGameShop.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email", creditCard.UserId);
+            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", creditCard.UserId);
             return View(creditCard);
         }
 
@@ -117,7 +117,7 @@ namespace TheWizardsGameShop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "Email", creditCard.UserId);
+            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", creditCard.UserId);
             return View(creditCard);
         }
 
