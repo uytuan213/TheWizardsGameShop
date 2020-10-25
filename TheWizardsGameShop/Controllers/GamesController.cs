@@ -11,6 +11,7 @@ namespace TheWizardsGameShop.Controllers
 {
     public class GamesController : Controller
     {
+        public const int PAGE_SIZE = 15;
         private readonly TheWizardsGameShopContext _context;
 
         public GamesController(TheWizardsGameShopContext context)
@@ -18,11 +19,36 @@ namespace TheWizardsGameShop.Controllers
             _context = context;
         }
 
-        // GET: Games
         public async Task<IActionResult> Index()
         {
-            var theWizardsGameShopContext = _context.Game.Include(g => g.GameCategory).Include(g => g.GameStatusCodeNavigation);
+            
+
+            var theWizardsGameShopContext = _context.Game.Include(g => g.GameCategory)
+                                                         .Include(g => g.GameStatusCodeNavigation)
+                                                         .Take(PAGE_SIZE);
             return View(await theWizardsGameShopContext.ToListAsync());
+        }
+
+        // GET: Games
+        public async Task<IActionResult> Index(int pageNo=1)
+        {
+            if (pageNo <= 0)
+            {
+                return NotFound();
+            }
+            int totalGames = _context.Game.Count();
+            ViewBag["totalPages"] = GetTotalPages(totalGames);
+
+            var games = _context.Game.Include(g => g.GameCategory)
+                                     .Include(g => g.GameStatusCodeNavigation)
+                                     .Skip((pageNo - 1) * PAGE_SIZE)
+                                     .Take(PAGE_SIZE);
+            if (games.Count() == 0)
+            {
+                TempData["errorMessage"] = "This page does not exist";
+                return NotFound();
+            }
+            return View(await games.ToListAsync());
         }
         // GET: Games/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -156,9 +182,64 @@ namespace TheWizardsGameShop.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Games/Search
+        public IActionResult Search()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Search(string keyword, int pageNo=1)
+        {
+            if (pageNo <= 0)
+            {
+                return NotFound();
+            }
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                int totalGames = _context.Game.Where(g => g.GameName.Contains(keyword)).Count();
+                ViewBag["totalPages"] = GetTotalPages(totalGames);
+
+                var searchResult = _context.Game.Include(g => g.GameImage)
+                                                .Where(g => g.GameName.Contains(keyword))
+                                                .Skip((pageNo - 1) * PAGE_SIZE)
+                                                .Take(PAGE_SIZE);
+
+                return View(await searchResult.ToListAsync());
+            }
+
+            return View();
+        }
+
+        public IActionResult SearchByCategory()
+        {
+            ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1");
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SearchByCategory(int catId, int pageNo=1)
+        {
+            if (pageNo <= 0)
+            {
+                return NotFound();
+            }
+            var searchResult = _context.Game.Include(g => g.GameImage)
+                                            .Where(g => g.GameCategoryId.Equals(catId))
+                                            .Skip((pageNo - 1) * PAGE_SIZE)
+                                            .Take(PAGE_SIZE);
+
+            return View(await searchResult.ToListAsync());
+        }
+
         private bool GameExists(int id)
         {
             return _context.Game.Any(e => e.GameId == id);
+        }
+
+        private int GetTotalPages(int totalItems)
+        {
+            return ((totalItems % PAGE_SIZE > 0) ? 1 : 0) + (totalItems / PAGE_SIZE);
         }
     }
 }

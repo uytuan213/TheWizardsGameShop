@@ -45,11 +45,23 @@ namespace TheWizardsGameShop.Controllers
             return View(review);
         }
 
+        public async Task<IActionResult> GetReviewsOnGame(int? gameId)
+        {
+            if (gameId == null)
+            {
+                return NotFound();
+            }
+
+            var reviews = await _context.Review.Include(r => r.User).Where(r => r.GameId.Equals(gameId)).ToListAsync();
+
+            return View(reviews);
+        }
+
         // GET: Reviews/Create
         public IActionResult Create()
         {
-            ViewData["GameId"] = new SelectList(_context.Game, "GameId", "GameDigitalPath");
-            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email");
+            // ViewData["GameId"] = new SelectList(_context.Game, "GameId", "GameDigitalPath");
+            // ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email");
             return View();
         }
 
@@ -58,16 +70,20 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ReviewId,ReviewContent,UserId,GameId,ReviewDate,IsPublished")] Review review)
+        public async Task<IActionResult> Create([Bind("ReviewId,ReviewContent,UserId,GameId")] Review review)
         {
             if (ModelState.IsValid)
             {
+                review.ReviewDate = DateTime.Now;
+                review.IsPublished = false;
                 _context.Add(review);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            /*
             ViewData["GameId"] = new SelectList(_context.Game, "GameId", "GameDigitalPath", review.GameId);
             ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", review.UserId);
+            */
             return View(review);
         }
 

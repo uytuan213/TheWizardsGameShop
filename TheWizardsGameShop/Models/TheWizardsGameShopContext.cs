@@ -77,7 +77,7 @@ namespace TheWizardsGameShop.Models
                     .WithMany(p => p.Address)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Addresses_Users");
+                    .HasConstraintName("FK_Addresses_WizardsUser");
             });
 
             modelBuilder.Entity<AddressType>(entity =>
@@ -110,7 +110,7 @@ namespace TheWizardsGameShop.Models
                     .WithMany(p => p.CreditCard)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CreditCards_Users");
+                    .HasConstraintName("FK_CreditCards_WizardsUser");
             });
 
             modelBuilder.Entity<FavoriteCategory>(entity =>

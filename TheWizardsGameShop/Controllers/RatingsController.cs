@@ -25,6 +25,13 @@ namespace TheWizardsGameShop.Controllers
             return View(await theWizardsGameShopContext.ToListAsync());
         }
 
+        public async Task<IActionResult> Index(int gameId)
+        {
+            ViewBag["avgRating"] = CalculateAvgRating(gameId);
+            var ratings = _context.Rating.Include(r => r.User).Where(r => r.GameId.Equals(gameId));
+            return View(await ratings.ToListAsync());
+        }
+
         // GET: Ratings/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -160,6 +167,13 @@ namespace TheWizardsGameShop.Controllers
         private bool RatingExists(int id)
         {
             return _context.Rating.Any(e => e.RatingId == id);
+        }
+
+        public double CalculateAvgRating(int gameId)
+        {
+            var avg = _context.Rating.Where(r => r.GameId.Equals(gameId)).Select(r => r.Rate).Average();
+
+            return avg;
         }
     }
 }
