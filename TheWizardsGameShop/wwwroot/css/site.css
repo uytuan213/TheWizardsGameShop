@@ -2,7 +2,7 @@
 :root {
     --header-height: 60px;
     --nav-height: 40px;
-    --footer-height: 60px;
+    --footer-height: 100px;
     --page-header-height: 200px;
     --spacing-xxs: 6px;
     --spacing-xs: 10px;
@@ -203,6 +203,11 @@ tr:last-of-type td {
 .list {
     display: flex;
     flex-wrap: wrap;
+    margin: 0 auto;
+}
+
+.list.narrow {
+    max-width: 1000px;
 }
 
 .list .item {
@@ -235,13 +240,13 @@ tr:last-of-type td {
     opacity: 0.5;
 }
 
-    .list .item .option:hover {
-        color: var(--color-brand);
-    }
+.list .item .option:hover {
+    color: var(--color-brand);
+}
 
-    .list .item .option:hover .material-icons {
-        opacity: 1;
-    }
+.list .item .option:hover .material-icons {
+    opacity: 1;
+}
 
 /* Header */
 header {
@@ -325,10 +330,11 @@ html {
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: var(--footer-height);
+    /* Margin bottom by footer height */
+    margin-bottom: var(--footer-height);
 }
-.footer {
+
+footer {
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -480,7 +486,31 @@ input[type=number].form-control:read-only {
     color: rgba(0, 0, 0, 0.5);
 }
 
+
+
 /* Home Page */
+
+@keyframes home-header {
+    from {
+        background-position: center 25%;
+    }
+
+    to {
+        background-position: center top;
+    }
+}
+
+@keyframes home-header-heading {
+    from {
+        opacity: 0.2;
+        transform: translateY(10%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
 .home-header {
     background-image: url('../images/galaxy.jpg');
@@ -492,6 +522,7 @@ input[type=number].form-control:read-only {
     height: 500px;
     margin-bottom: -200px;
     padding-bottom: 200px;
+    animation: home-header 1.25s ease-in-out;
 }
 
 .home-header h1 {
@@ -500,6 +531,7 @@ input[type=number].form-control:read-only {
     -webkit-text-fill-color: transparent;
     text-shadow: none;
     font-size: 3em;
+    animation: home-header-heading 1s ease-in-out;
 }
 
 #pageHome section {
@@ -549,13 +581,14 @@ input[type=number].form-control:read-only {
 }
 
 #pageMyAccount .list {
-    margin: -1%;
+    margin: -2% auto -2% auto;
+    padding: 2.5% 0;
 }
 
 #pageMyAccount .list .item {
     text-align: center;
-    width: 23%;
-    margin: 1%;
+    width: 29.3%;
+    margin: 2%;
     padding: var(--spacing) var(--spacing-s);
 }
 

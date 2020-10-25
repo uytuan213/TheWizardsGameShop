@@ -111,7 +111,7 @@ namespace TheWizardsGameShop.Controllers
             if (_context.Users.Where(u => u.UserName.Equals(users.UserName)).Any())
             {
                 isValid = false;
-                TempData["UserExistedMessage"] = "Username is used by another user.";
+                TempData["UserExistedMessage"] = "Username is used by another user.";.
             }
             if (isValid && ModelState.IsValid)
             {

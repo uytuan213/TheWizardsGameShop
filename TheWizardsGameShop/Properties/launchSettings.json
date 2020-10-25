@@ -41,7 +41,6 @@
     },
     "daehwa.ca:5000": {
       "commandName": "Project",
-      "launchBrowser": true,
       "environmentVariables": {
         "BASE_URL": "http://daehwa.ca:5000",
         "ASPNETCORE_ENVIRONMENT": "Development"
