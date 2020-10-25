@@ -9,26 +9,23 @@ using TheWizardsGameShop.Models;
 
 namespace TheWizardsGameShop.Controllers
 {
-    public class HomeController : Controller
+    public class EmployeeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<EmployeeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public EmployeeController(ILogger<EmployeeController> logger)
         {
             _logger = logger;
         }
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Employee", "Users");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            if (TempData["ErrorPageTitle"] != null) ViewData["ErrorPageTitle"] = TempData["ErrorPageTitle"];
-            if (TempData["ErrorPageMessage"] != null) ViewData["ErrorPageMessage"] = TempData["ErrorPageMessage"];
-
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }

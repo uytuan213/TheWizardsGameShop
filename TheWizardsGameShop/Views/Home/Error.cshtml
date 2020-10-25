@@ -1,0 +1,20 @@
+﻿@{ ViewData["Title"] = "Error"; }
+
+<div class="page contents" id="pageError">
+    <div class="page-body">
+        <span class="material-icons">error</span>
+        @if (ViewData["ErrorPageTitle"] != null || ViewData["ErrorPageMessage"] != null)
+        {
+            <h2>@ViewData["ErrorPageTitle"]</h2>
+            <h3>@ViewData["ErrorPageMessage"]</h3>
+        }
+        else
+        {
+            <h2>Error</h2>
+            <h3>Please try later.</h3>
+        }
+    <p style="margin-top: 20px;">
+        <a asp-controller="Home" asp-action="Index" class="btn">Go Home</a>
+    </p>
+    </div>
+</div>

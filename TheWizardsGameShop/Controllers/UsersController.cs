@@ -68,6 +68,24 @@ namespace TheWizardsGameShop.Controllers
             return NotFound();
         }
 
+        // GET: User/Employee
+        public IActionResult Employee()
+        {
+            if (!IsLoggedIn())
+            {
+                return RequireLogin(this);
+            }
+
+            if (!IsEmployee())
+            {
+                TempData["ErrorPageTitle"] = "Error";
+                TempData["ErrorPageMessage"] = "You don't have permission to access this page";
+                return RedirectToAction("Error", "Home");
+            }
+
+            return View();
+        }
+
         // GET: User/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -201,7 +219,7 @@ namespace TheWizardsGameShop.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UsersExists(users.UserId))
+                    if (!UserExists(users.UserId))
                     {
                         return NotFound();
                     }
@@ -244,16 +262,6 @@ namespace TheWizardsGameShop.Controllers
             _context.WizardsUser.Remove(users);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool UsersExists(int id)
-        {
-            return _context.WizardsUser.Any(e => e.UserId == id);
-        }
-
-        private bool IsLoggedIn()
-        {
-            return HttpContext.Session.GetInt32("userId") != null;
         }
 
         // GET: User/Login
@@ -528,6 +536,32 @@ namespace TheWizardsGameShop.Controllers
                 HttpContext.Session.SetString("userRole", roleName);
             }
             HttpContext.Session.SetString("loggedInTime", DateTime.Now.ToString());
+        }
+
+        private bool UserExists(int id)
+        {
+            return _context.WizardsUser.Any(e => e.UserId == id);
+        }
+
+        private bool IsLoggedIn()
+        {
+            return HttpContext.Session.GetInt32("userId") != null;
+        }
+
+        private bool IsEmployee()
+        {
+            // Check user
+            if (!IsLoggedIn()) return false;
+            var sessionUserId = HttpContext.Session.GetInt32("userId");
+            var user = _context.WizardsUser.Where(u => u.UserId == sessionUserId).FirstOrDefault();
+            if (user == null) return false;
+
+            // Find user role
+            var employeeRoleId = _context.WizardsRole.Where(r => r.RoleName.Equals("Employee")).FirstOrDefault().RoleId;
+            var userRoles = _context.UserRole.Where(ur => ur.UserId == sessionUserId && ur.RoleId == employeeRoleId).FirstOrDefault();
+
+            return userRoles != null;
+
         }
     }
 }

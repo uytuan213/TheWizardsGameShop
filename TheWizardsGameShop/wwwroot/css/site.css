@@ -555,6 +555,21 @@ input[type=number].form-control:read-only {
     margin: 1%;
 }
 
+/* Error Page */
+#pageError .page-body {
+    padding: var(--spacing-xxl) var(--spacing-l);
+    text-align: center;
+    color: darkred;
+}
+
+#pageError .material-icons {
+    font-size: 10em;
+}
+
+#pageError h3 {
+    color: var(--color-text-lighter);
+}
+
 /* Sign Up Page */
 #pageSignUp .page-header {
     background-color: var(--color-brand);
