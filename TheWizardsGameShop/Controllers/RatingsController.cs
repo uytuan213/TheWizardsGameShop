@@ -27,7 +27,7 @@ namespace TheWizardsGameShop.Controllers
 
         public async Task<IActionResult> Index(int gameId)
         {
-            ViewBag["avgRating"] = CalculateAvgRating(gameId);
+            ViewBag.avgRating = CalculateAvgRating(gameId);
             var ratings = _context.Rating.Include(r => r.User).Where(r => r.GameId.Equals(gameId));
             return View(await ratings.ToListAsync());
         }

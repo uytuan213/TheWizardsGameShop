@@ -19,16 +19,6 @@ namespace TheWizardsGameShop.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
-        {
-            
-
-            var theWizardsGameShopContext = _context.Game.Include(g => g.GameCategory)
-                                                         .Include(g => g.GameStatusCodeNavigation)
-                                                         .Take(PAGE_SIZE);
-            return View(await theWizardsGameShopContext.ToListAsync());
-        }
-
         // GET: Games
         public async Task<IActionResult> Index(int pageNo=1)
         {
@@ -37,7 +27,7 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
             int totalGames = _context.Game.Count();
-            ViewBag["totalPages"] = GetTotalPages(totalGames);
+            ViewBag.totalPages = GetTotalPages(totalGames);
 
             var games = _context.Game.Include(g => g.GameCategory)
                                      .Include(g => g.GameStatusCodeNavigation)
@@ -198,7 +188,7 @@ namespace TheWizardsGameShop.Controllers
             if (!string.IsNullOrEmpty(keyword))
             {
                 int totalGames = _context.Game.Where(g => g.GameName.Contains(keyword)).Count();
-                ViewBag["totalPages"] = GetTotalPages(totalGames);
+                ViewBag.totalPages = GetTotalPages(totalGames);
 
                 var searchResult = _context.Game.Include(g => g.GameImage)
                                                 .Where(g => g.GameName.Contains(keyword))
