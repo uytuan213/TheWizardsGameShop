@@ -46,7 +46,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: User/Menu
         public IActionResult Menu()
         {
-            if (!IsLoggedIn())
+            if (!UserHelper.IsLoggedIn(HttpContext))
             {
                 return RequireLogin(this);
             }
@@ -71,12 +71,12 @@ namespace TheWizardsGameShop.Controllers
         // GET: User/Employee
         public IActionResult Employee()
         {
-            if (!IsLoggedIn())
+            if (!UserHelper.IsLoggedIn(HttpContext))
             {
                 return RequireLogin(this);
             }
 
-            if (!IsEmployee())
+            if (!UserHelper.IsEmployee(HttpContext))
             {
                 TempData["ErrorPageTitle"] = "Error";
                 TempData["ErrorPageMessage"] = "You don't have permission to access this page";
@@ -154,14 +154,14 @@ namespace TheWizardsGameShop.Controllers
         // GET: User/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (!IsLoggedIn())
+            if (!UserHelper.IsLoggedIn(HttpContext))
             {
                 return RequireLogin(this);
             }
 
             var sessionUserId = HttpContext.Session.GetInt32("userId");
             // Check if logged in and the param matches session
-            if (IsLoggedIn() && id == null)
+            if (UserHelper.IsLoggedIn(HttpContext) && id == null)
             {
                 id = sessionUserId;
             }
@@ -301,7 +301,7 @@ namespace TheWizardsGameShop.Controllers
             }
 
             // If user already logged in
-            if (IsLoggedIn())
+            if (UserHelper.IsLoggedIn(HttpContext))
             {
                 if (!String.IsNullOrEmpty(actionName) && !String.IsNullOrEmpty(controllerName))
                 {
@@ -426,7 +426,7 @@ namespace TheWizardsGameShop.Controllers
         [HttpGet]
         public IActionResult ChangePassword()
         {
-            if (!IsLoggedIn())
+            if (!UserHelper.IsLoggedIn(HttpContext))
             {
                 return RequireLogin(this);
             }
@@ -543,6 +543,7 @@ namespace TheWizardsGameShop.Controllers
             return _context.WizardsUser.Any(e => e.UserId == id);
         }
 
+        /*
         private bool IsLoggedIn()
         {
             return HttpContext.Session.GetInt32("userId") != null;
@@ -561,7 +562,7 @@ namespace TheWizardsGameShop.Controllers
             var userRoles = _context.UserRole.Where(ur => ur.UserId == sessionUserId && ur.RoleId == employeeRoleId).FirstOrDefault();
 
             return userRoles != null;
-
         }
+        */
     }
 }
