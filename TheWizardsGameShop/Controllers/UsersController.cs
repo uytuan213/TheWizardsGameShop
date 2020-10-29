@@ -190,7 +190,7 @@ namespace TheWizardsGameShop.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(users.UserId))
+                    if (!UserHelper.UserExists(users.UserId, _context))
                     {
                         return NotFound();
                     }
@@ -365,7 +365,8 @@ namespace TheWizardsGameShop.Controllers
         public async Task<IActionResult> ResetPassword(string userName)
         {
             string link = $"{Environment.GetEnvironmentVariable("BASE_URL")}/Users/ResetPassword";
-            var user = _context.WizardsUser.Where(u => u.UserName.Equals(userName)).FirstOrDefault();
+            //_context.WizardsUser.Where(u => u.UserName.Equals(userName)).FirstOrDefault();
+            var user = UserHelper.GetUser(userName, _context);
             if (user != null)
             {
                 // Generate a random password
@@ -505,11 +506,5 @@ namespace TheWizardsGameShop.Controllers
             }
             HttpContext.Session.SetString("loggedInTime", DateTime.Now.ToString());
         }
-
-        private bool UserExists(int id)
-        {
-            return _context.WizardsUser.Any(e => e.UserId == id);
-        }
-
     }
 }
