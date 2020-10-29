@@ -30,25 +30,10 @@ namespace TheWizardsGameShop.Controllers
             _context = context;
         }
 
-        private RedirectToActionResult RequireLogin(Controller controller)
-        {
-            string actionName = controller.ControllerContext.RouteData.Values["action"].ToString();
-            string controllerName = controller.ControllerContext.RouteData.Values["controller"].ToString();
-
-            TempData["LoginMessage"] = UserHelper.NOT_LOGGED_IN_MESSAGE;
-            TempData["RequestedActionName"] = actionName;
-            TempData["RequestedControllerName"] = controllerName;
-
-            return RedirectToAction("Login", "Users");
-        }
-
         // GET: User/Menu
         public IActionResult Menu()
         {
-            if (!UserHelper.IsLoggedIn(HttpContext))
-            {
-                return RequireLogin(this);
-            }
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
             return View();
         }
@@ -70,17 +55,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: User/Employee
         public IActionResult Employee()
         {
-            if (!UserHelper.IsLoggedIn(HttpContext))
-            {
-                return RequireLogin(this);
-            }
-
-            if (!UserHelper.IsEmployee(HttpContext))
-            {
-                TempData["ErrorPageTitle"] = "Error";
-                TempData["ErrorPageMessage"] = "You don't have permission to access this page";
-                return RedirectToAction("Error", "Home");
-            }
+            if (!UserHelper.IsEmployee(this)) return UserHelper.RequireEmployee(this);
 
             return View();
         }
@@ -153,14 +128,11 @@ namespace TheWizardsGameShop.Controllers
         // GET: User/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (!UserHelper.IsLoggedIn(HttpContext))
-            {
-                return RequireLogin(this);
-            }
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
             var sessionUserId = HttpContext.Session.GetInt32("userId");
             // Check if logged in and the param matches session
-            if (UserHelper.IsLoggedIn(HttpContext) && id == null)
+            if (UserHelper.IsLoggedIn(this) && id == null)
             {
                 id = sessionUserId;
             }
@@ -300,7 +272,7 @@ namespace TheWizardsGameShop.Controllers
             }
 
             // If user already logged in
-            if (UserHelper.IsLoggedIn(HttpContext))
+            if (UserHelper.IsLoggedIn(this))
             {
                 if (!String.IsNullOrEmpty(actionName) && !String.IsNullOrEmpty(controllerName))
                 {
@@ -425,10 +397,7 @@ namespace TheWizardsGameShop.Controllers
         [HttpGet]
         public IActionResult ChangePassword()
         {
-            if (!UserHelper.IsLoggedIn(HttpContext))
-            {
-                return RequireLogin(this);
-            }
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
             ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             return View();
@@ -542,26 +511,5 @@ namespace TheWizardsGameShop.Controllers
             return _context.WizardsUser.Any(e => e.UserId == id);
         }
 
-        /*
-        private bool IsLoggedIn()
-        {
-            return HttpContext.Session.GetInt32("userId") != null;
-        }
-
-        private bool IsEmployee()
-        {
-            // Check user
-            if (!IsLoggedIn()) return false;
-            var sessionUserId = HttpContext.Session.GetInt32("userId");
-            var user = _context.WizardsUser.Where(u => u.UserId == sessionUserId).FirstOrDefault();
-            if (user == null) return false;
-
-            // Find user role
-            var employeeRoleId = _context.WizardsRole.Where(r => r.RoleName.Equals("Employee")).FirstOrDefault().RoleId;
-            var userRoles = _context.UserRole.Where(ur => ur.UserId == sessionUserId && ur.RoleId == employeeRoleId).FirstOrDefault();
-
-            return userRoles != null;
-        }
-        */
     }
 }

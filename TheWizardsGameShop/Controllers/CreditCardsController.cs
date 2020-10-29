@@ -22,10 +22,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: CreditCards
         public async Task<IActionResult> Index()
         {
-            if (!UserHelper.IsLoggedIn(HttpContext))
-            {
-                RequireLogin(this);
-            }
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
             var creditCards = _context.CreditCard.Where(c => c.UserId.Equals(HttpContext.Session.GetInt32("userId")));
             return View(await creditCards.ToListAsync());
@@ -52,10 +49,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: CreditCards/Create
         public IActionResult Create()
         {
-            if (!UserHelper.IsLoggedIn(HttpContext))
-            {
-                RequireLogin(this);
-            }
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
             ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             return View();
@@ -75,7 +69,7 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            if (UserHelper.IsLoggedIn(HttpContext))
+            if (UserHelper.IsLoggedIn(this))
             {
                 ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             }
@@ -96,10 +90,7 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
 
-            if (!UserHelper.IsLoggedIn(HttpContext))
-            {
-                RequireLogin(this);
-            }
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
             ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
 
@@ -139,7 +130,7 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            if (UserHelper.IsLoggedIn(HttpContext))
+            if (UserHelper.IsLoggedIn(this))
             {
                 ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             }
@@ -182,18 +173,6 @@ namespace TheWizardsGameShop.Controllers
         private bool CreditCardExists(int id)
         {
             return _context.CreditCard.Any(e => e.CreditCardId == id);
-        }
-
-        private RedirectToActionResult RequireLogin(Controller controller)
-        {
-            string actionName = controller.ControllerContext.RouteData.Values["action"].ToString();
-            string controllerName = controller.ControllerContext.RouteData.Values["controller"].ToString();
-
-            TempData["LoginMessage"] = UserHelper.NOT_LOGGED_IN_MESSAGE;
-            TempData["RequestedActionName"] = actionName;
-            TempData["RequestedControllerName"] = controllerName;
-
-            return RedirectToAction("Login", "Users");
         }
     }
 }

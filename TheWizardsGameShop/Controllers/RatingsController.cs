@@ -22,10 +22,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: Ratings
         public async Task<IActionResult> Index()
         {
-            if (!UserHelper.IsLoggedIn(HttpContext))
-            {
-                RequireLogin(this);
-            }
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
             var theWizardsGameShopContext = _context.Rating.Include(r => r.Game).Where(c => c.UserId.Equals(HttpContext.Session.GetInt32("userId")));
             return View(await theWizardsGameShopContext.ToListAsync());
         }
@@ -59,10 +56,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: Ratings/Create
         public IActionResult Create()
         {
-            if (!UserHelper.IsLoggedIn(HttpContext))
-            {
-                RequireLogin(this);
-            }
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
             ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             return View();
@@ -82,7 +76,7 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            if (UserHelper.IsLoggedIn(HttpContext))
+            if (UserHelper.IsLoggedIn(this))
             {
                 ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             }
@@ -104,10 +98,7 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
 
-            if (!UserHelper.IsLoggedIn(HttpContext))
-            {
-                RequireLogin(this);
-            }
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
             ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             return View(rating);
@@ -146,7 +137,7 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            if (UserHelper.IsLoggedIn(HttpContext))
+            if (UserHelper.IsLoggedIn(this))
             {
                 ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             }

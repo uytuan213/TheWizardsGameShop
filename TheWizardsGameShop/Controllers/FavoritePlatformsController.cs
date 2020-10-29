@@ -22,10 +22,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: FavoritePlatforms
         public async Task<IActionResult> Index()
         {
-            if (!UserHelper.IsLoggedIn(HttpContext))
-            {
-                RequireLogin(this);
-            }
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
             var theWizardsGameShopContext = _context.FavoritePlatform.Include(f => f.Platform).Where(f => f.UserId.Equals(HttpContext.Session.GetInt32("userId")));
             return View(await theWizardsGameShopContext.ToListAsync());
         }
@@ -53,11 +50,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: FavoritePlatforms/Create
         public IActionResult Create()
         {
-            
-            if (!UserHelper.IsLoggedIn(HttpContext))
-            {
-                RequireLogin(this);
-            }
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
             ViewData["PlatformId"] = new SelectList(_context.Platform, "PlatformId", "PlatformName");
             ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
@@ -78,7 +71,7 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PlatformId"] = new SelectList(_context.Platform, "PlatformId", "PlatformName", favoritePlatform.PlatformId);
-            if (UserHelper.IsLoggedIn(HttpContext))
+            if (UserHelper.IsLoggedIn(this))
             {
                 ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             }
@@ -99,10 +92,7 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
 
-            if (!UserHelper.IsLoggedIn(HttpContext))
-            {
-                RequireLogin(this);
-            }
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
             ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             ViewData["PlatformId"] = new SelectList(_context.Platform, "PlatformId", "PlatformName", favoritePlatform.PlatformId);
@@ -143,7 +133,7 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            if (UserHelper.IsLoggedIn(HttpContext))
+            if (UserHelper.IsLoggedIn(this))
             {
                 ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             }
@@ -186,18 +176,6 @@ namespace TheWizardsGameShop.Controllers
         private bool FavoritePlatformExists(int id)
         {
             return _context.FavoritePlatform.Any(e => e.UserId == id);
-        }
-
-        private RedirectToActionResult RequireLogin(Controller controller)
-        {
-            string actionName = controller.ControllerContext.RouteData.Values["action"].ToString();
-            string controllerName = controller.ControllerContext.RouteData.Values["controller"].ToString();
-
-            TempData["LoginMessage"] = UserHelper.NOT_LOGGED_IN_MESSAGE;
-            TempData["RequestedActionName"] = actionName;
-            TempData["RequestedControllerName"] = controllerName;
-
-            return RedirectToAction("Login", "Users");
         }
     }
 }

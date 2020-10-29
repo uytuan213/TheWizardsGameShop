@@ -22,10 +22,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: Reviews
         public async Task<IActionResult> Index()
         {
-            if (!UserHelper.IsLoggedIn(HttpContext))
-            {
-                RequireLogin(this);
-            }
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
             var theWizardsGameShopContext = _context.Review.Include(r => r.Game).Where(c => c.UserId.Equals(HttpContext.Session.GetInt32("userId")));
             return View(await theWizardsGameShopContext.ToListAsync());
         }
@@ -65,10 +62,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: Reviews/Create
         public IActionResult Create()
         {
-            if (!UserHelper.IsLoggedIn(HttpContext))
-            {
-                RequireLogin(this);
-            }
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
             ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             return View();
@@ -90,7 +84,7 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            if (UserHelper.IsLoggedIn(HttpContext))
+            if (UserHelper.IsLoggedIn(this))
             {
                 ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             }
@@ -112,7 +106,7 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
 
-            if (!UserHelper.IsLoggedIn(HttpContext))
+            if (!UserHelper.IsLoggedIn(this))
             {
                 RequireLogin(this);
             }
@@ -154,7 +148,7 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            if (UserHelper.IsLoggedIn(HttpContext))
+            if (UserHelper.IsLoggedIn(this))
             {
                 ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             }

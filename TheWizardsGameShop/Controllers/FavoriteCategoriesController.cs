@@ -22,10 +22,8 @@ namespace TheWizardsGameShop.Controllers
         // GET: FavoriteCategories
         public async Task<IActionResult> Index()
         {
-            if (!UserHelper.IsLoggedIn(HttpContext))
-            {
-                RequireLogin(this);
-            }
+
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
             var theWizardsGameShopContext = _context.FavoriteCategory.Include(f => f.GameCategory).Where(f => f.UserId.Equals(HttpContext.Session.GetInt32("userId")));
             return View(await theWizardsGameShopContext.ToListAsync());
@@ -54,10 +52,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: FavoriteCategories/Create
         public IActionResult Create()
         {
-            if (!UserHelper.IsLoggedIn(HttpContext))
-            {
-                RequireLogin(this);
-            }
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
             ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1");
@@ -78,7 +73,7 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1", favoriteCategory.GameCategoryId);
-            if (UserHelper.IsLoggedIn(HttpContext))
+            if (UserHelper.IsLoggedIn(this))
             {
                 ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             }
@@ -99,14 +94,11 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
 
-            if (!UserHelper.IsLoggedIn(HttpContext))
-            {
-                RequireLogin(this);
-            }
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
             ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1", favoriteCategory.GameCategoryId);
-            
+
             return View(favoriteCategory);
         }
 
@@ -143,7 +135,7 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            if (UserHelper.IsLoggedIn(HttpContext))
+            if (UserHelper.IsLoggedIn(this))
             {
                 ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             }
@@ -185,18 +177,6 @@ namespace TheWizardsGameShop.Controllers
         private bool FavoriteCategoryExists(int id)
         {
             return _context.FavoriteCategory.Any(e => e.UserId == id);
-        }
-
-        private RedirectToActionResult RequireLogin(Controller controller)
-        {
-            string actionName = controller.ControllerContext.RouteData.Values["action"].ToString();
-            string controllerName = controller.ControllerContext.RouteData.Values["controller"].ToString();
-
-            TempData["LoginMessage"] = UserHelper.NOT_LOGGED_IN_MESSAGE;
-            TempData["RequestedActionName"] = actionName;
-            TempData["RequestedControllerName"] = controllerName;
-
-            return RedirectToAction("Login", "Users");
         }
     }
 }
