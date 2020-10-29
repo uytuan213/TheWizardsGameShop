@@ -66,7 +66,6 @@ namespace TheWizardsGameShop.Models
         public string UserName { get; set; }
 
         [Display(Name = "Password")]
-        // [Required]
         [RegularExpression(@"^(.{0,7}|(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&]*)[a-zA-Z\d@$!%*#?&]{8,})$", ErrorMessage = "Password must contain at least one number, one lowercase and one uppercase letter.")]
         [MinLength(PASSWORD_MIN_LENGTH, ErrorMessage = "Password must be at least 8 characters.")]
         public string PasswordHash { get; set; }

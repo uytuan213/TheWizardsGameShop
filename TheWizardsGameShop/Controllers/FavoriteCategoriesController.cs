@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,12 @@ namespace TheWizardsGameShop.Controllers
         // GET: FavoriteCategories
         public async Task<IActionResult> Index()
         {
-            var theWizardsGameShopContext = _context.FavoriteCategory.Include(f => f.GameCategory).Include(f => f.User);
+            if (!UserHelper.IsLoggedIn(HttpContext))
+            {
+                RequireLogin(this);
+            }
+
+            var theWizardsGameShopContext = _context.FavoriteCategory.Include(f => f.GameCategory).Where(f => f.UserId.Equals(HttpContext.Session.GetInt32("userId")));
             return View(await theWizardsGameShopContext.ToListAsync());
         }
 
@@ -48,8 +54,13 @@ namespace TheWizardsGameShop.Controllers
         // GET: FavoriteCategories/Create
         public IActionResult Create()
         {
+            if (!UserHelper.IsLoggedIn(HttpContext))
+            {
+                RequireLogin(this);
+            }
+
+            ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1");
-            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email");
             return View();
         }
 
@@ -67,7 +78,10 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1", favoriteCategory.GameCategoryId);
-            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", favoriteCategory.UserId);
+            if (UserHelper.IsLoggedIn(HttpContext))
+            {
+                ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
+            }
             return View(favoriteCategory);
         }
 
@@ -84,8 +98,15 @@ namespace TheWizardsGameShop.Controllers
             {
                 return NotFound();
             }
+
+            if (!UserHelper.IsLoggedIn(HttpContext))
+            {
+                RequireLogin(this);
+            }
+
+            ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1", favoriteCategory.GameCategoryId);
-            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", favoriteCategory.UserId);
+            
             return View(favoriteCategory);
         }
 
@@ -121,8 +142,12 @@ namespace TheWizardsGameShop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            if (UserHelper.IsLoggedIn(HttpContext))
+            {
+                ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
+            }
             ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1", favoriteCategory.GameCategoryId);
-            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", favoriteCategory.UserId);
             return View(favoriteCategory);
         }
 
@@ -160,6 +185,18 @@ namespace TheWizardsGameShop.Controllers
         private bool FavoriteCategoryExists(int id)
         {
             return _context.FavoriteCategory.Any(e => e.UserId == id);
+        }
+
+        private RedirectToActionResult RequireLogin(Controller controller)
+        {
+            string actionName = controller.ControllerContext.RouteData.Values["action"].ToString();
+            string controllerName = controller.ControllerContext.RouteData.Values["controller"].ToString();
+
+            TempData["LoginMessage"] = UserHelper.NOT_LOGGED_IN_MESSAGE;
+            TempData["RequestedActionName"] = actionName;
+            TempData["RequestedControllerName"] = controllerName;
+
+            return RedirectToAction("Login", "Users");
         }
     }
 }

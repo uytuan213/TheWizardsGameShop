@@ -22,7 +22,6 @@ namespace TheWizardsGameShop.Controllers
     {
         private const int LIMIT_LOGIN_ATTEMPT = 3;
         private const int TOTAL_WAIT_IN_SECOND = 30;
-        private const string NOT_LOGGED_IN_MESSAGE = "Please log in to proceed.";
 
         private readonly TheWizardsGameShopContext _context;
 
@@ -36,7 +35,7 @@ namespace TheWizardsGameShop.Controllers
             string actionName = controller.ControllerContext.RouteData.Values["action"].ToString();
             string controllerName = controller.ControllerContext.RouteData.Values["controller"].ToString();
 
-            TempData["LoginMessage"] = NOT_LOGGED_IN_MESSAGE;
+            TempData["LoginMessage"] = UserHelper.NOT_LOGGED_IN_MESSAGE;
             TempData["RequestedActionName"] = actionName;
             TempData["RequestedControllerName"] = controllerName;
 
@@ -278,7 +277,7 @@ namespace TheWizardsGameShop.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(String? actionName, String? controllerName, [Bind("UserName, PasswordHash")] WizardsUser users)
         {
-            TempData["LoginMessage"] = NOT_LOGGED_IN_MESSAGE;
+            TempData["LoginMessage"] = UserHelper.NOT_LOGGED_IN_MESSAGE;
             TempData["RequestedActionName"] = actionName;
             TempData["RequestedControllerName"] = controllerName;
 

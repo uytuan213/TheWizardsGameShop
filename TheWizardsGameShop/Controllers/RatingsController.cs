@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,11 @@ namespace TheWizardsGameShop.Controllers
         // GET: Ratings
         public async Task<IActionResult> Index()
         {
-            var theWizardsGameShopContext = _context.Rating.Include(r => r.Game).Include(r => r.User);
+            if (!UserHelper.IsLoggedIn(HttpContext))
+            {
+                RequireLogin(this);
+            }
+            var theWizardsGameShopContext = _context.Rating.Include(r => r.Game).Where(c => c.UserId.Equals(HttpContext.Session.GetInt32("userId")));
             return View(await theWizardsGameShopContext.ToListAsync());
         }
 
@@ -55,8 +60,12 @@ namespace TheWizardsGameShop.Controllers
         // GET: Ratings/Create
         public IActionResult Create()
         {
-            ViewData["GameId"] = new SelectList(_context.Game, "GameId", "GameDigitalPath");
-            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email");
+            if (!UserHelper.IsLoggedIn(HttpContext))
+            {
+                RequireLogin(this);
+            }
+
+            ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             return View();
         }
 
@@ -73,8 +82,12 @@ namespace TheWizardsGameShop.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GameId"] = new SelectList(_context.Game, "GameId", "GameDigitalPath", rating.GameId);
-            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", rating.UserId);
+
+            if (UserHelper.IsLoggedIn(HttpContext))
+            {
+                ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
+            }
+
             return View(rating);
         }
 
@@ -91,8 +104,13 @@ namespace TheWizardsGameShop.Controllers
             {
                 return NotFound();
             }
-            ViewData["GameId"] = new SelectList(_context.Game, "GameId", "GameDigitalPath", rating.GameId);
-            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", rating.UserId);
+
+            if (!UserHelper.IsLoggedIn(HttpContext))
+            {
+                RequireLogin(this);
+            }
+
+            ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             return View(rating);
         }
 
@@ -128,8 +146,11 @@ namespace TheWizardsGameShop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GameId"] = new SelectList(_context.Game, "GameId", "GameDigitalPath", rating.GameId);
-            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", rating.UserId);
+
+            if (UserHelper.IsLoggedIn(HttpContext))
+            {
+                ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
+            }
             return View(rating);
         }
 
@@ -169,11 +190,16 @@ namespace TheWizardsGameShop.Controllers
             return _context.Rating.Any(e => e.RatingId == id);
         }
 
-        public double CalculateAvgRating(int gameId)
+        private RedirectToActionResult RequireLogin(Controller controller)
         {
-            var avg = _context.Rating.Where(r => r.GameId.Equals(gameId)).Select(r => r.Rate).Average();
+            string actionName = controller.ControllerContext.RouteData.Values["action"].ToString();
+            string controllerName = controller.ControllerContext.RouteData.Values["controller"].ToString();
 
-            return avg;
+            TempData["LoginMessage"] = UserHelper.NOT_LOGGED_IN_MESSAGE;
+            TempData["RequestedActionName"] = actionName;
+            TempData["RequestedControllerName"] = controllerName;
+
+            return RedirectToAction("Login", "Users");
         }
     }
 }

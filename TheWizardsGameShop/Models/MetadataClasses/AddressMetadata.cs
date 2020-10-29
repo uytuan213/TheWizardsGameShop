@@ -65,6 +65,11 @@ namespace TheWizardsGameShop.Models
             ErrorMessage = "Postal code invalid!")]
         public string PostalCode { get; set; }
 
+        [Display(Name = "Address type")]
+        [Required]
+        public int AddressTypeId { get; set; }
+
+        public virtual AddressType AddressType { get; set; }
         public virtual Province ProvinceCodeNavigation { get; set; }
         public virtual WizardsUser User { get; set; }
     }

@@ -12,8 +12,6 @@ namespace TheWizardsGameShop.Controllers
 {
     public class AddressesController : Controller
     {
-        private const string NOT_LOGGED_IN_MESSAGE = "Please log in to proceed.";
-
         private readonly TheWizardsGameShopContext _context;
 
         public AddressesController(TheWizardsGameShopContext context)
@@ -26,7 +24,7 @@ namespace TheWizardsGameShop.Controllers
             string actionName = controller.ControllerContext.RouteData.Values["action"].ToString();
             string controllerName = controller.ControllerContext.RouteData.Values["controller"].ToString();
 
-            TempData["LoginMessage"] = NOT_LOGGED_IN_MESSAGE;
+            TempData["LoginMessage"] = UserHelper.NOT_LOGGED_IN_MESSAGE;
             TempData["RequestedActionName"] = actionName;
             TempData["RequestedControllerName"] = controllerName;
 
@@ -36,7 +34,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: Addresses
         public async Task<IActionResult> Index()
         {
-            if (!IsLoggedIn())
+            if (!UserHelper.IsLoggedIn(HttpContext))
             {
                 return RequireLogin(this);
             }
@@ -56,7 +54,6 @@ namespace TheWizardsGameShop.Controllers
 
             var address = await _context.Address
                 .Include(a => a.ProvinceCodeNavigation)
-                .Include(a => a.User)
                 .FirstOrDefaultAsync(m => m.AddressId == id);
             if (address == null)
             {
@@ -69,12 +66,13 @@ namespace TheWizardsGameShop.Controllers
         // GET: Addresses/Create
         public IActionResult Create()
         {
-            if (!IsLoggedIn())
+            if (!UserHelper.IsLoggedIn(HttpContext))
             {
                 return RequireLogin(this);
             }
 
             ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceName");
+            ViewData["AddressType"] = new SelectList(_context.AddressType, "AddressTypeId", "AddressTypeName");
             //ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserName", "Email");
             ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             return View();
@@ -85,7 +83,7 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AddressId,UserId,Street1,Street2,City,ProvinceCode,PostalCode")] Address address)
+        public async Task<IActionResult> Create([Bind("AddressId,UserId,Street1,Street2,City,ProvinceCode,PostalCode, AddressTypeId")] Address address)
         {
             if (ModelState.IsValid)
             {
@@ -94,9 +92,9 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceName", address.ProvinceCode);
-            
+            ViewData["AddressType"] = new SelectList(_context.AddressType, "AddressTypeId", "AddressTypeName");
             ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", address.UserId);
-            if (IsLoggedIn())
+            if (UserHelper.IsLoggedIn(HttpContext))
             {
                 ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             }
@@ -106,7 +104,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: Addresses/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (!IsLoggedIn())
+            if (!UserHelper.IsLoggedIn(HttpContext))
             {
                 return RequireLogin(this);
             }
@@ -131,7 +129,7 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AddressId,UserId,Street1,Street2,City,ProvinceCode,PostalCode")] Address address)
+        public async Task<IActionResult> Edit(int id, [Bind("AddressId,UserId,Street1,Street2,City,ProvinceCode,PostalCode, AddressTypeId")] Address address)
         {
             if (id != address.AddressId)
             {
@@ -159,6 +157,7 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceCode", address.ProvinceCode);
+            ViewData["AddressType"] = new SelectList(_context.AddressType, "AddressTypeId", "AddressTypeName");
             ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", address.UserId);
             return View(address);
         }
@@ -166,7 +165,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: Addresses/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (!IsLoggedIn())
+            if (!UserHelper.IsLoggedIn(HttpContext))
             {
                 return RequireLogin(this);
             }
@@ -204,11 +203,6 @@ namespace TheWizardsGameShop.Controllers
         public bool AddressExists(int id)
         {
             return _context.Address.Any(e => e.AddressId == id);
-        }
-
-        private bool IsLoggedIn()
-        {
-            return HttpContext.Session.GetInt32("userId") != null;
         }
     }
 }

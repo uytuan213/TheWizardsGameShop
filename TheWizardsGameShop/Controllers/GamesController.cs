@@ -57,6 +57,8 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
 
+            ViewBag.AvgRating = CalculateAvgRating((int)id);
+
             return View(game);
         }
 
@@ -220,6 +222,13 @@ namespace TheWizardsGameShop.Controllers
                                             .Take(PAGE_SIZE);
 
             return View(await searchResult.ToListAsync());
+        }
+
+        public double CalculateAvgRating(int gameId)
+        {
+            var avg = _context.Rating.Where(r => r.GameId.Equals(gameId)).Select(r => r.Rate).Average();
+
+            return avg;
         }
 
         private bool GameExists(int id)

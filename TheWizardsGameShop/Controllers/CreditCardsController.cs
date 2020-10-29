@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,8 +22,13 @@ namespace TheWizardsGameShop.Controllers
         // GET: CreditCards
         public async Task<IActionResult> Index()
         {
-            var theWizardsGameShopContext = _context.CreditCard.Include(c => c.User);
-            return View(await theWizardsGameShopContext.ToListAsync());
+            if (!UserHelper.IsLoggedIn(HttpContext))
+            {
+                RequireLogin(this);
+            }
+
+            var creditCards = _context.CreditCard.Where(c => c.UserId.Equals(HttpContext.Session.GetInt32("userId")));
+            return View(await creditCards.ToListAsync());
         }
 
         // GET: CreditCards/Details/5
@@ -34,7 +40,6 @@ namespace TheWizardsGameShop.Controllers
             }
 
             var creditCard = await _context.CreditCard
-                .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.CreditCardId == id);
             if (creditCard == null)
             {
@@ -47,7 +52,12 @@ namespace TheWizardsGameShop.Controllers
         // GET: CreditCards/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email");
+            if (!UserHelper.IsLoggedIn(HttpContext))
+            {
+                RequireLogin(this);
+            }
+
+            ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             return View();
         }
 
@@ -64,7 +74,11 @@ namespace TheWizardsGameShop.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", creditCard.UserId);
+
+            if (UserHelper.IsLoggedIn(HttpContext))
+            {
+                ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
+            }
             return View(creditCard);
         }
 
@@ -81,7 +95,14 @@ namespace TheWizardsGameShop.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", creditCard.UserId);
+
+            if (!UserHelper.IsLoggedIn(HttpContext))
+            {
+                RequireLogin(this);
+            }
+
+            ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
+
             return View(creditCard);
         }
 
@@ -117,7 +138,11 @@ namespace TheWizardsGameShop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", creditCard.UserId);
+
+            if (UserHelper.IsLoggedIn(HttpContext))
+            {
+                ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
+            }
             return View(creditCard);
         }
 
@@ -157,6 +182,18 @@ namespace TheWizardsGameShop.Controllers
         private bool CreditCardExists(int id)
         {
             return _context.CreditCard.Any(e => e.CreditCardId == id);
+        }
+
+        private RedirectToActionResult RequireLogin(Controller controller)
+        {
+            string actionName = controller.ControllerContext.RouteData.Values["action"].ToString();
+            string controllerName = controller.ControllerContext.RouteData.Values["controller"].ToString();
+
+            TempData["LoginMessage"] = UserHelper.NOT_LOGGED_IN_MESSAGE;
+            TempData["RequestedActionName"] = actionName;
+            TempData["RequestedControllerName"] = controllerName;
+
+            return RedirectToAction("Login", "Users");
         }
     }
 }
