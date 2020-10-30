@@ -163,6 +163,11 @@ tr:last-of-type td {
     text-align: center;
 }
 
+.link {
+    color: var(--color-brand);
+    cursor: pointer;
+}
+
 .link:hover,
 .link:active,
 .link:focus {
@@ -179,6 +184,11 @@ tr:last-of-type td {
     font-weight: 500;
     color: var(--color-text-lighter);
     line-height: 1em;
+}
+
+.btn-s {
+    padding: var(--spacing-xxs) var(--spacing-xs);
+    border-width: 1px;
 }
 
 .btn:hover,
@@ -272,6 +282,19 @@ header {
 
 .nav-logo img {
     height: var(--nav-height);
+}
+
+.nav-search {
+    border: none;
+    background: var(--color-background-lighter);
+    border-radius: var(--border-radius-max);
+    padding: var(--spacing-xxs) var(--spacing-s);
+    font-weight: 600;
+    width: 360px;
+}
+
+.nav-search::placeholder {
+    font-weight: 300;
 }
 
 .nav-menu {
@@ -382,6 +405,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000 !important;
 }
 
 .modal-blocker {
@@ -391,6 +415,7 @@ footer {
     left: 0;
     top: 0;
     background-color: rgba(255, 255, 255, 0.5);
+    animation: fade-in 0.1s ease-out;
 }
 
 .modal-window {
@@ -400,6 +425,8 @@ footer {
     width: 90%;
     max-width: 500px;
     position: relative;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.07);
+    animation: fade-in-upward-s 0.2s ease-out;
 }
 
 .modal-buttons {
@@ -499,7 +526,41 @@ input[type=number].form-control:read-only {
     }
 }
 
-@keyframes home-header-heading {
+@keyframes fade-in {
+    from {
+        opacity: 0.2;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fade-in-upward {
+    from {
+        opacity: 0.2;
+        transform: translateY(5%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-in-upward-s {
+    from {
+        opacity: 0.2;
+        transform: translateY(2.5%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-in-upward-l {
     from {
         opacity: 0.2;
         transform: translateY(10%);
@@ -530,7 +591,7 @@ input[type=number].form-control:read-only {
     -webkit-text-fill-color: transparent;
     text-shadow: none;
     font-size: 3em;
-    animation: home-header-heading 1s ease-in-out;
+    animation: fade-in-upward-l 1s ease-out;
 }
 
 #pageHome section {
@@ -642,6 +703,7 @@ input[type=number].form-control:read-only {
 #pageCreditCards .list .item {
     width: 31.33%;
     margin: 1%;
+    min-height: 180px;
 }
 
 #pageAddresses .list .item.add,

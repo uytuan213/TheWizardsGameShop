@@ -1,64 +1,61 @@
 ﻿@model TheWizardsGameShop.Models.Game
 
-@{
-    ViewData["Title"] = "Create";
-}
+@{ ViewData["Title"] = "Add New Game"; }
 
-<h1>Create</h1>
-
-<h4>Game</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="GameId" class="control-label"></label>
-                <input asp-for="GameId" class="form-control" />
-                <span asp-validation-for="GameId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GameStatusCode" class="control-label"></label>
-                <select asp-for="GameStatusCode" class ="form-control" asp-items="ViewBag.GameStatusCode"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="GameCategoryId" class="control-label"></label>
-                <select asp-for="GameCategoryId" class ="form-control" asp-items="ViewBag.GameCategoryId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="GameName" class="control-label"></label>
-                <input asp-for="GameName" class="form-control" />
-                <span asp-validation-for="GameName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GameDescription" class="control-label"></label>
-                <input asp-for="GameDescription" class="form-control" />
-                <span asp-validation-for="GameDescription" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GamePrice" class="control-label"></label>
-                <input asp-for="GamePrice" class="form-control" />
-                <span asp-validation-for="GamePrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GameQty" class="control-label"></label>
-                <input asp-for="GameQty" class="form-control" />
-                <span asp-validation-for="GameQty" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GameDigitalPath" class="control-label"></label>
-                <input asp-for="GameDigitalPath" class="form-control" />
-                <span asp-validation-for="GameDigitalPath" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="page contents" id="pageGames">
+    <div class="page-header page-header-full flex-center">
+        <h1>Games</h1>
     </div>
-</div>
+    <div class="row page-body">
+        <div class="col-md-4">
+            <form asp-action="Create" class="narrow">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="GameId" class="control-label"></label>
+                    <input asp-for="GameId" class="form-control" />
+                    <span asp-validation-for="GameId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="GameStatusCode" class="control-label"></label>
+                    <select asp-for="GameStatusCode" class="form-control" asp-items="ViewBag.GameStatusCode"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="GameCategoryId" class="control-label"></label>
+                    <select asp-for="GameCategoryId" class="form-control" asp-items="ViewBag.GameCategoryId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="GameName" class="control-label"></label>
+                    <input asp-for="GameName" class="form-control" />
+                    <span asp-validation-for="GameName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="GameDescription" class="control-label"></label>
+                    <input asp-for="GameDescription" class="form-control" />
+                    <span asp-validation-for="GameDescription" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="GamePrice" class="control-label"></label>
+                    <input asp-for="GamePrice" class="form-control" />
+                    <span asp-validation-for="GamePrice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="GameQty" class="control-label"></label>
+                    <input asp-for="GameQty" class="form-control" />
+                    <span asp-validation-for="GameQty" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="GameDigitalPath" class="control-label"></label>
+                    <input asp-for="GameDigitalPath" class="form-control" />
+                    <span asp-validation-for="GameDigitalPath" class="text-danger"></span>
+                </div>
+                <div class="form-buttons text-center">
+                    <input type="submit" value="Add Game" class="btn btn-primary" />
+                    <a asp-action="Admin" class="btn">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

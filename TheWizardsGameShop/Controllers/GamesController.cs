@@ -19,8 +19,8 @@ namespace TheWizardsGameShop.Controllers
             _context = context;
         }
 
-        // GET: Games
-        public async Task<IActionResult> Index(int pageNo=1)
+        // GET: Games/Admin
+        public async Task<IActionResult> Admin(int pageNo=1)
         {
             if (pageNo <= 0)
             {
@@ -40,6 +40,13 @@ namespace TheWizardsGameShop.Controllers
             }
             return View(await games.ToListAsync());
         }
+
+        // GET: Games
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.Game.ToListAsync());
+        }
+
         // GET: Games/Details/5
         public async Task<IActionResult> Details(int? id)
         {

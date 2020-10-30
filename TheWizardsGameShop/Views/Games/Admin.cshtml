@@ -1,0 +1,76 @@
+﻿@model IEnumerable<TheWizardsGameShop.Models.Game>
+
+@{ ViewData["Title"] = "Games"; }
+
+<div class="page contents" id="pageGames">
+    <div class="page-header page-header-full flex-center">
+        <h1>Games</h1>
+    </div>
+    <div class="page-body">
+        <p class="page-submenu">
+            <a asp-controller="Users" asp-action="Menu" class="item">&lt; Back to Menu</a>
+            <span class="float-right">
+                <a asp-action="Create" class="btn btn-s btn-primary">Add Game</a>
+            </span>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GameName)
+                    </th>
+                    @*<th>
+                        @Html.DisplayNameFor(model => model.GameDescription)
+                    </th>*@
+                    <th>
+                        @Html.DisplayNameFor(model => model.GamePrice)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GameQty)
+                    </th>
+                    @*<th>
+                        @Html.DisplayNameFor(model => model.GameDigitalPath)
+                    </th>*@
+                    <th>
+                        @Html.DisplayNameFor(model => model.GameCategory)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GameStatusCodeNavigation)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+    <tr>
+        <td>
+            <a asp-action="Details" asp-route-id="@item.GameId" class="link">@Html.DisplayFor(modelItem => item.GameName)</a>
+        </td>
+        @*<td>
+            @Html.DisplayFor(modelItem => item.GameDescription)
+        </td>*@
+        <td>
+            $@Html.DisplayFor(modelItem => item.GamePrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GameQty)
+        </td>
+        @*<td>
+            @Html.DisplayFor(modelItem => item.GameDigitalPath)
+        </td>*@
+        <td>
+            @Html.DisplayFor(modelItem => item.GameCategory.GameCategory1)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GameStatusCodeNavigation.GameStatusCode)
+        </td>
+        <td>
+            <a asp-action="Edit" asp-route-id="@item.GameId" class="btn btn-s">Edit</a>
+            <a asp-action="Delete" asp-route-id="@item.GameId" class="btn btn-s">Delete</a>
+        </td>
+    </tr>}
+            </tbody>
+        </table>
+    </div>
+</div>

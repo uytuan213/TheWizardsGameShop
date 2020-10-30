@@ -31,19 +31,25 @@
     <header class="flex-center">
         <nav class="nav contents flex-center-vertical">
             <a class="nav-logo" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/logo.png" title="The Wizards' Game Shop" alt="The Wizards' Game Shop" /></a>
-            <ul class="nav-menu flex-center-vertical">
+            @*<ul class="nav-menu flex-center-vertical">
                 <li>
                     <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                 </li>
                 <li>
                     <a asp-area="" asp-controller="Games" asp-action="Index">Browse</a>
                 </li>
-            </ul>
+            </ul>*@
+        <form>
+            <input placeholder="Search" class="nav-search" id="nav-search" name="nav-search" />
+        </form>
             <ul class="nav-menu flex-center-vertical absolute-right">
                 @if (isLoggedIn)
                 {
                     <li>
                         <a asp-area="" asp-controller="Users" asp-action="Menu" class="account flex-center-vertical"><span class="material-icons">account_circle</span>@session.GetString("userName")</a>
+                    </li>
+                    <li>
+                        <a onclick="alert('Not available', 'Coming soon');">Cart</a>
                     </li>
                     <li>
                         <a asp-area="" asp-controller="Users" asp-action="Logout">Logout</a>
