@@ -20,27 +20,39 @@ namespace TheWizardsGameShop.Controllers
         }
 
         // GET: Games
-        public async Task<IActionResult> Index(int pageNo = 1)
+        public async Task<IActionResult> Index(int pageNo=1, int? categoryId=null)
         {
             if (pageNo <= 0)
             {
                 return NotFound();
             }
-            int totalGames = _context.Game.Count();
-            ViewBag.totalPages = GetTotalPages(totalGames);
-
-            var games = _context.Game.Include(g => g.GameCategory)
+            int totalGames;
+            IQueryable<Game> games;
+            if (categoryId == null)
+            {
+                totalGames = _context.Game.Count();
+                games = _context.Game.Include(g => g.GameCategory)
                                      .Include(g => g.GameStatusCodeNavigation)
                                      .Skip((pageNo - 1) * PAGE_SIZE)
                                      .Take(PAGE_SIZE);
+            }
+            else
+            {
+                totalGames = _context.Game.Where(g => g.GameCategoryId.Equals(categoryId)).Count();
+                games = _context.Game.Include(g => g.GameCategory)
+                                     .Include(g => g.GameStatusCodeNavigation)
+                                     .Where(g => g.GameCategoryId.Equals(categoryId))
+                                     .Skip((pageNo - 1) * PAGE_SIZE)
+                                     .Take(PAGE_SIZE);
+            }
+
+            ViewBag.totalPages = GetTotalPages(totalGames);
             if (games.Count() == 0)
             {
                 TempData["errorMessage"] = "This page does not exist";
                 return NotFound();
             }
             return View(await games.ToListAsync());
-
-            //return View(await _context.Game.ToListAsync());
         }
 
         // GET: Games/Admin
@@ -253,7 +265,9 @@ namespace TheWizardsGameShop.Controllers
 
         public double CalculateAvgRating(int gameId)
         {
-            var avg = _context.Rating.Where(r => r.GameId.Equals(gameId)).Select(r => r.Rate).Average();
+            var avg = 0d;
+            if (_context.Rating.Where(r => r.GameId.Equals(gameId)).Any())
+                avg = _context.Rating.Where(r => r.GameId.Equals(gameId)).Select(r => r.Rate).Average();
 
             return avg;
         }
