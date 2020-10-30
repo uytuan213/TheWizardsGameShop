@@ -27,7 +27,9 @@ namespace TheWizardsGameShop.Controllers
 
             webReport.Report.Dictionary.Connections.Add(sqlConnection);
             webReport.Report.Load($".//Reports//{reportName}.frx");
-            
+            webReport.ShowPreparedReport = false;
+            webReport.ShowExports = false;
+
             ViewBag.report = webReport;
             return View();
         }

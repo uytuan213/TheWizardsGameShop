@@ -19,8 +19,8 @@ namespace TheWizardsGameShop.Controllers
             _context = context;
         }
 
-        // GET: Games/Admin
-        public async Task<IActionResult> Admin(int pageNo=1)
+        // GET: Games
+        public async Task<IActionResult> Index(int pageNo = 1)
         {
             if (pageNo <= 0)
             {
@@ -39,12 +39,32 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
             return View(await games.ToListAsync());
+
+            //return View(await _context.Game.ToListAsync());
         }
 
-        // GET: Games
-        public async Task<IActionResult> Index()
+        // GET: Games/Admin
+        public async Task<IActionResult> Admin(int pageNo = 1)
         {
-            return View(await _context.Game.ToListAsync());
+            if (!UserHelper.IsEmployee(this)) return UserHelper.RequireEmployee(this);
+
+            if (pageNo <= 0)
+            {
+                return NotFound();
+            }
+            int totalGames = _context.Game.Count();
+            ViewBag.totalPages = GetTotalPages(totalGames);
+
+            var games = _context.Game.Include(g => g.GameCategory)
+                                     .Include(g => g.GameStatusCodeNavigation)
+                                     .Skip((pageNo - 1) * PAGE_SIZE)
+                                     .Take(PAGE_SIZE);
+            if (games.Count() == 0)
+            {
+                TempData["errorMessage"] = "This page does not exist";
+                return NotFound();
+            }
+            return View(await games.ToListAsync());
         }
 
         // GET: Games/Details/5
