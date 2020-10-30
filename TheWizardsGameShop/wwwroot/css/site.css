@@ -4,6 +4,7 @@
     --nav-height: 40px;
     --footer-height: 100px;
     --page-header-height: 200px;
+    --page-header-short-height: 100px;
     --spacing-xxs: 6px;
     --spacing-xs: 10px;
     --spacing-s: 15px;
@@ -14,6 +15,7 @@
     --color-text: #2a2a2a;
     --color-text-lighter: #5f5f68;
     --color-brand: #8c84bf;
+    --color-employee: gray;
     --color-border: #d8dbea;
     --color-border-darker: #c7c7d8;
     --color-background: #e6e7ed; /* rgb(230, 231, 237) */
@@ -284,6 +286,14 @@ header {
     height: var(--nav-height);
 }
 
+.nav-mode {
+    color: white;
+    background: var(--color-brand);
+    border-radius: var(--border-radius-max);
+    padding: var(--spacing-xxs) var(--spacing-s);
+    font-weight: 600;
+}
+
 .nav-search {
     border: none;
     background: var(--color-background-lighter);
@@ -370,15 +380,28 @@ footer {
 }
 
 .page-header {
-    border-bottom: var(--border);
-    margin: 0 var(--spacing-xl);
     height: var(--page-header-height);
+    padding: 0 var(--spacing-xl);
 }
 
-.page-header.page-header-full {
-    border-bottom: none;
-    padding: 0 var(--spacing-xl);
-    margin: 0;
+.page-header.nobackground {
+    padding: 0;
+    margin: 0 var(--spacing-xl);
+    border-bottom: var(--border);
+}
+
+.page-header.short {
+    height: var(--page-header-short-height);
+    text-align: left;
+}
+
+.page-header.short h1 {
+    font-size: 2em;
+}
+
+.page-header.short h1 .material-icons {
+    transform: scale(1.25);
+    margin-right: var(--spacing-s);
 }
 
 .page-header h4 {
@@ -415,7 +438,8 @@ footer {
     left: 0;
     top: 0;
     background-color: rgba(255, 255, 255, 0.5);
-    animation: fade-in 0.1s ease-out;
+    /*animation: fade-in 0.1s ease-out;*/
+    backdrop-filter: blur(2px);
 }
 
 .modal-window {
@@ -426,7 +450,9 @@ footer {
     max-width: 500px;
     position: relative;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.07);
-    animation: fade-in-upward-s 0.2s ease-out;
+    animation: fade-in-upward-s 0.1s cubic-bezier(0, 0.85, 0.95, 1);
+    /*backdrop-filter: blur(10px);*/
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
 .modal-buttons {
@@ -631,54 +657,50 @@ input[type=number].form-control:read-only {
     color: var(--color-text-lighter);
 }
 
-/* Sign Up Page */
-#pageSignUp .page-header {
+/* My Account, Employee Portal Page */
+.page[--data-theme="my-account"] .page-header {
     background-color: var(--color-brand);
     background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255,255,255,0.2));
     color: white;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* Profile Page */
-#pageProfile .page-header {
-    background-color: var(--color-brand);
+.page[--data-theme="employee-portal"] .page-header {
+    background-color: var(--color-employee);
     background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255,255,255,0.2));
     color: white;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* My Account Page */
-#pageMyAccount .page-header {
-    background-color: var(--color-brand);
-    background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255,255,255,0.2));
-    color: white;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-#pageMyAccount .list {
+#pageMyAccount .list,
+#pageEmployeePortal .list {
     margin: -2% auto -2% auto;
     padding: 2.5% 0;
 }
 
-#pageMyAccount .list .item {
+#pageMyAccount .list .item,
+#pageEmployeePortal .list .item {
     text-align: center;
     width: 29.3%;
     margin: 2%;
     padding: var(--spacing) var(--spacing-s);
 }
 
-#pageMyAccount .list .item p {
+#pageMyAccount .list .item p,
+#pageEmployeePortal .list .item p {
     width: 100%;
     font-size: 1.5em;
 }
 
-#pageMyAccount .list .item h5 {
+#pageMyAccount .list .item h5,
+#pageEmployeePortal .list .item h5 {
     width: 100%;
     color: var(--color-text-lighter);
     height: 40px;
 }
 
-#pageMyAccount .list .item .material-icons {
+#pageMyAccount .list .item .material-icons,
+#pageEmployeePortal .list .item .material-icons {
     display: block;
     font-size: 3em;
     color: var(--color-brand);

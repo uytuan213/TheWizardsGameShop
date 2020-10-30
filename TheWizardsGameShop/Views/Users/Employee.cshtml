@@ -1,22 +1,20 @@
-﻿@{ ViewData["Title"] = "Employee Portal"; }
+﻿@{ 
+    ViewData["Title"] = "Employee Portal";
+    ViewData["HeaderMode"] = "Employee";
+}
 
-<div class="page contents" id="pageMyAccount">
-    <div class="page-header page-header-full flex-center">
+<div class="page contents" id="pageEmployeePortal" --data-theme="employee-portal">
+    <div class="page-header flex-center">
         <h1>Employee Portal</h1>
     </div>
     <div class="page-body">
         <div class="list narrow">
-            <a asp-action="Edit" class="item clickable flex-center">
-                <span class="material-icons">person</span>
-                <p>Profile</p>
-                <h5>Edit personal info such as name, phone number, and email address</h5>
-            </a>
             <a asp-controller="Games" asp-action="Admin" class="item clickable flex-center">
                 <span class="material-icons">category</span>
                 <p>Manage Games</p>
                 <h5>Add, edit and delete games</h5>
             </a>
-            <a asp-controller="Reviews" asp-action="Index" class="item clickable flex-center">
+            <a asp-controller="Reviews" asp-action="Admin" class="item clickable flex-center">
                 <span class="material-icons">comment</span>
                 <p>Manage Reviews</p>
                 <h5>View and publish user reviews</h5>

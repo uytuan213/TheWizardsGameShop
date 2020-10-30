@@ -1,14 +1,17 @@
 ﻿@model IEnumerable<TheWizardsGameShop.Models.Game>
 
-@{ ViewData["Title"] = "Games"; }
+@{ 
+    ViewData["Title"] = "Manage Games";
+    ViewData["HeaderMode"] = "Employee";
+}
 
-<div class="page contents" id="pageGames">
-    <div class="page-header page-header-full flex-center">
-        <h1>Games</h1>
+<div class="page contents" id="pageGames" --data-theme="employee-portal">
+    <div class="page-header short flex-center-vertical">
+        <h1><span class="material-icons">category</span>Games</h1>
     </div>
     <div class="page-body">
         <p class="page-submenu">
-            <a asp-controller="Users" asp-action="Menu" class="item">&lt; Back to Menu</a>
+            <a asp-controller="Users" asp-action="Employee" class="item">&lt; Back to Menu</a>
             <span class="float-right">
                 <a asp-action="Create" class="btn btn-s btn-primary">Add Game</a>
             </span>

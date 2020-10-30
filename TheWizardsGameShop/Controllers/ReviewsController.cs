@@ -27,6 +27,14 @@ namespace TheWizardsGameShop.Controllers
             return View(await theWizardsGameShopContext.ToListAsync());
         }
 
+        // GET: Reviews/Admin
+        public async Task<IActionResult> Admin()
+        {
+            if (!UserHelper.IsEmployee(this)) return UserHelper.RequireEmployee(this);
+            var theWizardsGameShopContext = _context.Review.Include(r => r.Game).Where(c => c.UserId.Equals(HttpContext.Session.GetInt32("userId")));
+            return View(await theWizardsGameShopContext.ToListAsync());
+        }
+
         // GET: Reviews/Details/5
         public async Task<IActionResult> Details(int? id)
         {

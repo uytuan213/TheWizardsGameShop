@@ -1,12 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Http;
 @inject IHttpContextAccessor HttpContextAccessor
 
-@{ 
+@{
     var session = HttpContextAccessor.HttpContext.Session;
     var isLoggedIn = session.GetInt32("userId") != null;
     var showModal = !String.IsNullOrEmpty(session.GetString("modalTitle"));
     var modalTitle = session.GetString("modalTitle");
     var modalMessage = session.GetString("modalMessage");
+    string headerMode = (string)ViewData["headerMode"];
 }
 
 <!DOCTYPE html>
@@ -30,20 +31,40 @@
 <body>
     <header class="flex-center">
         <nav class="nav contents flex-center-vertical">
-            <a class="nav-logo" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/logo.png" title="The Wizards' Game Shop" alt="The Wizards' Game Shop" /></a>
+            @if (headerMode != "Employee")
+            {
+                <a class="nav-logo" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/logo.png" title="The Wizards' Game Shop" alt="The Wizards' Game Shop" /></a>
+            }
+            else
+            {
+                <a class="nav-logo" asp-area="" asp-controller="Users" asp-action="Employee"><img src="~/images/logo.png" title="The Wizards' Game Shop" alt="The Wizards' Game Shop" /></a>
+                <div class="nav-mode">Employee</div>
+            }
+
             @*<ul class="nav-menu flex-center-vertical">
-                <li>
-                    <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="Games" asp-action="Index">Browse</a>
-                </li>
-            </ul>*@
-        <form>
-            <input placeholder="Search" class="nav-search" id="nav-search" name="nav-search" />
-        </form>
-            <ul class="nav-menu flex-center-vertical absolute-right">
-                @if (isLoggedIn)
+            <li>
+                <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+            </li>
+            <li>
+                <a asp-area="" asp-controller="Games" asp-action="Index">Browse</a>
+            </li>
+        </ul>*@
+            @if (headerMode != "Employee")
+            {
+                <form>
+                    <input placeholder="Search" class="nav-search" id="nav-search" name="nav-search" />
+                </form>
+            }
+        <ul class="nav-menu flex-center-vertical absolute-right">
+            @if (isLoggedIn)
+            {
+                @if (headerMode == "Employee")
+                {
+                    <li>
+                        <a nohref class="account flex-center-vertical"><span class="material-icons">account_circle</span>@session.GetString("userName")</a>
+                    </li>
+                }
+                else
                 {
                     <li>
                         <a asp-area="" asp-controller="Users" asp-action="Menu" class="account flex-center-vertical"><span class="material-icons">account_circle</span>@session.GetString("userName")</a>
@@ -51,20 +72,21 @@
                     <li>
                         <a onclick="alert('Not available', 'Coming soon');">Cart</a>
                     </li>
-                    <li>
-                        <a asp-area="" asp-controller="Users" asp-action="Logout">Logout</a>
-                    </li>
                 }
-                else
-                {
-                    <li>
-                        <a asp-area="" asp-controller="Users" asp-action="Login">Login</a>
-                    </li>
-                    <li>
-                        <a asp-area="" asp-controller="Users" asp-action="Create">Sign Up</a>
-                    </li>
-                }
-            </ul>
+                <li>
+                    <a asp-area="" asp-controller="Users" asp-action="Logout">Logout</a>
+                </li>
+            }
+            else
+            {
+                <li>
+                    <a asp-area="" asp-controller="Users" asp-action="Login">Login</a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Users" asp-action="Create">Sign Up</a>
+                </li>
+            }
+        </ul>
         </nav>
     </header>
     <main role="main">

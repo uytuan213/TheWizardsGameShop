@@ -1,5 +1,23 @@
-﻿<div class="container">
-    <div style="margin-left:600px">
-        @await ViewBag.report.Render()
+﻿@model IEnumerable<TheWizardsGameShop.Models.Review>
+
+@{ 
+    ViewData["Title"] = "Reports";
+    ViewData["HeaderMode"] = "Employee"; 
+}
+
+<div class="page contents" id="pageReviews" --data-theme="employee-portal">
+    <div class="page-header short flex-center-vertical">
+        <h1><span class="material-icons">content_paste</span>Reports</h1>
+    </div>
+    <div class="page-body">
+        <p class="page-submenu">
+            <a asp-controller="Users" asp-action="Employee" class="item">&lt; Back to Menu</a>
+            <span class="float-right">
+                <a asp-action="Create" class="btn btn-s btn-primary">Add Game</a>
+            </span>
+        </p>
+        <div class="flex-center" style="width: 100%;">
+            @await ViewBag.report.Render()
+        </div>
     </div>
 </div>
