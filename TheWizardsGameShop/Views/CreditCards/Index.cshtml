@@ -19,14 +19,14 @@
             {
     <div class="item">
         <p>
-            @Html.DisplayFor(modelItem => item.CreditCardNumber)
+            @item.CreditCardNumber.Substring(12, 4).PadLeft(16, '*')
         </p>
         <p>
-            @Html.DisplayFor(modelItem => item.ExpiryDate)
+            @item.ExpiryDate.Insert(2, "/")
         </p>
-        <p>
+        @*<p>
             @Html.DisplayFor(modelItem => item.Cvc)
-        </p>
+        </p>*@
         <p>
             @Html.DisplayFor(modelItem => item.CardHolder)
         </p>

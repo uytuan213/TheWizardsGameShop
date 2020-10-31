@@ -61,7 +61,7 @@
                 @if (headerMode == "Employee")
                 {
                     <li>
-                        <a nohref class="account flex-center-vertical"><span class="material-icons">account_circle</span>@session.GetString("userName")</a>
+                        <a nohref class="account flex-center-vertical" style="pointer-events: none;"><span class="material-icons">account_circle</span>@session.GetString("userName")</a>
                     </li>
                 }
                 else

@@ -64,11 +64,13 @@ namespace TheWizardsGameShop.Controllers
         {
             if (ModelState.IsValid)
             {
+                creditCard.ExpiryDate = creditCard.ExpiryDate.Replace("/", "");
                 _context.Add(creditCard);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
+            //ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "UserName", creditCard.UserId);
             if (UserHelper.IsLoggedIn(this))
             {
                 ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
@@ -79,6 +81,8 @@ namespace TheWizardsGameShop.Controllers
         // GET: CreditCards/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
+
             if (id == null)
             {
                 return NotFound();
@@ -90,10 +94,9 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
 
-            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
+            //ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "UserName", creditCard.UserId);
 
-            ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
-
+            ViewData["ExpiryDate"] = creditCard.ExpiryDate.Insert(2, "/");
             return View(creditCard);
         }
 
@@ -113,6 +116,7 @@ namespace TheWizardsGameShop.Controllers
             {
                 try
                 {
+                    creditCard.ExpiryDate = creditCard.ExpiryDate.Replace("/", "");
                     _context.Update(creditCard);
                     await _context.SaveChangesAsync();
                 }
@@ -130,10 +134,7 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            if (UserHelper.IsLoggedIn(this))
-            {
-                ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
-            }
+            //ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "UserName", creditCard.UserId);
             return View(creditCard);
         }
 

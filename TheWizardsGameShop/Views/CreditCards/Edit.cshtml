@@ -11,24 +11,25 @@
             <form asp-action="Edit" class="narrow">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="CreditCardId" />
-                <div class="form-group">
-                    <label asp-for="UserId" class="control-label"></label>
-                    <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-                    <span asp-validation-for="UserId" class="text-danger"></span>
-                </div>
+                <input type="hidden" asp-for="UserId" />
                 <div class="form-group">
                     <label asp-for="CreditCardNumber" class="control-label"></label>
-                    <input asp-for="CreditCardNumber" class="form-control" />
+                    <input asp-for="CreditCardNumber" class="form-control" readonly />
                     <span asp-validation-for="CreditCardNumber" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="ExpiryDate" class="control-label"></label>
-                    <input asp-for="ExpiryDate" class="form-control" />
+                    <div class="flex-space-between">
+                        <div style="width: 40%;">
+                            <label asp-for="ExpiryDate" class="control-label"></label>
+                            <input asp-for="ExpiryDate" class="form-control masked" placeholder="MM/YY" autocomplete="off" pattern="(1[0-2]|0[1-9])\/\d\d" data-valid-example="02/22" />
+                        </div>
+                        <div style="width: 40%;">
+                            <label asp-for="Cvc" class="control-label"></label>
+                            <input asp-for="Cvc" class="form-control" autocomplete="off" />
+                        </div>
+                    </div>
+
                     <span asp-validation-for="ExpiryDate" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Cvc" class="control-label"></label>
-                    <input asp-for="Cvc" class="form-control" />
                     <span asp-validation-for="Cvc" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -44,6 +45,8 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript" src="~/js/masking-input.js" data-autoinit="true"></script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

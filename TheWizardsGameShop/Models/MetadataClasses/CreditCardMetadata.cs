@@ -16,18 +16,34 @@ namespace TheWizardsGameShop.Models
         {
             if (!IsCreditCardValid(CreditCardNumber))
             {
-                yield return new ValidationResult("Credit card number invalid!");
+                yield return new ValidationResult("Credit card number invalid");
             }
 
             if (!string.IsNullOrEmpty(ExpiryDate))
             {
-                var expDate = DateTime.Parse(ExpiryDate);
-
-                // Set the exp date to the last day of month
-                expDate = new DateTime(expDate.Year, expDate.Month, DateTime.DaysInMonth(expDate.Year, expDate.Month));
-                if (expDate < DateTime.Today)
+                var dateDigits = ExpiryDate.Replace("/", "");
+                if (dateDigits.Length == 4 && ValidationHelper.IsNumeric(dateDigits))
                 {
-                    yield return new ValidationResult("The credit card is expired!");
+                    var month = int.Parse(dateDigits.Substring(0, 2));
+                    var year = int.Parse("20" + dateDigits.Substring(2, 2));
+
+                    if (month >= 1 && month <= 12 && year >= 2000 && year <= 2099)
+                    {
+                        // Set the exp date to the last day of month
+                        var expDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
+                        if (expDate < DateTime.Today)
+                        {
+                            yield return new ValidationResult("Credit card expired");
+                        }
+                    }
+                    else
+                    {
+                        yield return new ValidationResult("Expiry date invalid");
+                    }
+                }
+                else
+                {
+                    yield return new ValidationResult("Expiry date invalid");
                 }
             }
 
@@ -66,21 +82,23 @@ namespace TheWizardsGameShop.Models
         public int CreditCardId { get; set; }
         public int UserId { get; set; }
 
-        [Display(Name = "Credit card number")]
+        [Display(Name = "Card number")]
         [Required]
+        [RegularExpression(@"^[0-9]{16}$", ErrorMessage = "Card number must be exactly 16 digits")]
         public string CreditCardNumber { get; set; }
 
-        [Display(Name = "Expiry data")]
+        [Display(Name = "Expiration date")]
         [Required]
+        [RegularExpression(@"^(1[0-2]|0[1-9])\/?\d\d$", ErrorMessage = "Expiry date invalid")]
         public string ExpiryDate { get; set; }
 
-        [Display(Name = "CVC")]
+        [Display(Name = "Security code")]
         [Required]
-        [MaxLength(4, ErrorMessage = "Maximun 4 digits")]
-        [RegularExpression(@"^[0-9]{3,4}$", ErrorMessage = "CVC must be 3 or 4 digit")]
+        [MaxLength(4, ErrorMessage = "Maximum 4 digits")]
+        [RegularExpression(@"^[0-9]{3,4}$", ErrorMessage = "CVC must be 3 or 4 digits")]
         public string Cvc { get; set; }
 
-        [Display(Name = "Card holder")]
+        [Display(Name = "Cardholder name")]
         [Required]
         public string CardHolder { get; set; }
 

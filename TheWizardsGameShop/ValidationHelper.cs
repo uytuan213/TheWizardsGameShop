@@ -51,5 +51,17 @@ namespace TheWizardsGameShop
             Regex pattern = new Regex(@"\D*([2-9]\d{2})(\D*)([2-9]\d{2})(\D*)(\d{4})\D*");
             return pattern.IsMatch(str.Trim());
         }
+
+        public static Boolean IsNumeric(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                return false;
+            }
+            Regex pattern = new Regex(@"^[0-9]*$");
+            return pattern.IsMatch(str.Trim());
+        }
     }
+
+    
 }
