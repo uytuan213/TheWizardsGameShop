@@ -65,7 +65,7 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AddressId,UserId,Street1,Street2,City,ProvinceCode,PostalCode, AddressTypeId")] Address address)
+        public async Task<IActionResult> Create([Bind("AddressId,UserId,Street1,Street2,City,ProvinceCode,PostalCode,AddressTypeId")] Address address)
         {
             if (ModelState.IsValid)
             {
