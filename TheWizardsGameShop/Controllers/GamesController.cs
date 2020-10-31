@@ -12,6 +12,7 @@ namespace TheWizardsGameShop.Controllers
     public class GamesController : Controller
     {
         public const int PAGE_SIZE = 15;
+        public const int SEARCH_SUGGESTIONS_COUNT = 10;
         private readonly TheWizardsGameShopContext _context;
 
         public GamesController(TheWizardsGameShopContext context)
@@ -65,7 +66,7 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
             int totalGames = _context.Game.Count();
-            ViewBag.totalPages = GetTotalPages(totalGames);
+            ViewBag.TotalPages = GetTotalPages(totalGames);
 
             var games = _context.Game.Include(g => g.GameCategory)
                                      .Include(g => g.GameStatusCodeNavigation)
@@ -76,6 +77,8 @@ namespace TheWizardsGameShop.Controllers
                 TempData["errorMessage"] = "This page does not exist";
                 return NotFound();
             }
+
+            ViewBag.PageNo = pageNo;
             return View(await games.ToListAsync());
         }
 
@@ -214,12 +217,11 @@ namespace TheWizardsGameShop.Controllers
         }
 
         // GET: Games/Search
-        public IActionResult Search()
-        {
-            return View();
-        }
+        //public IActionResult Search()
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
         public async Task<IActionResult> Search(string keyword, int pageNo=1)
         {
             if (pageNo <= 0)
@@ -239,7 +241,27 @@ namespace TheWizardsGameShop.Controllers
                 return View(await searchResult.ToListAsync());
             }
 
+            ViewData["SearchKeyword"] = keyword;
             return View();
+        }
+
+        public async Task<IActionResult> SearchSuggestions(string keyword)
+        {
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                int totalGames = _context.Game.Where(g => g.GameName.Contains(keyword)).Count();
+                ViewBag.totalPages = GetTotalPages(totalGames);
+
+                var searchResult = _context.Game.Include(g => g.GameImage)
+                                                .Where(g => g.GameName.Contains(keyword))
+                                                .OrderBy(g => g.GameName)
+                                                .Take(SEARCH_SUGGESTIONS_COUNT);
+
+                return PartialView(await searchResult.ToListAsync());
+            }
+
+            ViewData["SearchKeyword"] = keyword;
+            return PartialView();
         }
 
         public IActionResult SearchByCategory()

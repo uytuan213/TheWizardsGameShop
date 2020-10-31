@@ -1,0 +1,33 @@
+﻿@model IEnumerable<TheWizardsGameShop.Models.Game>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Jost">
+    <link rel="stylesheet" href="~/css/reset.css" />
+    <link rel="stylesheet" href="~/css/sanitize.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        html {
+            background-image: none;
+        }
+        body {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="suggestions">
+        @if (Model != null)
+        {
+            @foreach (var item in Model)
+            {
+                <a asp-action="Details" asp-route-id="@item.GameId" target="_parent" class="item">@Html.DisplayFor(modelItem => item.GameName)</a>
+            }
+        }
+    </div>
+</body>
+</html>

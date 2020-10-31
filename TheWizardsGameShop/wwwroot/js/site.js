@@ -1,4 +1,6 @@
-﻿confirm = function (title, message, buttonValue, buttonTarget) {
+﻿var MIN_KEYWORD_LENGTH = 1;
+
+confirm = function (title, message, buttonValue, buttonTarget) {
     $("#modal-title").html(title);
     $("#modal-message").html(message);
     //var buttons = "";
@@ -32,4 +34,23 @@ alert = function (title, message, buttonValue = "OK") {
 
 closeModal = function () {
     $("#modal").hide();
+}
+
+loadSearchSuggestions = function (e) {
+    var keyword = e.target.value;
+    var window = $("#nav-search-suggestions");
+    var iframe = $("#nav-search-suggestions-iframe");
+    var baseUrl = "/Games/SearchSuggestions";
+
+    if (keyword.length >= MIN_KEYWORD_LENGTH) {
+        //iframe.css("height", "0");
+        iframe.attr("src", baseUrl + "?keyword=" + keyword);
+        window.show();
+    } else {
+        window.hide();
+    }
+}
+
+resizeIframe = function (obj) {
+    obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
 }

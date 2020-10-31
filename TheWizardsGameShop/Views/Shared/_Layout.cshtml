@@ -23,7 +23,7 @@
     <link href='https://fonts.googleapis.com/css?family=Product+Sans' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css2" />
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
     <link rel="stylesheet" href="~/css/reset.css" />
     <link rel="stylesheet" href="~/css/sanitize.css" />
     <link rel="stylesheet" href="~/css/site.css" />
@@ -51,9 +51,16 @@
         </ul>*@
             @if (headerMode != "Employee")
             {
-                <form>
-                    <input placeholder="Search" class="nav-search" id="nav-search" name="nav-search" />
-                </form>
+        <div class="nav-search">
+            <form asp-controller="Games" asp-action="Search" method="get" class="nav-search">
+                <input placeholder="Search" id="nav-search-input" name="keyword" value="@ViewData["SearchKeyword"]" autocomplete="off" />
+                <button type="submit" class="nav-search-btn"><span class="material-icons">search</span></button>
+            </form>
+            <div class="nav-search-suggestions" id="nav-search-suggestions" style="display: none;">
+                @*@Html.Partial("~/Views/Games/SearchSuggestions.cshtml")*@
+                <iframe src="/Games/SearchSuggestions" id="nav-search-suggestions-iframe" frameborder="0" scrolling="auto" onload="resizeIframe(this);"></iframe>
+            </div>
+        </div>
             }
         <ul class="nav-menu flex-center-vertical absolute-right">
             @if (isLoggedIn)
@@ -128,6 +135,10 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        var searchInput = document.getElementById('nav-search-input');
+        searchInput.addEventListener('input', loadSearchSuggestions);
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

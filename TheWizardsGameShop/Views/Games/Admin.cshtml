@@ -15,6 +15,22 @@
             <span class="float-right">
                 <a asp-action="Create" class="btn btn-s btn-primary">Add Game</a>
             </span>
+        <p class="page-number text-center">
+            <a href="?pageNo=1" class="link">&lt;&lt;</a>
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                @if (i == ViewBag.PageNo)
+                {
+                    <a nohref class="link bold">@i</a>
+                }
+                else
+                {
+                <a href="?pageNo=@i" class="link">@i</a>
+                }
+
+            }
+                <a href="?pageNo=@ViewBag.TotalPages" class="link">&gt;&gt;</a>
+</p>
         </p>
         <table class="table">
             <thead>
