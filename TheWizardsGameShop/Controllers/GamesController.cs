@@ -105,7 +105,7 @@ namespace TheWizardsGameShop.Controllers
         public IActionResult Create()
         {
             ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1");
-            ViewData["GameStatusCode"] = new SelectList(_context.GameStatus, "GameStatusCode", "GameStatusCode");
+            ViewData["GameStatusCode"] = new SelectList(_context.GameStatus, "GameStatusCode", "GameStatus1");
             return View();
         }
 
@@ -123,7 +123,7 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1", game.GameCategoryId);
-            ViewData["GameStatusCode"] = new SelectList(_context.GameStatus, "GameStatusCode", "GameStatusCode", game.GameStatusCode);
+            ViewData["GameStatusCode"] = new SelectList(_context.GameStatus, "GameStatusCode", "GameStatus1", game.GameStatusCode);
             return View(game);
         }
 
@@ -141,7 +141,7 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
             ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1", game.GameCategoryId);
-            ViewData["GameStatusCode"] = new SelectList(_context.GameStatus, "GameStatusCode", "GameStatusCode", game.GameStatusCode);
+            ViewData["GameStatusCode"] = new SelectList(_context.GameStatus, "GameStatusCode", "GameStatus1", game.GameStatusCode);
             return View(game);
         }
 
@@ -178,7 +178,7 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1", game.GameCategoryId);
-            ViewData["GameStatusCode"] = new SelectList(_context.GameStatus, "GameStatusCode", "GameStatusCode", game.GameStatusCode);
+            ViewData["GameStatusCode"] = new SelectList(_context.GameStatus, "GameStatusCode", "GameStatus1", game.GameStatusCode);
             return View(game);
         }
 
