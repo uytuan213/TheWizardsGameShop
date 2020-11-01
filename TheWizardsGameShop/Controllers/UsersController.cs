@@ -48,6 +48,14 @@ namespace TheWizardsGameShop.Controllers
             return View();
         }
 
+        // GET: User/Favorites
+        public IActionResult Favorites()
+        {
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
+
+            return View();
+        }
+
         // GET: User
         public async Task<IActionResult> Index()
         {

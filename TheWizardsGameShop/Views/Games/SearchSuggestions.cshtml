@@ -28,6 +28,10 @@
                 <a asp-action="Details" asp-route-id="@item.GameId" target="_parent" class="item">@Html.DisplayFor(modelItem => item.GameName)</a>
             }
         }
+        else
+        {
+            <p>No result</p>
+        }
     </div>
 </body>
 </html>

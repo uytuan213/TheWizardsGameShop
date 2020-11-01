@@ -1,0 +1,17 @@
+﻿@{ ViewData["Title"] = "Favourites"; }
+
+<div class="page contents" id="pageFavorites" --data-theme="my-account">
+    <div class="page-header flex-center">
+        <h1>Favourites</h1>
+    </div>
+    <div class="page-body">
+        <section>
+            <h2>Favorite Platforms</h2>
+            @Html.Partial("~/Views/FavoritePlatforms/Index.cshtml")
+        </section>
+        <section>
+            <h2>Favorite Categories</h2>
+            @Html.Partial("~/Views/FavoriteCategories/Index.cshtml")
+        </section>
+    </div>
+</div>
