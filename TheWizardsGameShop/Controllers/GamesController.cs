@@ -34,6 +34,7 @@ namespace TheWizardsGameShop.Controllers
                 totalGames = _context.Game.Count();
                 games = _context.Game.Include(g => g.GameCategory)
                                      .Include(g => g.GameStatusCodeNavigation)
+                                     .Include(g => g.GameImage)
                                      .Skip((pageNo - 1) * PAGE_SIZE)
                                      .Take(PAGE_SIZE);
             }
@@ -42,6 +43,7 @@ namespace TheWizardsGameShop.Controllers
                 totalGames = _context.Game.Where(g => g.GameCategoryId.Equals(categoryId)).Count();
                 games = _context.Game.Include(g => g.GameCategory)
                                      .Include(g => g.GameStatusCodeNavigation)
+                                     .Include(g => g.GameImage)
                                      .Where(g => g.GameCategoryId.Equals(categoryId))
                                      .Skip((pageNo - 1) * PAGE_SIZE)
                                      .Take(PAGE_SIZE);
@@ -93,6 +95,7 @@ namespace TheWizardsGameShop.Controllers
             var game = await _context.Game
                 .Include(g => g.GameCategory)
                 .Include(g => g.GameStatusCodeNavigation)
+                .Include(g => g.GameImage)
                 .FirstOrDefaultAsync(m => m.GameId == id);
             if (game == null)
             {

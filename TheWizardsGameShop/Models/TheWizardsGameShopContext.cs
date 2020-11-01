@@ -100,17 +100,11 @@ namespace TheWizardsGameShop.Models
                 entity.Property(e => e.Cvc)
                     .IsRequired()
                     .HasColumnName("CVC")
-                    .HasMaxLength(3);
+                    .HasMaxLength(4);
 
                 entity.Property(e => e.ExpiryDate)
                     .IsRequired()
-                    .HasMaxLength(10);
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.CreditCard)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CreditCards_WizardsUser");
+                    .HasMaxLength(4);
             });
 
             modelBuilder.Entity<FavoriteCategory>(entity =>
