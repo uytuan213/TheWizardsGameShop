@@ -42,8 +42,6 @@ namespace TheWizardsGameShop.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
-            var theWizardsGameShopContext = _context.WizardsUser.Include(u => u.GenderNavigation);
-            // return View(await theWizardsGameShopContext.ToListAsync());
             return NotFound();
         }
 
@@ -398,17 +396,28 @@ namespace TheWizardsGameShop.Controllers
             }
             else
             {
-                var payload = ReadToken(token);
-                var userId = int.Parse(payload.Where(p => p.Key.Equals("userId")).First().Value.ToString());
-                var username = payload.Where(p => p.Key.Equals("username")).First().Value.ToString();
+                int userId;
+                string username;
+                string strRequestedTime;
+                try
+                {
+                    var payload = ReadToken(token);
+                    userId = int.Parse(payload.Where(p => p.Key.Equals("userId")).First().Value.ToString());
+                    username = payload.Where(p => p.Key.Equals("username")).First().Value.ToString();
+                    strRequestedTime = payload.Where(p => p.Key.Equals("requestedTime")).First().Value.ToString();
+                }
+                catch (Exception ex)
+                {
+                    // random token that can break the ReadToken()
+                    return NotFound();
+                }
+                
                 if (!UserHelper.GetUser(username, _context).UserId.Equals(userId))
                 {
                     return NotFound();
                 }
-                
-                var strRequestedTime = payload.Where(p => p.Key.Equals("requestedTime")).First().Value.ToString();
                 var totalTime = DateTime.UtcNow - DateTime.Parse(strRequestedTime);
-                if (totalTime.TotalMinutes <= 1)
+                if (totalTime.TotalMinutes <= 60)
                 {
                     ViewData["userId"] = userId;
                     ViewData["OldPasswordRequired"] = false;
