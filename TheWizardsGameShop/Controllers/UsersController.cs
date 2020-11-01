@@ -1,21 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Net.Mail;
-using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.IdentityModel;
-using System.Security;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MimeKit;
-using MimeKit.Encodings;
 using TheWizardsGameShop.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -368,7 +359,6 @@ namespace TheWizardsGameShop.Controllers
         [HttpPost]
         public async Task<IActionResult> ResetPassword(string userName)
         {
-            string link = $"{Environment.GetEnvironmentVariable("BASE_URL")}/Users/ResetPassword";
             //_context.WizardsUser.Where(u => u.UserName.Equals(userName)).FirstOrDefault();
             var user = UserHelper.GetUser(userName, _context);
             if (user != null)
@@ -379,8 +369,11 @@ namespace TheWizardsGameShop.Controllers
                 //_context.Update(user);
                 //await _context.SaveChangesAsync();
 
+                var token = CreateToken(user.UserId, user.UserName);
+
                 //Prepare email to send user
                 string subject = "Reset Password";
+                string link = $"{Environment.GetEnvironmentVariable("BASE_URL")}/Users/ChangePassword?token={token}";
                 BodyBuilder bodyBuilder = PrepareResetEmailBody(link);
 
                 //Create MailboxAddress for user
@@ -389,22 +382,44 @@ namespace TheWizardsGameShop.Controllers
                 //Send email
                 EmailHelper.SendEmail(userMailboxAddress, subject, bodyBuilder);
 
-                TempData["Message"] = "The reset password email has been sent to your email address.";
-                return RedirectToAction("login", "users");
-            } else
-            {
-                TempData["Message"] = "Username does not exist.";
             }
-
-            return View();
+            TempData["Message"] = "The reset password email has been sent to your email address.";
+            return RedirectToAction("login", "users");
         }
 
         [HttpGet]
-        public IActionResult ChangePassword()
+        public IActionResult ChangePassword(string token = null)
         {
-            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
+            if (token == null)
+            {
+                if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
-            ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
+                ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
+            }
+            else
+            {
+                var payload = ReadToken(token);
+                var userId = int.Parse(payload.Where(p => p.Key.Equals("userId")).First().Value.ToString());
+                var username = payload.Where(p => p.Key.Equals("username")).First().Value.ToString();
+                if (!UserHelper.GetUser(username, _context).UserId.Equals(userId))
+                {
+                    return NotFound();
+                }
+                
+                var strRequestedTime = payload.Where(p => p.Key.Equals("requestedTime")).First().Value.ToString();
+                var totalTime = DateTime.UtcNow - DateTime.Parse(strRequestedTime);
+                if (totalTime.TotalMinutes <= 1)
+                {
+                    ViewData["userId"] = userId;
+                    ViewData["OldPasswordRequired"] = false;
+                }
+                else
+                {
+                    TempData["errorMessage"] = "The reset link is expired";
+                    return RedirectToAction("error", "home");
+                }
+            }
+            
             return View();
         }
 
@@ -511,7 +526,7 @@ namespace TheWizardsGameShop.Controllers
             HttpContext.Session.SetString("loggedInTime", DateTime.Now.ToString());
         }
 
-        private string CreateToken()
+        private string CreateToken(int userId, string username)
         {
             // Define const Key this should be private secret key  stored in some safe place
             string key = "401b09eab3c013d4ca54922bb802bec8fd5318192b0a75f201d8b3727429090fb337591abd3e44453b954555b7a0812e1081c39b740293f765eae731f5a65ed1";
@@ -533,8 +548,9 @@ namespace TheWizardsGameShop.Controllers
             //Some PayLoad that contain information about the  customer
             var payload = new JwtPayload
            {
-               { "userId", "1"},
-               { "requestedTime", new DateTime()},
+               { "userId", userId },
+               { "username", username},
+               { "requestedTime", DateTime.UtcNow},
            };
 
             //
@@ -547,7 +563,7 @@ namespace TheWizardsGameShop.Controllers
             return tokenString;
         }
 
-        private string ReadToken(string tokenString)
+        private JwtPayload ReadToken(string tokenString)
         {
             // Define const Key this should be private secret key  stored in some safe place
             string key = "401b09eab3c013d4ca54922bb802bec8fd5318192b0a75f201d8b3727429090fb337591abd3e44453b954555b7a0812e1081c39b740293f765eae731f5a65ed1";
@@ -570,7 +586,7 @@ namespace TheWizardsGameShop.Controllers
             // you can  either validate it or try to  read
             var token = handler.ReadJwtToken(tokenString);
 
-            return token.Payload.First().Value.ToString();
+            return token.Payload;
         }
     }
 }

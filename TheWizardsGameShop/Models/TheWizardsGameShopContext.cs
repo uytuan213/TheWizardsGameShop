@@ -105,6 +105,12 @@ namespace TheWizardsGameShop.Models
                 entity.Property(e => e.ExpiryDate)
                     .IsRequired()
                     .HasMaxLength(4);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.CreditCard)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CreditCard_WizardsUser");
             });
 
             modelBuilder.Entity<FavoriteCategory>(entity =>
