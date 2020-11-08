@@ -56,15 +56,13 @@ namespace TheWizardsGameShop.Controllers
         {
             if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
-            //ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1");, "PlatformId", "PlatformName");
-
             var userId = UserHelper.GetSessionUserId(this);
             var favoriteCategoryContext = _context.FavoriteCategory
                 .Include(f => f.GameCategory)
                 .Where(f => f.UserId.Equals(userId));
             ViewData["UserId"] = userId;
             ViewData["FavoriteCategories"] = favoriteCategoryContext.ToList();
-            ViewData["GameCategories"] = _context.GameCategory.ToList();
+            ViewData["GameCategories"] = getCategoriesNotInFav(userId);
 
             return View();
         }
@@ -83,7 +81,6 @@ namespace TheWizardsGameShop.Controllers
                 //return RedirectToAction(nameof(Index));
                 //return View(favoriteCategory);
             }
-            //ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1", favoriteCategory.GameCategoryId);
 
             var userId = UserHelper.GetSessionUserId(this);
             var favoriteCategoryContext = _context.FavoriteCategory
@@ -91,7 +88,7 @@ namespace TheWizardsGameShop.Controllers
                 .Where(f => f.UserId.Equals(userId));
             ViewData["UserId"] = userId;
             ViewData["FavoriteCategories"] = favoriteCategoryContext.ToList();
-            ViewData["GameCategories"] = _context.GameCategory.ToList();
+            ViewData["GameCategories"] = getCategoriesNotInFav(userId);
 
             return View(favoriteCategory);
         }
@@ -180,7 +177,6 @@ namespace TheWizardsGameShop.Controllers
 
             await DeleteConfirmed(Convert.ToInt32(userId), Convert.ToInt32(favoriteCategory.GameCategoryId));
             return RedirectToAction(nameof(Create));
-            //return View(favoriteCategory);
         }
 
         // POST: FavoriteCategories/Delete/5
@@ -200,6 +196,20 @@ namespace TheWizardsGameShop.Controllers
         private bool FavoriteCategoryExists(int id)
         {
             return _context.FavoriteCategory.Any(e => e.UserId == id);
+        }
+
+        private IQueryable<GameCategory> getCategoriesNotInFav(int? userId)
+        {
+            if (userId == null)
+            {
+                return null;
+            }
+            var catsInFav = _context.FavoriteCategory.Where(f => f.UserId.Equals(userId))
+                                                         .Select(fp => new { fp.GameCategoryId });
+
+            var catsNotInFav = _context.GameCategory.Where(p => !catsInFav.Any(fp => fp.GameCategoryId.Equals(p.GameCategoryId)));
+
+            return catsNotInFav;
         }
     }
 }

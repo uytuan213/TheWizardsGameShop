@@ -67,15 +67,15 @@ namespace TheWizardsGameShop.Controllers
         {
             if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
-            //ViewData["PlatformId"] = new SelectList(_context.Platform, "PlatformId", "PlatformName");
-
             var userId = UserHelper.GetSessionUserId(this);
             var favoritePlatformContext = _context.FavoritePlatform
                 .Include(f => f.Platform)
                 .Where(f => f.UserId.Equals(userId));
             ViewData["UserId"] = userId;
             ViewData["FavoritePlatforms"] = favoritePlatformContext.ToList();
-            ViewData["Platforms"] = _context.Platform.ToList();
+
+            
+            ViewData["Platforms"] = getPlatformsNotInFav(userId);
 
             return View();
         }
@@ -102,7 +102,7 @@ namespace TheWizardsGameShop.Controllers
                 .Where(f => f.UserId.Equals(userId));
             ViewData["UserId"] = userId;
             ViewData["FavoritePlatforms"] = favoritePlatformContext.ToList();
-            ViewData["Platforms"] = _context.Platform.ToList();
+            ViewData["Platforms"] = getPlatformsNotInFav(userId);
 
             return View(favoritePlatform);
         }
@@ -213,6 +213,20 @@ namespace TheWizardsGameShop.Controllers
         private bool FavoritePlatformExists(int id)
         {
             return _context.FavoritePlatform.Any(e => e.UserId == id);
+        }
+
+        private IQueryable<Platform> getPlatformsNotInFav(int? userId)
+        {
+            if (userId == null)
+            {
+                return null;
+            }
+            var platformsInFav = _context.FavoritePlatform.Where(f => f.UserId.Equals(userId))
+                                                         .Select(fp => new { fp.PlatformId });
+
+            var platformsNotInFav = _context.Platform.Where(p => !platformsInFav.Any(fp => fp.PlatformId.Equals(p.PlatformId)));
+
+            return platformsNotInFav;
         }
     }
 }
