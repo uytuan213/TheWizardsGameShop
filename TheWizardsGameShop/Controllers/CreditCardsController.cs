@@ -24,8 +24,16 @@ namespace TheWizardsGameShop.Controllers
         {
             if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
-            var creditCards = _context.CreditCard.Where(c => c.UserId.Equals(HttpContext.Session.GetInt32("userId")));
-            return View(await creditCards.ToListAsync());
+            var creditCards = await _context.CreditCard.Where(c => c.UserId.Equals(HttpContext.Session.GetInt32("userId"))).ToListAsync();
+            if (creditCards != null)
+            {
+                foreach (var item in creditCards)
+                {
+                    decodeData(item);
+                }
+            }
+            
+            return View(creditCards);
         }
 
         // GET: CreditCards/Details/5
@@ -64,10 +72,11 @@ namespace TheWizardsGameShop.Controllers
         {
             if (ModelState.IsValid)
             {
+                encodeData(creditCard);
                 creditCard.ExpiryDate = creditCard.ExpiryDate.Replace("/", "");
                 _context.Add(creditCard);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));   
             }
 
             //ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "UserName", creditCard.UserId);
@@ -96,6 +105,7 @@ namespace TheWizardsGameShop.Controllers
 
             //ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "UserName", creditCard.UserId);
 
+            decodeData(creditCard);
             ViewData["ExpiryDate"] = creditCard.ExpiryDate.Insert(2, "/");
             return View(creditCard);
         }
@@ -117,6 +127,7 @@ namespace TheWizardsGameShop.Controllers
                 try
                 {
                     creditCard.ExpiryDate = creditCard.ExpiryDate.Replace("/", "");
+                    encodeData(creditCard);
                     _context.Update(creditCard);
                     await _context.SaveChangesAsync();
                 }
@@ -174,6 +185,26 @@ namespace TheWizardsGameShop.Controllers
         private bool CreditCardExists(int id)
         {
             return _context.CreditCard.Any(e => e.CreditCardId == id);
+        }
+
+        /// <summary>
+        /// Encode Credit card number and Cvc using Base64Helper
+        /// </summary>
+        /// <param name="creditCard">The credit card to encode</param>
+        private void encodeData(CreditCard creditCard)
+        {
+            creditCard.CreditCardNumber = Base64Helper.encode(creditCard.CreditCardNumber);
+            creditCard.Cvc = Base64Helper.encode(creditCard.Cvc);
+        }
+
+        /// <summary>
+        /// Decode Credit card number and Cvc using Base64Helper
+        /// </summary>
+        /// <param name="creditCard">The credit card to decode</param>
+        private void decodeData(CreditCard creditCard)
+        {
+            creditCard.CreditCardNumber = Base64Helper.decode(creditCard.CreditCardNumber);
+            creditCard.Cvc = Base64Helper.decode(creditCard.Cvc);
         }
     }
 }

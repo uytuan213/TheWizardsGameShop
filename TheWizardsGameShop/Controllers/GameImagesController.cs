@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +16,12 @@ namespace TheWizardsGameShop.Controllers
     public class GameImagesController : Controller
     {
         private readonly TheWizardsGameShopContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public GameImagesController(TheWizardsGameShopContext context)
+        public GameImagesController(TheWizardsGameShopContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: GameImages
@@ -47,7 +53,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: GameImages/Create
         public IActionResult Create()
         {
-            ViewData["GameId"] = new SelectList(_context.Game, "GameId", "GameDigitalPath");
+            ViewData["GameId"] = new SelectList(_context.Game, "GameId", "GameName");
             return View();
         }
 
@@ -56,15 +62,17 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GameImageId,GameId,GameImagePath")] GameImage gameImage)
+        public async Task<IActionResult> Create([FromForm(Name = "imageFile")] IFormFile imageFile ,[Bind("GameImageId,GameId")] GameImage gameImage, bool isThumbnail = false)
         {
             if (ModelState.IsValid)
             {
+                string filePath = UploadedFile(gameImage.GameId, imageFile, isThumbnail);
+                gameImage.GameImagePath = filePath;
                 _context.Add(gameImage);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GameId"] = new SelectList(_context.Game, "GameId", "GameDigitalPath", gameImage.GameId);
+            ViewData["GameId"] = new SelectList(_context.Game, "GameId", "GameName", gameImage.GameId);
             return View(gameImage);
         }
 
@@ -81,7 +89,7 @@ namespace TheWizardsGameShop.Controllers
             {
                 return NotFound();
             }
-            ViewData["GameId"] = new SelectList(_context.Game, "GameId", "GameDigitalPath", gameImage.GameId);
+            ViewData["GameId"] = new SelectList(_context.Game, "GameId", "GameName", gameImage.GameId);
             return View(gameImage);
         }
 
@@ -154,6 +162,30 @@ namespace TheWizardsGameShop.Controllers
         private bool GameImageExists(int id)
         {
             return _context.GameImage.Any(e => e.GameImageId == id);
+        }
+
+        private string UploadedFile(int gameId, IFormFile imageFile, bool isThumbnail)
+        {
+            string filePath = null;
+
+            if (imageFile != null)
+            {
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, $"images\\{gameId}");
+                string fileName = isThumbnail ? "Thumbnail_" + imageFile.FileName : Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+                filePath = Path.Combine(uploadsFolder, fileName);
+
+                // Create directory if it doesn't exist
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    imageFile.CopyTo(fileStream);
+                }
+            }
+            return filePath;
         }
     }
 }
