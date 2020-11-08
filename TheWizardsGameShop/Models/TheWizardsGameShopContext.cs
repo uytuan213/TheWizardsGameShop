@@ -95,12 +95,11 @@ namespace TheWizardsGameShop.Models
 
                 entity.Property(e => e.CreditCardNumber)
                     .IsRequired()
-                    .HasMaxLength(16);
+                    .HasMaxLength(256);
 
                 entity.Property(e => e.Cvc)
-                    .IsRequired()
                     .HasColumnName("CVC")
-                    .HasMaxLength(4);
+                    .HasMaxLength(256);
 
                 entity.Property(e => e.ExpiryDate)
                     .IsRequired()

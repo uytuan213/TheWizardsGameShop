@@ -9,8 +9,8 @@ namespace TheWizardsGameShop.Models
         public int UserId { get; set; }
         public string CreditCardNumber { get; set; }
         public string ExpiryDate { get; set; }
-        public string Cvc { get; set; }
         public string CardHolder { get; set; }
+        public string Cvc { get; set; }
 
         public virtual WizardsUser User { get; set; }
     }
