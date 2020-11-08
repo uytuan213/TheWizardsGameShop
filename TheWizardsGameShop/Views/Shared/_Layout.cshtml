@@ -21,12 +21,13 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Jost">
     <link href='https://fonts.googleapis.com/css?family=Product+Sans' rel='stylesheet' type='text/css'>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-          rel="stylesheet">
     @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
     <link rel="stylesheet" href="~/css/reset.css" />
     <link rel="stylesheet" href="~/css/sanitize.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/@@coreui/icons/css/brand.min.css">
 </head>
 <body>
     <header class="flex-center">
@@ -112,7 +113,7 @@
             <h2 id="modal-title"></h2>
             <p id="modal-message"></p>
             <p class="modal-buttons" id="modal-buttons">
-                <a class="btn btn-primary" id="modal-ok"></a>
+                <a class="btn btn--primary" id="modal-ok"></a>
                 <a class="btn" id="modal-close" onclick="closeModal();">Cancel</a>
             </p>
         </div>
@@ -126,7 +127,7 @@
                 <h2 id="cmodal-title">@modalTitle</h2>
                 <p id="cmodal-message">@modalMessage</p>
                 <p class="modal-buttons" id="cmodal-buttons">
-                    <a class="btn btn-primary" id="cmodal-ok" asp-controller="Users" asp-action="CloseModal">OK</a>
+                    <a class="btn btn--primary" id="cmodal-ok" asp-controller="Users" asp-action="CloseModal">OK</a>
                 </p>
             </div>
         </div>

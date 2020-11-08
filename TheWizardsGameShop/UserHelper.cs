@@ -85,7 +85,7 @@ namespace TheWizardsGameShop
         /// <param name="ctr"></param>
         /// <param name="context">The context</param>
         /// <returns>WizardsUser object</returns>
-        public static WizardsUser GetCurrentUser(Controller ctr, TheWizardsGameShopContext context)
+        public static WizardsUser GetSessionUser(Controller ctr, TheWizardsGameShopContext context)
         {
             int? sessionUserId = ctr.HttpContext.Session.GetInt32("userId");
 
@@ -95,6 +95,17 @@ namespace TheWizardsGameShop
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Get the currently logged in user id stored in session
+        /// </summary>
+        /// <param name="ctr"></param>
+        /// <param name="context">The context</param>
+        /// <returns>User Id</returns>
+        public static int? GetSessionUserId(Controller ctr)
+        {
+            return ctr.HttpContext.Session.GetInt32("userId");
         }
 
         /// <summary>

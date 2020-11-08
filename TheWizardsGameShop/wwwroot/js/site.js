@@ -19,7 +19,7 @@ confirm = function (title, message, buttonValue, buttonTarget) {
     $("#modal-ok").attr("href", $("#" + buttonTarget).attr('href'));
     $("#modal-ok").attr("asp-route-id", $("#" + buttonTarget).attr('asp-route-id'));
     $("#modal-ok").attr("asp-action", $("#" + buttonTarget).attr('asp-action'));
-    $("#modal-close").removeClass("btn-primary");
+    $("#modal-close").removeClass("btn--primary");
     $("#modal").show();
 }
 
@@ -28,7 +28,7 @@ alert = function (title, message, buttonValue = "OK") {
     $("#modal-message").html(message);
     $("#modal-ok").hide();
     $("#modal-close").html(buttonValue);
-    $("#modal-close").addClass("btn-primary");
+    $("#modal-close").addClass("btn--primary");
     $("#modal").show();
 }
 

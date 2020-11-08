@@ -22,11 +22,13 @@ namespace TheWizardsGameShop.Controllers
         // GET: FavoriteCategories
         public async Task<IActionResult> Index()
         {
-
             if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
-            var theWizardsGameShopContext = _context.FavoriteCategory.Include(f => f.GameCategory).Where(f => f.UserId.Equals(HttpContext.Session.GetInt32("userId")));
-            return View(await theWizardsGameShopContext.ToListAsync());
+            var sessionUserId = UserHelper.GetSessionUserId(this);
+            var context = _context.FavoriteCategory
+                .Include(f => f.GameCategory)
+                .Where(f => f.UserId.Equals(sessionUserId));
+            return View(await context.ToListAsync());
         }
 
         // GET: FavoriteCategories/Details/5
@@ -54,8 +56,16 @@ namespace TheWizardsGameShop.Controllers
         {
             if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
-            ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
-            ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1");
+            //ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1");, "PlatformId", "PlatformName");
+
+            var userId = UserHelper.GetSessionUserId(this);
+            var favoriteCategoryContext = _context.FavoriteCategory
+                .Include(f => f.GameCategory)
+                .Where(f => f.UserId.Equals(userId));
+            ViewData["UserId"] = userId;
+            ViewData["FavoriteCategories"] = favoriteCategoryContext.ToList();
+            ViewData["GameCategories"] = _context.GameCategory.ToList();
+
             return View();
         }
 
@@ -70,13 +80,19 @@ namespace TheWizardsGameShop.Controllers
             {
                 _context.Add(favoriteCategory);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
+                //return View(favoriteCategory);
             }
-            ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1", favoriteCategory.GameCategoryId);
-            if (UserHelper.IsLoggedIn(this))
-            {
-                ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
-            }
+            //ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1", favoriteCategory.GameCategoryId);
+
+            var userId = UserHelper.GetSessionUserId(this);
+            var favoriteCategoryContext = _context.FavoriteCategory
+                .Include(f => f.GameCategory)
+                .Where(f => f.UserId.Equals(userId));
+            ViewData["UserId"] = userId;
+            ViewData["FavoriteCategories"] = favoriteCategoryContext.ToList();
+            ViewData["GameCategories"] = _context.GameCategory.ToList();
+
             return View(favoriteCategory);
         }
 
@@ -146,7 +162,9 @@ namespace TheWizardsGameShop.Controllers
         // GET: FavoriteCategories/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            var userId = HttpContext.Session.GetInt32("userId");
+
+            if (id == null || userId == null)
             {
                 return NotFound();
             }
@@ -154,24 +172,29 @@ namespace TheWizardsGameShop.Controllers
             var favoriteCategory = await _context.FavoriteCategory
                 .Include(f => f.GameCategory)
                 .Include(f => f.User)
-                .FirstOrDefaultAsync(m => m.UserId == id);
+                .FirstOrDefaultAsync(m => m.UserId == userId && m.GameCategoryId == id);
             if (favoriteCategory == null)
             {
                 return NotFound();
             }
 
-            return View(favoriteCategory);
+            await DeleteConfirmed(Convert.ToInt32(userId), Convert.ToInt32(favoriteCategory.GameCategoryId));
+            return RedirectToAction(nameof(Create));
+            //return View(favoriteCategory);
         }
 
         // POST: FavoriteCategories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int userId, int gameCategoryId)
         {
-            var favoriteCategory = await _context.FavoriteCategory.FindAsync(id);
+            var favoriteCategory = await _context.FavoriteCategory
+                .Include(f => f.GameCategory)
+                .Include(f => f.User)
+                .FirstOrDefaultAsync(m => m.UserId == userId && m.GameCategoryId == gameCategoryId);
             _context.FavoriteCategory.Remove(favoriteCategory);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Create));
         }
 
         private bool FavoriteCategoryExists(int id)

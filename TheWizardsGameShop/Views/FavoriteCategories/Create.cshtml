@@ -1,35 +1,84 @@
 ﻿@model TheWizardsGameShop.Models.FavoriteCategory
 
-@{
-    ViewData["Title"] = "Create";
-}
+@{ ViewData["Title"] = "Favourites"; }
 
-<h1>Create</h1>
-
-<h4>FavoriteCategory</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="UserId" />
-            @*<div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
-            </div>*@
-            <div class="form-group">
-                <label asp-for="GameCategoryId" class="control-label"></label>
-                <select asp-for="GameCategoryId" class ="form-control" asp-items="ViewBag.GameCategoryId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="page contents" id="pageFavorites" --data-theme="my-account">
+    <div class="page-header flex-center text-center">
+        <div>
+            <h1>Favourites</h1>
+        </div>
     </div>
-</div>
+    <div class="row page-body">
+        <div class="page-submenu flex-col-3">
+            <div class="col">
+                <a asp-controller="Users" asp-action="Menu" class="item">&lt; Back to Menu</a>
+            </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+            <div class="col page-tabs flex-center">
+                <a asp-controller="FavoritePlatforms" asp-action="Create" class="tab">Platforms</a>
+                <a asp-controller="FavoriteCategories" asp-action="Create" class="tab selected">Categories</a>
+            </div>
+
+            <div class="col"></div>
+        </div>
+
+        <div class="col-md-4">
+            <form asp-action="Create" id="category-form">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="UserId" value="@ViewData["UserId"]" />
+                <input type="hidden" asp-for="GameCategoryId" />
+                @*<div class="form-group">
+            <label asp-for="GameCategoryId" class="control-label"></label>
+            <select asp-for="GameCategoryId" class="form-control" asp-items="ViewBag.GameCategoryId"></select>
+        </div>*@
+
+                <script>
+                    handleFavoriteCategoryClick = function (gameCategoryId) {
+                        $("#GameCategoryId").val(gameCategoryId);
+                        $("#category-form").submit();
+                    }
+                    handleGameCategoryClick = function (gameCategoryId) {
+                        $("#GameCategoryId").val(gameCategoryId);
+                        $("#category-form").submit();
+                    }</script>
+
+                <section class="highlight">
+                    <h3>Favourite Categories</h3>
+                    <h4>Click to delete from your favorites</h4>
+                    <hr />
+                    <div class="list">
+                        @if (ViewBag.FavoriteCategories != null && ViewBag.FavoriteCategories.Count > 0)
+                        {
+            @foreach (var item in ViewBag.FavoriteCategories)
+            {
+            <a asp-action="Delete" asp-route-id="@item.GameCategoryId" class="item clickable selected flex-center">
+                @item.GameCategory.GameCategory1
+            </a>} }
+        else
+        {
+            <div class="list__message flex-center">Empty</div>}
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Click to add to your favorites</h4>
+                    <hr />
+                    <div class="list">
+                        @foreach (var item in ViewBag.GameCategories)
+                        {
+            <div class="item clickable flex-center" onclick="handleGameCategoryClick(@item.GameCategoryId);">
+                @item.GameCategory1
+            </div>}
+                    </div>
+                </section>
+
+                <div class="form-buttons text-center">
+                    @*<input type="submit" value="Save" class="btn btn--primary" />*@
+                    <a asp-controller="Users" asp-action="Menu" class="btn btn--primary">Finish</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 @section Scripts {

@@ -1,37 +1,123 @@
 ﻿@model TheWizardsGameShop.Models.FavoritePlatform
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Favourites";
 }
 
-<h1>Create</h1>
-
-<h4>FavoritePlatform</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="UserId" />
-            @*<div class="form-group">
-            <label asp-for="UserId" class="control-label"></label>
-            <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
-        </div>*@
-            <div class="form-group">
-                <label asp-for="PlatformId" class="control-label"></label>
-                <select asp-for="PlatformId" class="form-control" asp-items="ViewBag.PlatformId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="page contents" id="pageFavorites" --data-theme="my-account">
+    <div class="page-header flex-center text-center">
+        <div>
+            <h1>Favourites</h1>
+        </div>
     </div>
-</div>
+    <div class="row page-body">
+        <div class="page-submenu flex-col-3">
+            <div class="col">
+                <a asp-controller="Users" asp-action="Menu" class="item">&lt; Back to Menu</a>
+            </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+            <div class="col page-tabs flex-center">
+                <a asp-controller="FavoritePlatforms" asp-action="Create" class="tab selected">Platforms</a>
+                <a asp-controller="FavoriteCategories" asp-action="Create" class="tab">Categories</a>
+            </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+            <div class="col"></div>
+        </div>
+
+        <div class="col-md-4">
+            <form asp-action="Create" id="platform-form">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="UserId" value="@ViewData["UserId"]" />
+                <input type="hidden" asp-for="PlatformId" />
+                @*<div class="form-group">
+                    <label asp-for="PlatformId" class="control-label"></label>
+                    <select asp-for="PlatformId" class="form-control" asp-items="ViewBag.PlatformId"></select>
+                </div>*@
+
+                <script>
+                    handleFavoritePlatformClick = function (platformId) {
+                        $("#PlatformId").val(platformId);
+                        $("#platform-form").submit();
+                    }
+                    handlePlatformClick = function (platformId) {
+                        $("#PlatformId").val(platformId);
+                        $("#platform-form").submit();
+                    }
+                </script>
+
+                <section class="highlight">
+                    <h3>Favourite Platforms</h3>
+                    <h4>Click to delete from your favorites</h4>
+                    <hr />
+                    <div class="list">
+                        @if (ViewBag.FavoritePlatforms != null && ViewBag.FavoritePlatforms.Count > 0)
+                        {
+            @foreach (var item in ViewBag.FavoritePlatforms)
+            {
+    <a asp-action="Delete" asp-route-id="@item.PlatformId" class="item clickable selected flex-center">
+        <p class="item__icon">
+            @if (item.Platform.PlatformName == "PC")
+            {
+    <i class="cib-windows"></i> }
+                        else if (item.Platform.PlatformName == "PS4")
+                        {
+    <i class="cib-playstation"></i> }
+                        else if (item.Platform.PlatformName == "Xbox One")
+                        {
+    <i class="cib-xbox"></i> }
+                        else if (item.Platform.PlatformName == "Switch")
+                        {
+    <i class="cib-nintendo-switch"></i> }
+                        else if (item.Platform.PlatformName == "2DS")
+                        {
+    <i class="cib-nintendo-3ds"></i>}
+        </p>
+        @item.Platform.PlatformName
+    </a>} }
+        else
+        {
+    <div class="list__message flex-center">Empty</div>}
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Click to add to your favorites</h4>
+                    <hr />
+                    <div class="list">
+                        @foreach (var item in ViewBag.Platforms)
+                        {
+            <div class="item clickable flex-center" onclick="handlePlatformClick(@item.PlatformId);">
+                <p class="item__icon">
+                    @if (item.PlatformName == "PC")
+                    {
+    <i class="cib-windows"></i> }
+else if (item.PlatformName == "PS4")
+{
+    <i class="cib-playstation"></i> }
+else if (item.PlatformName == "Xbox One")
+{
+    <i class="cib-xbox"></i> }
+else if (item.PlatformName == "Switch")
+{
+    <i class="cib-nintendo-switch"></i> }
+else if (item.PlatformName == "2DS")
+{
+    <i class="cib-nintendo-3ds"></i>}
+                </p>
+                @item.PlatformName
+            </div>}
+                    </div>
+                </section>
+
+                <div class="form-buttons text-center">
+                    @*<input type="submit" value="Save" class="btn btn--primary" />*@
+                    <a asp-controller="Users" asp-action="Menu" class="btn btn--primary">Finish</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

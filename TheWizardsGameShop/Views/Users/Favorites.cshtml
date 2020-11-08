@@ -5,13 +5,78 @@
         <h1>Favourites</h1>
     </div>
     <div class="page-body">
-        <section>
-            <h2>Favorite Platforms</h2>
-            @Html.Partial("~/Views/FavoritePlatforms/Index.cshtml")
+        <p class="page-submenu">
+            <a asp-controller="Users" asp-action="Menu" class="item">&lt; Back to Menu</a>
+        </p>
+
+        <section class="highlight">
+            <p>
+                <h3 class="inline-block">Favorite Platforms</h3>
+                <a asp-controller="FavoritePlatforms" asp-action="Create" class="btn btn--s float-right">Manage</a>
+            </p>
+            <hr />
+            <div class="list">
+                @if (ViewBag.FavoritePlatforms.Count > 0)
+                {
+                    @foreach (var item in ViewBag.FavoritePlatforms)
+                    {
+                <div class="item flex-center">
+                    <p class="item__icon">
+                        @if (item.Platform.PlatformName == "PC")
+                        {
+                            <i class="cib-windows"></i>
+                        }
+                        else if (item.Platform.PlatformName == "PS4")
+                        {
+                            <i class="cib-playstation"></i>
+                        }
+                        else if (item.Platform.PlatformName == "Xbox One")
+                        {
+                            <i class="cib-xbox"></i>
+                        }
+                        else if (item.Platform.PlatformName == "Switch")
+                        {
+                            <i class="cib-nintendo-switch"></i>
+                        }
+                        else if (item.Platform.PlatformName == "2DS")
+                        {
+                            <i class="cib-nintendo-3ds"></i>
+                        }
+                    </p>
+                    @item.Platform.PlatformName
+                </div>}
+                }
+                else
+                {
+                    <div class="flex-center" style="width: 100%; height: 100px;">
+                <a asp-controller="FavoritePlatforms" asp-action="Create" class="link">Click here to add your favourite platforms.</a>
+                    </div>
+                }
+
+            </div>
         </section>
-        <section>
-            <h2>Favorite Categories</h2>
-            @Html.Partial("~/Views/FavoriteCategories/Index.cshtml")
+        <section class="highlight">
+            <p>
+                <h3 class="inline-block">Favorite Categories</h3>
+                <a asp-controller="FavoriteCategories" asp-action="Create" class="btn btn--s float-right">Manage</a>
+            </p>
+            <hr />
+            <div class="list">
+                @if (ViewBag.FavoriteCategories.Count > 0)
+                {
+                    @foreach (var item in ViewBag.FavoriteCategories)
+                    {
+                        <div class="item flex-center text-center" onclick="handleCategoryClick(@item.GameCategoryId);">
+                            @item.GameCategory.GameCategory
+                        </div>}
+                }
+                else
+                {
+                    <div class="flex-center" style="width: 100%; height: 100px;">
+                <a asp-controller="FavoriteCategories" asp-action="Create" class="link">Click here to add your favourite categories.</a>
+                    </div>
+                }
+            </div>
         </section>
     </div>
 </div>

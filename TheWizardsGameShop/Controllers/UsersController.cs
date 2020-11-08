@@ -44,6 +44,17 @@ namespace TheWizardsGameShop.Controllers
         {
             if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
+            var userId = UserHelper.GetSessionUserId(this);
+            var favoritePlatformContext = _context.FavoritePlatform
+                .Include(f => f.Platform)
+                .Where(f => f.UserId.Equals(userId));
+            var favoriteCategoryContext = _context.FavoriteCategory
+                .Include(f => f.GameCategory)
+                .Where(f => f.UserId.Equals(userId));
+
+            ViewData["FavoritePlatforms"] = favoritePlatformContext.ToList();
+            ViewData["FavoriteCategories"] = favoriteCategoryContext.ToList();
+
             return View();
         }
 
