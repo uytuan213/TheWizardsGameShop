@@ -30,7 +30,6 @@
         <Column Name="PlatformName" DataType="System.String"/>
       </TableDataSource>
       <TableDataSource Name="Rating" DataType="System.Int32" Enabled="true" TableName="Rating">
-        <Column Name="RatingId" DataType="System.Int32"/>
         <Column Name="Rate" DataType="System.Double"/>
         <Column Name="UserId" DataType="System.Int32"/>
         <Column Name="GameId" DataType="System.Int32"/>

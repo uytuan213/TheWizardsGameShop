@@ -5,7 +5,6 @@ namespace TheWizardsGameShop.Models
 {
     public partial class Rating
     {
-        public int RatingId { get; set; }
         public double Rate { get; set; }
         public int UserId { get; set; }
         public int GameId { get; set; }

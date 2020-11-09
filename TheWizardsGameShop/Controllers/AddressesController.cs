@@ -54,7 +54,7 @@ namespace TheWizardsGameShop.Controllers
             if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
             ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceName");
-            ViewData["AddressType"] = new SelectList(_context.AddressType, "AddressTypeId", "AddressTypeName");
+            ViewData["AddressTypeId"] = new SelectList(_context.AddressType, "AddressTypeId", "AddressTypeName");
             //ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserName", "Email");
             ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             return View();
@@ -136,7 +136,7 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceCode", address.ProvinceCode);
-            ViewData["AddressType"] = new SelectList(_context.AddressType, "AddressTypeId", "AddressTypeName");
+            ViewData["AddressTypeId"] = new SelectList(_context.AddressType, "AddressTypeId", "AddressTypeName");
             //ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", address.UserId);
             return View(address);
         }

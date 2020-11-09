@@ -93,9 +93,7 @@ namespace TheWizardsGameShop.Models
                     .IsRequired()
                     .HasMaxLength(256);
 
-                entity.Property(e => e.CreditCardNumber)
-                    .IsRequired()
-                    .HasMaxLength(256);
+                entity.Property(e => e.CreditCardNumber).HasMaxLength(256);
 
                 entity.Property(e => e.Cvc)
                     .HasColumnName("CVC")
@@ -246,6 +244,8 @@ namespace TheWizardsGameShop.Models
 
             modelBuilder.Entity<Rating>(entity =>
             {
+                entity.HasKey(e => new { e.UserId, e.GameId });
+
                 entity.HasOne(d => d.Game)
                     .WithMany(p => p.Rating)
                     .HasForeignKey(d => d.GameId)

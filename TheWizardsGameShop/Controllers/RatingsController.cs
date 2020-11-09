@@ -36,6 +36,8 @@ namespace TheWizardsGameShop.Controllers
         // GET: Ratings/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
+
             if (id == null)
             {
                 return NotFound();
@@ -44,7 +46,7 @@ namespace TheWizardsGameShop.Controllers
             var rating = await _context.Rating
                 .Include(r => r.Game)
                 .Include(r => r.User)
-                .FirstOrDefaultAsync(m => m.RatingId == id);
+                .FirstOrDefaultAsync(m => m.GameId == id);
             if (rating == null)
             {
                 return NotFound();
@@ -54,94 +56,89 @@ namespace TheWizardsGameShop.Controllers
         }
 
         // GET: Ratings/Create
-        public IActionResult Create()
-        {
-            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
+        //public IActionResult Create(int gameId, int rate)
+        //{
+        //    if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
-            ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
-            return View();
-        }
+        //    ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
+        //    return View();
+        //}
 
         // POST: Ratings/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RatingId,Rate,UserId,GameId")] Rating rating)
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(int gameId, int rate) //[Bind("RatingId,Rate,UserId,GameId")] Rating rating
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(rating);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
+            var userId = UserHelper.GetSessionUserId(this);
+            Rating rating = new Rating();
+            rating.Rate = (double)rate;
+            rating.UserId = (int)userId;
+            rating.GameId = gameId;
 
-            if (UserHelper.IsLoggedIn(this))
-            {
-                ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
-            }
+            _context.Add(rating);
+            await _context.SaveChangesAsync();
 
-            return View(rating);
+            return RedirectToAction("Details", "Games", new { id = gameId });
+            //return View(rating);
         }
 
         // GET: Ratings/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var rating = await _context.Rating.FindAsync(id);
+        //    var rating = await _context.Rating.FindAsync(id);
+        //    if (rating == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
+
+        //    ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
+        //    return View(rating);
+        //}
+
+        // POST: Ratings/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int gameId, int rate) //int id, [Bind("RatingId,Rate,UserId,GameId")] Rating rating
+        {
+            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
+            var userId = UserHelper.GetSessionUserId(this);
+            var rating = await _context.Rating.FirstOrDefaultAsync(r => r.GameId.Equals(gameId) && r.UserId.Equals(userId));
+
             if (rating == null)
             {
                 return NotFound();
             }
 
-            if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
-
-            ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
-            return View(rating);
-        }
-
-        // POST: Ratings/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RatingId,Rate,UserId,GameId")] Rating rating)
-        {
-            if (id != rating.RatingId)
+            try
             {
-                return NotFound();
+                rating.Rate = rate;
+
+                _context.Update(rating);
+                await _context.SaveChangesAsync();
             }
-
-            if (ModelState.IsValid)
+            catch (DbUpdateConcurrencyException)
             {
-                try
+                if (!RatingExists(rating.GameId))
                 {
-                    _context.Update(rating);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!RatingExists(rating.RatingId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
-                return RedirectToAction(nameof(Index));
             }
 
-            if (UserHelper.IsLoggedIn(this))
-            {
-                ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
-            }
-            return View(rating);
+            return RedirectToAction("Details", "Games", new { id = gameId });
         }
 
         // GET: Ratings/Delete/5
@@ -155,7 +152,7 @@ namespace TheWizardsGameShop.Controllers
             var rating = await _context.Rating
                 .Include(r => r.Game)
                 .Include(r => r.User)
-                .FirstOrDefaultAsync(m => m.RatingId == id);
+                .FirstOrDefaultAsync(m => m.GameId == id);
             if (rating == null)
             {
                 return NotFound();
@@ -177,7 +174,7 @@ namespace TheWizardsGameShop.Controllers
 
         private bool RatingExists(int id)
         {
-            return _context.Rating.Any(e => e.RatingId == id);
+            return _context.Rating.Any(e => e.GameId == id);
         }
 
         private RedirectToActionResult RequireLogin(Controller controller)

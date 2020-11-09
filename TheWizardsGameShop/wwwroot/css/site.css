@@ -234,6 +234,10 @@ textarea {
     text-decoration: underline;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 .btn {
     display: inline-block;
     cursor: pointer;
@@ -1085,6 +1089,45 @@ input[type=number].form-control:read-only {
     font-size: 1.125em;
     margin-left: var(--spacing-xxs);
 }
+
+#pageGames #game-info__rate__user {
+    border-radius: var(--border-radius-max);
+    font-size: 0.9em;
+    background: var(--color-brand);
+    color: white;
+    padding: 1px var(--spacing-xs);
+    margin-left: var(--spacing-s);
+    position: relative;
+    display: inline-block;
+}
+
+    #pageGames #game-info__rate__user__select {
+        position: absolute;
+        top: calc(100% + var(--spacing-xxs));
+        left: calc(50% - 70px);
+        width: 140px;
+        text-align: center;
+        background: white;
+        border: var(--border-thicker);
+        padding: var(--spacing-xs);
+        letter-spacing: -3px;
+        line-height: 0;
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05);
+        animation: fade-in-downward-s 0.1s var(--timing-ease-out-smoother);
+        display: none;
+    }
+
+        #pageGames #game-info__rate__user__select a {
+            color: var(--color-text-lighter);
+        }
+
+#pageGames #game-info__rate__user__select a.hover {
+    color: orange;
+}
+
+    #pageGames #game-info__rate__user__select .material-icons {
+        font-size: 14pt;
+    }
 
 #pageGames #game-info__rate__icon {
     position: relative;

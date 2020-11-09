@@ -1,16 +1,14 @@
 ﻿@model TheWizardsGameShop.Models.Game
 
-@{
-    ViewData["Title"] = "Game Details";
-    ViewData["BackgroundImage"] = "/images/" + Model.GameId + "/01.png";
-    string rateHighlightWidth = ((double)ViewData["AvgRating"] / 5 * 100).ToString() + "%";
-}
+@{ ViewData["Title"] = "Game Details";
+                ViewData["BackgroundImage"] = "/images/" + Model.GameId + "/01.png";
+                string rateHighlightWidth = ((double)ViewData["AvgRating"] / 5 * 100).ToString() + "%"; }
 
 <div class="page contents" id="pageGames" --data-theme="games">
-    <div class="page-header long flex-center" style="background-image: url('/images/@Html.DisplayFor(model => model.GameId)/01.png')">
+    <div class="page-header long flex-center" style="background-image: url('/images/@Model.GameId/01.png')">
         <h1>&nbsp;</h1>
     </div>
-    <div class="page-body">
+    <section class="page-body">
         <div id="game-info" class="flex-col-3">
             <div id="game-info__thumbnail" class="col">
                 <img src="/images/@Html.DisplayFor(model => model.GameId)/00.png" style="width: 100%;" />
@@ -18,7 +16,7 @@
             <div id="game-info__title" class="col">
                 <h2>@Html.DisplayFor(model => model.GameName)</h2>
                 <p id="game-info__category">@Html.DisplayFor(model => model.GameCategory.GameCategory1)</p>
-                <p id="game-info__rate" class="flex-center-vertical">
+                <div id="game-info__rate" class="flex-center-vertical">
                     <span id="game-info__rate__icon">
                         <span class="material-icons">grade</span>
                         <span class="material-icons">grade</span>
@@ -36,39 +34,130 @@
                     <span id="game-info__rate__grade">
                         @ViewData["AvgRating"]
                     </span>
-                </p>
+
+                    <span id="game-info__rate__user" class="clickable" onclick="$('#game-info__rate__user__select').toggle();">
+                        @if (ViewData["UserRatingRate"] == null)
+                        {
+                            <span>Rate this game</span>
+
+                            <span id="game-info__rate__user__select">
+                                <a id="game-info__rate__user__select__1" href="/Ratings/Create?gameId=@Model.GameId&rate=1"><span class="material-icons">star</span></a>
+                                <a id="game-info__rate__user__select__2" href="/Ratings/Create?gameId=@Model.GameId&rate=2"><span class="material-icons">star</span></a>
+                                <a id="game-info__rate__user__select__3" href="/Ratings/Create?gameId=@Model.GameId&rate=3"><span class="material-icons">star</span></a>
+                                <a id="game-info__rate__user__select__4" href="/Ratings/Create?gameId=@Model.GameId&rate=4"><span class="material-icons">star</span></a>
+                                <a id="game-info__rate__user__select__5" href="/Ratings/Create?gameId=@Model.GameId&rate=5"><span class="material-icons">star</span></a>
+                            </span> }
+                        else
+                        {
+                            <span>My Rating: @ViewData["UserRatingRate"]</span>
+
+                            <span id="game-info__rate__user__select">
+                                <a id="game-info__rate__user__select__1" href="/Ratings/Edit?gameId=@Model.GameId&rate=1"><span class="material-icons">star</span></a>
+                                <a id="game-info__rate__user__select__2" href="/Ratings/Edit?gameId=@Model.GameId&rate=2"><span class="material-icons">star</span></a>
+                                <a id="game-info__rate__user__select__3" href="/Ratings/Edit?gameId=@Model.GameId&rate=3"><span class="material-icons">star</span></a>
+                                <a id="game-info__rate__user__select__4" href="/Ratings/Edit?gameId=@Model.GameId&rate=4"><span class="material-icons">star</span></a>
+                                <a id="game-info__rate__user__select__5" href="/Ratings/Edit?gameId=@Model.GameId&rate=5"><span class="material-icons">star</span></a>
+                            </span>}
+                    </span>
+
+                    @if (ViewData["UserRatingRate"] != null)
+                    {
+                    <script>
+                        var rate = @ViewData["UserRatingRate"];
+                    </script>
+                    }
+                    else
+                    {
+                        <script>var rate = 0;</script>
+                    }
+
+                    <script>
+                        var eraseHighlight = function () {
+                            $('#game-info__rate__user__select__1').removeClass('hover');
+                            $('#game-info__rate__user__select__2').removeClass('hover');
+                            $('#game-info__rate__user__select__3').removeClass('hover');
+                            $('#game-info__rate__user__select__4').removeClass('hover');
+                            $('#game-info__rate__user__select__5').removeClass('hover');
+                        }
+
+                        var highlightUserRate = function () {
+                            eraseHighlight();
+
+                            if (rate >= 5) {
+                                $('#game-info__rate__user__select__5').addClass('hover');
+                            }
+                            if (rate >= 4) {
+                                $('#game-info__rate__user__select__4').addClass('hover');
+                            }
+                            if (rate >= 3) {
+                                $('#game-info__rate__user__select__3').addClass('hover');
+                            }
+                            if (rate >= 2) {
+                                $('#game-info__rate__user__select__2').addClass('hover');
+                            }
+                            if (rate >= 1) {
+                                $('#game-info__rate__user__select__1').addClass('hover');
+                            }
+                        }
+
+                        var handleMouseLeave = function () {
+                            highlightUserRate();
+                        }
+
+                        var handleMouseEnter = function (rate) {
+                            eraseHighlight();
+
+                            if (rate >= 5) {
+                                $('#game-info__rate__user__select__5').addClass('hover');
+                            }
+                            if (rate >= 4) {
+                                $('#game-info__rate__user__select__4').addClass('hover');
+                            }
+                            if (rate >= 3) {
+                                $('#game-info__rate__user__select__3').addClass('hover');
+                            }
+                            if (rate >= 2) {
+                                $('#game-info__rate__user__select__2').addClass('hover');
+                            }
+                            if (rate >= 1) {
+                                $('#game-info__rate__user__select__1').addClass('hover');
+                            }
+                        }
+
+                        $('#game-info__rate__user__select__1').hover(function () { handleMouseEnter(1); }, handleMouseLeave);
+                        $('#game-info__rate__user__select__2').hover(function () { handleMouseEnter(2); }, handleMouseLeave);
+                        $('#game-info__rate__user__select__3').hover(function () { handleMouseEnter(3); }, handleMouseLeave);
+                        $('#game-info__rate__user__select__4').hover(function () { handleMouseEnter(4); }, handleMouseLeave);
+                        $('#game-info__rate__user__select__5').hover(function () { handleMouseEnter(5); }, handleMouseLeave);
+                        highlightUserRate();
+                    </script>
+                </div>
             </div>
             <div id="game-info__buy" class="col">
                 <p id="game-info__price">$@Html.DisplayFor(model => model.GamePrice)</p>
                 <a nohref id="game-info__buy__btn" class="btn btn--primary flex-center"><span class="material-icons">add_shopping_cart</span>Add to Cart</a>
-                
-                <p id="game-info__qty">@Html.DisplayFor(model => model.GameQty)</p>
-                <p id="game-info__status">@Html.DisplayFor(model => model.GameStatusCodeNavigation.GameStatusCode)</p>
+
+                <p id="game-info__qty">Available: @Html.DisplayFor(model => model.GameQty)</p>
+                @*<p id="game-info__status">@Html.DisplayFor(model => model.GameStatusCodeNavigation.GameStatusCode)</p>*@
             </div>
         </div>
         <p class="page-submenu">
             <a href="javascript:history.back()" class="item">&lt; Back</a>
         </p>
-        <dl class="row">
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.GameDescription)
-            </dt>
-            <dd class="col-sm-10">
+        <section>
+            <h3>@Html.DisplayNameFor(model => model.GameDescription)</h3>
+            <p>
                 @Html.DisplayFor(model => model.GameDescription)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.GameDigitalPath)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.GameDigitalPath)
-            </dd>
-            <dd class="col-sm-10">
-                @{ foreach (var i in Model.GameImage)
-                                {
-        <p>@i.GameImagePath</p> } }
-                </dd>
-                </dl>
-            </div>
-    <div>
+            </p>
+        </section>
     </div>
 </div>
+
+@*<dd class="col-sm-10">
+    @Html.DisplayFor(model => model.GameDigitalPath)
+</dd>
+<dd class="col-sm-10">
+    @{ foreach (var i in Model.GameImage)
+        {
+<p>@i.GameImagePath</p> } }
+</dd>*@

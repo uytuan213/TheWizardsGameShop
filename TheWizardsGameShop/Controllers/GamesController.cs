@@ -95,6 +95,7 @@ namespace TheWizardsGameShop.Controllers
 
             var game = await _context.Game
                 .Include(g => g.GameCategory)
+                .Include(g => g.GamePlatform)
                 .Include(g => g.GameStatusCodeNavigation)
                 .Include(g => g.GameImage)
                 .FirstOrDefaultAsync(m => m.GameId == id);
@@ -108,8 +109,13 @@ namespace TheWizardsGameShop.Controllers
             if (UserHelper.IsLoggedIn(this))
             {
                 var userId = UserHelper.GetSessionUserId(this);
-                ViewData["UserReview"] = _context.Review.Where(r => r.GameId.Equals(id) && r.UserId.Equals(userId));
-                ViewData["UserRating"] = _context.Rating.Where(r => r.GameId.Equals(id) && r.UserId.Equals(userId));
+                var userReview = await _context.Review.FirstOrDefaultAsync(r => r.GameId.Equals(id) && r.UserId.Equals(userId));
+                var userRating = await _context.Rating.FirstOrDefaultAsync(r => r.GameId.Equals(id) && r.UserId.Equals(userId));
+                ViewData["UserReview"] = userReview;
+                if (userRating != null)
+                {
+                    ViewData["UserRatingRate"] = userRating.Rate;
+                }
             }
 
             return View(game);
