@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +15,12 @@ namespace TheWizardsGameShop.Controllers
         public const int PAGE_SIZE = 15;
         public const int SEARCH_SUGGESTIONS_COUNT = 10;
         private readonly TheWizardsGameShopContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public GamesController(TheWizardsGameShopContext context)
+        public GamesController(TheWizardsGameShopContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Games
@@ -128,12 +131,20 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GameId,GameStatusCode,GameCategoryId,GameName,GameDescription,GamePrice,GameQty,GameDigitalPath")] Game game)
+        public async Task<IActionResult> Create([Bind("GameId,GameStatusCode,GameCategoryId,GameName,GameDescription,GamePrice,GameQty")] Game game,
+            [FromForm(Name="gameFile")] IFormFile gameFile = null)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(game);
                 await _context.SaveChangesAsync();
+                if (gameFile != null)
+                {
+                    var newGame = _context.Game.Last();
+                    newGame.GameDigitalPath = UploadedFile(newGame.GameId, gameFile);
+                    _context.Update(newGame);
+                    await _context.SaveChangesAsync();
+                }
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1", game.GameCategoryId);
@@ -164,7 +175,8 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GameId,GameStatusCode,GameCategoryId,GameName,GameDescription,GamePrice,GameQty,GameDigitalPath")] Game game)
+        public async Task<IActionResult> Edit(int id, [Bind("GameId,GameStatusCode,GameCategoryId,GameName,GameDescription,GamePrice,GameQty")] Game game,
+            [FromForm(Name = "gameFile")] IFormFile gameFile = null)
         {
             if (id != game.GameId)
             {
@@ -175,6 +187,21 @@ namespace TheWizardsGameShop.Controllers
             {
                 try
                 {
+                    if (gameFile != null)
+                    {
+                        var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, $"download\\{game.GameId}");
+                        // Delete the old game file if exists
+                        if (Directory.EnumerateFileSystemEntries(folderPath).Any())
+                        {
+                            DirectoryInfo di = new DirectoryInfo(folderPath);
+                            foreach(FileInfo file in di.GetFiles())
+                            {
+                                file.Delete();
+                            }
+                        }
+                        game.GameDigitalPath = UploadedFile(game.GameId, gameFile);
+                    }
+
                     _context.Update(game);
                     await _context.SaveChangesAsync();
                 }
@@ -313,6 +340,30 @@ namespace TheWizardsGameShop.Controllers
         private int GetTotalPages(int totalItems)
         {
             return ((totalItems % PAGE_SIZE > 0) ? 1 : 0) + (totalItems / PAGE_SIZE);
+        }
+
+        private string UploadedFile(int gameId, IFormFile gameFile)
+        {
+            string filePath = null;
+
+            if (gameFile != null)
+            {
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, $"download\\{gameId}");
+                string fileName = gameId + "_" + gameFile.FileName;
+                filePath = Path.Combine(uploadsFolder, fileName);
+
+                // Create directory if it doesn't exist
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    gameFile.CopyTo(fileStream);
+                }
+            }
+            return filePath;
         }
     }
 }
