@@ -72,6 +72,7 @@ namespace TheWizardsGameShop.Controllers
 
             var games = _context.Game.Include(g => g.GameCategory)
                                      .Include(g => g.GameStatusCodeNavigation)
+                                     .Include(g => g.GameImage)
                                      .Skip((pageNo - 1) * PAGE_SIZE)
                                      .Take(PAGE_SIZE);
             if (games.Count() == 0)

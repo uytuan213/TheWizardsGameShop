@@ -4,7 +4,10 @@
     --nav-height: 40px;
     --footer-height: 100px;
     --page-header-height: 200px;
+    --page-header-long-height: 500px;
     --page-header-short-height: 100px;
+    --page-box-shadow: 0 30px 50px rgba(0, 0, 0, 0.05);
+    --page-box-shadow-darker: 0 30px 50px rgba(0, 0, 0, 0.2);
     --search-width: 360px;
     --search-suggestions-max-height: 350px;
     --spacing-xxs: 6px;
@@ -144,6 +147,10 @@ td {
 
 tr:last-of-type td {
     border-bottom: none;
+}
+
+textarea {
+    width: 100%;
 }
 
 /* Common Styles */
@@ -319,7 +326,7 @@ tr:last-of-type td {
 .tab {
     position: relative;
     color: var(--color-text-lighter);
-    padding: var(--spacing-xxs) 0;
+    padding-bottom: var(--spacing-xxs);
     margin: 0 var(--spacing-xs);
     margin-bottom: var(--spacing-xxs);
 }
@@ -500,6 +507,21 @@ header {
     color: var(--color-brand);
 }
 
+.game-background {
+    position: fixed;
+    left: 0;
+    top: -10%;
+    width: 100%;
+    height: 120vh;
+    z-index: -1;
+    filter: blur(50px) brightness(75%) grayscale(25%);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 30%, rgba(0, 0, 0, 1) 90%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 30%, rgba(0, 0, 0, 1) 90%);
+}
+
 /* Footer */
 html {
     position: relative;
@@ -523,17 +545,24 @@ footer {
 /* Page */
 .page {
     background-color: white;
+    box-shadow: var(--page-box-shadow);
 }
 
 .page-header {
     height: var(--page-header-height);
     padding: 0 var(--spacing-xl);
+    background-size: cover;
+    background-position: center 25%;
 }
 
 .page-header.nobackground {
     padding: 0;
     margin: 0 var(--spacing-xl);
     border-bottom: var(--border);
+}
+
+.page-header.long {
+    height: var(--page-header-long-height);
 }
 
 .page-header.short {
@@ -708,6 +737,18 @@ input[type=number].form-control:read-only {
 
     to {
         background-position: center top;
+    }
+}
+
+@keyframes page-header {
+    from {
+        opacity: 0.25;
+        background-position: center 20%;
+    }
+
+    to {
+        opacity: 1;
+        background-position: center 25%;
     }
 }
 
@@ -1008,7 +1049,99 @@ input[type=number].form-control:read-only {
     text-align: center;
 }
 
+/* Game Page */
+#pageGames {
+    background-color: rgba(255, 255, 255, 0.9);
+}
 
+#pageGames .page-header {
+    animation: page-header 0.2s var(--timing-ease-out-smoother);
+}
+
+#pageGames #game-info {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    /*border: 2px solid white;*/
+    margin-top: calc(var(--spacing-xl) * -1 - 150px);
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.05);
+    animation: fade-in-upward-s 0.2s var(--timing-ease-out-smoother);
+}
+
+#pageGames #game-info__thumbnail {
+    width: 120px !important;
+}
+
+#pageGames #game-info__title {
+    width: calc(100% - 340px) !important;
+    padding: 0 var(--spacing);
+}
+
+#pageGames #game-info__rate__grade {
+    color: var(--color-text-lighter);
+    font-weight: 600;
+    font-size: 1.125em;
+    margin-left: var(--spacing-xxs);
+}
+
+#pageGames #game-info__rate__icon {
+    position: relative;
+    display: inline-block;
+    color: rgba(0, 0, 0, 0.1);
+    letter-spacing: -2px;
+    line-height: 0;
+}
+
+#pageGames #game-info__rate__icon__highlight {
+    position: absolute;
+    display: inline-block;
+    left: 0;
+    top: 0;
+    color: orange;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    overflow-wrap: normal;
+    word-break: keep-all;
+    white-space: nowrap;
+}
+
+#pageGames #game-info__buy {
+    width: 220px !important;
+}
+
+#pageGames #game-info__buy__btn {
+    border-radius: 0 !important;
+    padding: var(--spacing-s) var(--spacing-xxs) !important;
+    margin: var(--spacing-xxs) 0;
+    font-size: 1.125em;
+    font-weight: 600;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s var(--timing-ease-out-smoother);
+}
+
+#pageGames #game-info__buy__btn:hover {
+    transform: scale(1.04);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+#pageGames #game-info__buy__btn:active {
+    transform: scale(1.02);
+}
+
+#pageGames #game-info__buy__btn .material-icons {
+    margin-right: var(--spacing-xxs);
+    vertical-align: middle;
+}
+
+#pageGames #game-info__price {
+    font-size: 1.25em;
+    font-weight: 600;
+}
 
 .shell {
     position: relative;

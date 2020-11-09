@@ -28,8 +28,21 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/@@coreui/icons/css/brand.min.css">
+    @if (ViewData["BackgroundImage"] != null)
+    {
+        <style>
+            html { background: none; }
+            .page { box-shadow: var(--page-box-shadow-darker); }
+        </style>
+    }
 </head>
 <body>
+    @if (ViewData["BackgroundImage"] != null)
+    {
+    <div class="game-background" style="background-image: url('@ViewData["BackgroundImage"]');">
+    </div>
+    }
+
     <header class="flex-center">
         <nav class="nav contents flex-center-vertical">
             @if (headerMode != "Employee")
@@ -43,58 +56,58 @@
             }
 
             @*<ul class="nav-menu flex-center-vertical">
-            <li>
-                <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-            </li>
-            <li>
-                <a asp-area="" asp-controller="Games" asp-action="Index">Browse</a>
-            </li>
-        </ul>*@
+                    <li>
+                        <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="Games" asp-action="Index">Browse</a>
+                    </li>
+                </ul>*@
             @if (headerMode != "Employee")
             {
-        <div class="nav-search">
-            <form asp-controller="Games" asp-action="Search" method="get" class="nav-search">
-                <input placeholder="Search" id="nav-search-input" name="keyword" value="@ViewData["SearchKeyword"]" autocomplete="off" />
-                <button type="submit" class="nav-search-btn"><span class="material-icons">search</span></button>
-            </form>
-            <div class="nav-search-suggestions" id="nav-search-suggestions" style="display: none;">
-                @*@Html.Partial("~/Views/Games/SearchSuggestions.cshtml")*@
-                <iframe src="" id="nav-search-suggestions-iframe" frameborder="0" scrolling="auto" onload="resizeIframe(this);">Loading...</iframe>
-            </div>
-        </div>
+                <div class="nav-search">
+                    <form asp-controller="Games" asp-action="Search" method="get" class="nav-search">
+                        <input placeholder="Search" id="nav-search-input" name="keyword" value="@ViewData["SearchKeyword"]" autocomplete="off" />
+                        <button type="submit" class="nav-search-btn"><span class="material-icons">search</span></button>
+                    </form>
+                    <div class="nav-search-suggestions" id="nav-search-suggestions" style="display: none;">
+                        @*@Html.Partial("~/Views/Games/SearchSuggestions.cshtml")*@
+                        <iframe src="" id="nav-search-suggestions-iframe" frameborder="0" scrolling="auto" onload="resizeIframe(this);">Loading...</iframe>
+                    </div>
+                </div>
             }
-        <ul class="nav-menu flex-center-vertical absolute-right">
-            @if (isLoggedIn)
-            {
-                @if (headerMode == "Employee")
+            <ul class="nav-menu flex-center-vertical absolute-right">
+                @if (isLoggedIn)
                 {
+                    @if (headerMode == "Employee")
+                    {
+                        <li>
+                            <a nohref class="account flex-center-vertical" style="pointer-events: none;"><span class="material-icons">account_circle</span>@session.GetString("userName")</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a asp-area="" asp-controller="Users" asp-action="Menu" class="account flex-center-vertical"><span class="material-icons">account_circle</span>@session.GetString("userName")</a>
+                        </li>
+                        <li>
+                            <a onclick="alert('Not available', 'Coming soon');">Cart</a>
+                        </li>
+                    }
                     <li>
-                        <a nohref class="account flex-center-vertical" style="pointer-events: none;"><span class="material-icons">account_circle</span>@session.GetString("userName")</a>
+                        <a asp-area="" asp-controller="Users" asp-action="Logout">Logout</a>
                     </li>
                 }
                 else
                 {
                     <li>
-                        <a asp-area="" asp-controller="Users" asp-action="Menu" class="account flex-center-vertical"><span class="material-icons">account_circle</span>@session.GetString("userName")</a>
+                        <a asp-area="" asp-controller="Users" asp-action="Login">Login</a>
                     </li>
                     <li>
-                        <a onclick="alert('Not available', 'Coming soon');">Cart</a>
+                        <a asp-area="" asp-controller="Users" asp-action="Create">Sign Up</a>
                     </li>
                 }
-                <li>
-                    <a asp-area="" asp-controller="Users" asp-action="Logout">Logout</a>
-                </li>
-            }
-            else
-            {
-                <li>
-                    <a asp-area="" asp-controller="Users" asp-action="Login">Login</a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="Users" asp-action="Create">Sign Up</a>
-                </li>
-            }
-        </ul>
+            </ul>
         </nav>
     </header>
     <main role="main">
@@ -103,7 +116,7 @@
 
     <footer class="flex-center">
         <div class="contents flex-center-vertical">
-            &copy; 2020 - TheWizardsGameShop - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2020 - The Wizards Game Shop
         </div>
     </footer>
 
