@@ -103,7 +103,14 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
 
-            ViewBag.AvgRating = CalculateAvgRating((int)id);
+            ViewData["AvgRating"] = CalculateAvgRating((int)id);
+            ViewData["GameReviews"] = _context.Review.Include(r => r.User).Where(r => r.GameId.Equals(id) && r.IsPublished);
+            if (UserHelper.IsLoggedIn(this))
+            {
+                var userId = UserHelper.GetSessionUserId(this);
+                ViewData["UserReview"] = _context.Review.Where(r => r.GameId.Equals(id) && r.UserId.Equals(userId));
+                ViewData["UserRating"] = _context.Rating.Where(r => r.GameId.Equals(id) && r.UserId.Equals(userId));
+            }
 
             return View(game);
         }
