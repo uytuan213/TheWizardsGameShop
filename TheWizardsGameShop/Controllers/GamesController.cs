@@ -134,6 +134,10 @@ namespace TheWizardsGameShop.Controllers
         // GET: Games/Create
         public IActionResult Create()
         {
+            if (!UserHelper.IsEmployee(this))
+            {
+                return UserHelper.RequireEmployee(this);
+            }
             ViewData["GamePlatformId"] = new SelectList(_context.Platform, "PlatformId", "PlatformName");
             ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1");
             ViewData["GameStatusCode"] = new SelectList(_context.GameStatus, "GameStatusCode", "GameStatus1");
@@ -154,9 +158,8 @@ namespace TheWizardsGameShop.Controllers
                 await _context.SaveChangesAsync();
                 if (gameFile != null)
                 {
-                    var newGame = await _context.Game.LastOrDefaultAsync();
-                    newGame.GameDigitalPath = UploadedFile(newGame.GameId, gameFile);
-                    _context.Update(newGame);
+                    game.GameDigitalPath = UploadedFile(game.GameId, gameFile);
+                    _context.Update(game);
                     await _context.SaveChangesAsync();
                 }
                 return RedirectToAction(nameof(Admin));
@@ -170,6 +173,11 @@ namespace TheWizardsGameShop.Controllers
         // GET: Games/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!UserHelper.IsEmployee(this))
+            {
+                return UserHelper.RequireEmployee(this);
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -243,6 +251,11 @@ namespace TheWizardsGameShop.Controllers
         // GET: Games/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!UserHelper.IsEmployee(this))
+            {
+                return UserHelper.RequireEmployee(this);
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -289,6 +302,8 @@ namespace TheWizardsGameShop.Controllers
                 ViewBag.totalPages = GetTotalPages(totalGames);
 
                 var searchResult = _context.Game.Include(g => g.GameImage)
+                                                .Include(g => g.GameCategory)
+                                                .Include(g => g.GameStatusCodeNavigation)
                                                 .Where(g => g.GameName.Contains(keyword))
                                                 .Skip((pageNo - 1) * PAGE_SIZE)
                                                 .Take(PAGE_SIZE);
@@ -381,7 +396,7 @@ namespace TheWizardsGameShop.Controllers
                     gameFile.CopyTo(fileStream);
                 }
             }
-            return filePath;
+            return "\\" + Path.GetRelativePath(_webHostEnvironment.WebRootPath, filePath);
         }
     }
 }

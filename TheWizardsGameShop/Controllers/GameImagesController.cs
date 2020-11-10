@@ -189,7 +189,7 @@ namespace TheWizardsGameShop.Controllers
                     imageFile.CopyTo(fileStream);
                 }
             }
-            return filePath;
+            return "\\" + Path.GetRelativePath(_webHostEnvironment.WebRootPath, filePath); ;
         }
     }
 }
