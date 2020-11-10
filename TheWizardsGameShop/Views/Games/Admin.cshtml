@@ -35,7 +35,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>
+                    <th style="width: 45%;">
                         @Html.DisplayNameFor(model => model.GameName)
                     </th>
                     @*<th>
@@ -56,6 +56,7 @@
                     <th>
                         @Html.DisplayNameFor(model => model.GameStatusCodeNavigation)
                     </th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -86,6 +87,7 @@
         <td>
             <a asp-action="Edit" asp-route-id="@item.GameId" class="btn btn--s">Edit</a>
             <a asp-action="Delete" asp-route-id="@item.GameId" class="btn btn--s">Delete</a>
+            <a asp-controller="GameImages" asp-action="Create" asp-route-gameId="@item.GameId" class="btn btn--s">Upload Image</a>
         </td>
     </tr>}
             </tbody>

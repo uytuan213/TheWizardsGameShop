@@ -32,7 +32,7 @@ namespace TheWizardsGameShop.Controllers
                     decodeData(item);
                 }
             }
-            
+
             return View(creditCards);
         }
 
@@ -106,7 +106,6 @@ namespace TheWizardsGameShop.Controllers
             //ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "UserName", creditCard.UserId);
 
             decodeData(creditCard);
-            ViewData["ExpiryDate"] = creditCard.ExpiryDate.Insert(2, "/");
             return View(creditCard);
         }
 

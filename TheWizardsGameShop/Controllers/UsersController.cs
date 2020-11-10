@@ -400,7 +400,7 @@ namespace TheWizardsGameShop.Controllers
                 EmailHelper.SendEmail(userMailboxAddress, subject, bodyBuilder);
 
             }
-            TempData["Message"] = "The reset password email has been sent to your email address.";
+            TempData["Message"] = "Password reset link has been sent to your email address.";
             return RedirectToAction("login", "users");
         }
 
@@ -452,7 +452,7 @@ namespace TheWizardsGameShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangePassword(string newPassword, string newPasswordConfirm, [Bind("UserId, PasswordHash")] WizardsUser users)
+        public async Task<IActionResult> ChangePassword(string newPassword, string newPasswordConfirm, string mode, [Bind("UserId, PasswordHash")] WizardsUser users)
         {
             var userResult = _context.WizardsUser
                 .Where(u => u.UserId.Equals(users.UserId))
@@ -460,8 +460,8 @@ namespace TheWizardsGameShop.Controllers
 
             var username = users.UserName;
             var password = users.PasswordHash;
-            var passwordHash = HashHelper.ComputeHash(password);
-            var isMatch = userResult != null && userResult.PasswordHash.Equals(passwordHash);
+            var passwordHash = !string.IsNullOrEmpty(password) ? HashHelper.ComputeHash(password) : null;
+            var isMatch = userResult != null && (mode == "reset" || userResult.PasswordHash.Equals(passwordHash));
 
             // Password correct
             if (isMatch)
@@ -497,6 +497,7 @@ namespace TheWizardsGameShop.Controllers
             }
 
             ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
+            ViewData["OldPasswordRequired"] = mode != "reset";
             return View();
         }
         private string GenerateRandomPassword()

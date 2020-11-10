@@ -6,12 +6,12 @@
         @if (ViewData["ErrorPageTitle"] != null || ViewData["ErrorPageMessage"] != null)
         {
             <h2>@ViewData["ErrorPageTitle"]</h2>
-            <h3>@ViewData["ErrorPageMessage"]</h3>
+            <h4>@ViewData["ErrorPageMessage"]</h4>
         }
         else
         {
             <h2>Page Not Found</h2>
-            <h3>The page does not exist. Please contact customer support.</h3>
+            <h4>The page does not exist. Please contact customer support.</h4>
         }
     <p style="margin-top: 20px;">
         <a href="javascript:history.back()" class="btn">Go Back</a>

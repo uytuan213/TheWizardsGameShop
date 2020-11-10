@@ -51,9 +51,10 @@ namespace TheWizardsGameShop.Controllers
         }
 
         // GET: GameImages/Create
-        public IActionResult Create()
+        public IActionResult Create(int gameId)
         {
-            ViewData["GameId"] = new SelectList(_context.Game, "GameId", "GameName");
+            //ViewData["GameId"] = new SelectList(_context.Game, "GameId", "GameName");
+            ViewData["GameId"] = gameId;
             return View();
         }
 
@@ -64,15 +65,17 @@ namespace TheWizardsGameShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromForm(Name = "imageFile")] IFormFile imageFile ,[Bind("GameImageId,GameId")] GameImage gameImage, bool isThumbnail = false)
         {
-            if (ModelState.IsValid)
+            if (true) //ModelState.IsValid
             {
                 string filePath = UploadedFile(gameImage.GameId, imageFile, isThumbnail);
                 gameImage.GameImagePath = filePath;
                 _context.Add(gameImage);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
+                return RedirectToAction("Admin", "Games");
             }
-            ViewData["GameId"] = new SelectList(_context.Game, "GameId", "GameName", gameImage.GameId);
+            //ViewData["GameId"] = new SelectList(_context.Game, "GameId", "GameName", gameImage.GameId);
+            ViewData["GameId"] = gameImage.GameId;
             return View(gameImage);
         }
 
@@ -171,7 +174,8 @@ namespace TheWizardsGameShop.Controllers
             if (imageFile != null)
             {
                 string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, $"images\\{gameId}");
-                string fileName = isThumbnail ? "Thumbnail_" + imageFile.FileName : Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+                //string fileName = isThumbnail ? "Thumbnail_" + imageFile.FileName : Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+                string fileName = isThumbnail ? "00.png" : "01.png";
                 filePath = Path.Combine(uploadsFolder, fileName);
 
                 // Create directory if it doesn't exist

@@ -6,12 +6,12 @@
         @if (ViewData["ErrorPageTitle"] != null || ViewData["ErrorPageMessage"] != null)
         {
             <h2>@ViewData["ErrorPageTitle"]</h2>
-            <h3>@ViewData["ErrorPageMessage"]</h3>
+            <h4>@ViewData["ErrorPageMessage"]</h4>
         }
         else
         {
             <h2>Error</h2>
-            <h3>Oops, something happened. Please try again later.</h3>
+            <h4>Oops, something happened. Please try again later.</h4>
         }
     <p style="margin-top: 20px;">
         <a href="javascript:history.back()" class="btn">Go Back</a>

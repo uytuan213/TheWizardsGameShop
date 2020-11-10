@@ -16,11 +16,11 @@
             </div>
 
             <div class="col page-tabs flex-center">
-                <a asp-action="Index" class="tab selected">Games</a>
-                <a asp-action="Index" class="tab" disabled>Customers</a>
-                <a asp-action="Index" class="tab" disabled>Employees</a>
-                <a asp-action="Index" class="tab" disabled>Sales</a>
-                <a asp-action="Index" class="tab" disabled>Exceptions</a>
+                <a id="report-tab-games" asp-action="Index" class="tab">Games</a>
+                <a id="report-tab-customers" href="?reportName=MemberReport" class="tab">Customers</a>
+                <a id="report-tab-employees" asp-action="Index" class="tab" disabled>Employees</a>
+                <a id="report-tab-sales" asp-action="Index" class="tab" disabled>Sales</a>
+                <a id="report-tab-exceptions" asp-action="Index" class="tab" disabled>Exceptions</a>
             </div>
 
             <div class="col"></div>
@@ -30,3 +30,11 @@
         </div>
     </div>
 </div>
+
+<script>
+    if (location.search.indexOf("reportName=MemberReport") != -1) {
+        $("#report-tab-customers").addClass("selected");
+    } else if (location.search == "" || location.search.indexOf("reportName=GameReport") != -1) {
+        $("#report-tab-games").addClass("selected");
+    }
+</script>

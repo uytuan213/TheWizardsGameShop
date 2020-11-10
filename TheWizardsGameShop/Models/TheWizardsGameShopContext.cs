@@ -146,9 +146,7 @@ namespace TheWizardsGameShop.Models
 
             modelBuilder.Entity<Game>(entity =>
             {
-                entity.Property(e => e.GameDigitalPath)
-                    .IsRequired()
-                    .HasMaxLength(256);
+                entity.Property(e => e.GameDigitalPath).HasMaxLength(256);
 
                 entity.Property(e => e.GameName)
                     .IsRequired()

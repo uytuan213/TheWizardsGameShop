@@ -84,28 +84,33 @@
                     <h4>Click to add to your favorites</h4>
                     <hr />
                     <div class="list">
-                        @foreach (var item in ViewBag.Platforms)
+                        @if (ViewBag.Platforms != null)
                         {
-            <div class="item clickable flex-center" onclick="handlePlatformClick(@item.PlatformId);">
-                <p class="item__icon">
-                    @if (item.PlatformName == "PC")
+                    @foreach (var item in ViewBag.Platforms)
                     {
-    <i class="cib-windows"></i> }
-else if (item.PlatformName == "PS4")
-{
-    <i class="cib-playstation"></i> }
-else if (item.PlatformName == "Xbox One")
-{
-    <i class="cib-xbox"></i> }
-else if (item.PlatformName == "Switch")
-{
-    <i class="cib-nintendo-switch"></i> }
-else if (item.PlatformName == "2DS")
-{
-    <i class="cib-nintendo-3ds"></i>}
-                </p>
-                @item.PlatformName
-            </div>}
+                    <div class="item clickable flex-center" onclick="handlePlatformClick(@item.PlatformId);">
+                        <p class="item__icon">
+                            @if (item.PlatformName == "PC")
+                            {
+                    <i class="cib-windows"></i> }
+                else if (item.PlatformName == "PS4")
+                {
+                    <i class="cib-playstation"></i> }
+                else if (item.PlatformName == "Xbox One")
+                {
+                    <i class="cib-xbox"></i> }
+                else if (item.PlatformName == "Switch")
+                {
+                    <i class="cib-nintendo-switch"></i> }
+                else if (item.PlatformName == "2DS")
+                {
+                    <i class="cib-nintendo-3ds"></i>}
+                        </p>
+                        @item.PlatformName
+                    </div>} }
+                                else
+                                {
+                    <div class="list__message flex-center">You've favourited all.</div>}
                     </div>
                 </section>
 

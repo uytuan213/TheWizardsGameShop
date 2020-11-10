@@ -25,7 +25,7 @@ namespace TheWizardsGameShop.Controllers
             if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
             var userId = HttpContext.Session.GetInt32("userId");
-            var userAddresses = _context.Address.Where(a => a.UserId.Equals(userId));
+            var userAddresses = _context.Address.Include(a => a.AddressType).Where(a => a.UserId.Equals(userId));
             return View(await userAddresses.ToListAsync());
         }
 
@@ -74,7 +74,7 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceName", address.ProvinceCode);
-            ViewData["AddressType"] = new SelectList(_context.AddressType, "AddressTypeId", "AddressTypeName");
+            ViewData["AddressTypeId"] = new SelectList(_context.AddressType, "AddressTypeId", "AddressTypeName");
             //ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "Email", address.UserId);
             if (UserHelper.IsLoggedIn(this))
             {
@@ -99,6 +99,7 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
             ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceCode", address.ProvinceCode);
+            ViewData["AddressTypeId"] = new SelectList(_context.AddressType, "AddressTypeId", "AddressTypeName");
             //ViewData["UserId"] = new SelectList(_context.WizardsUser, "UserId", "UserName", address.UserId);
             return View(address);
         }

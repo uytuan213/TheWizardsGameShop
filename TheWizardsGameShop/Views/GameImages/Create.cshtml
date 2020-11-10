@@ -1,43 +1,47 @@
 ﻿@model TheWizardsGameShop.Models.GameImage
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Game Images";
+    ViewData["HeaderMode"] = "Employee";
 }
 
-<h1>Create</h1>
-
-<h4>GameImage</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" enctype='multipart/form-data'>
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @*<div class="form-group">
-                <label asp-for="GameImageId" class="control-label"></label>
-                <input asp-for="GameImageId" class="form-control" />
-                <span asp-validation-for="GameImageId" class="text-danger"></span>
-            </div>*@
-            <div class="form-group">
-                <label asp-for="GameId" class="control-label"></label>
-                <select asp-for="GameId" class ="form-control" asp-items="ViewBag.GameId"></select>
-            </div>
-            <div class="form-group">
-                @*<label asp-for="GameImagePath" class="control-label"></label>
-                <input asp-for="GameImagePath" class="form-control" />
-                <span asp-validation-for="GameImagePath" class="text-danger"></span>*@
-                <input type="file" name="imageFile" id="imageFile" class="form-control" />
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="page contents" id="pageGames" --data-theme="employee-portal">
+    <div class="page-header short flex-center-vertical">
+        <h1><span class="material-icons">category</span>Games</h1>
+    </div>
+    <div class="row page-body">
+        <div class="col-md-4">
+            <form asp-action="Create" enctype='multipart/form-data' class="narrow">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                @*<div class="form-group">
+            <label asp-for="GameImageId" class="control-label"></label>
+            <input asp-for="GameImageId" class="form-control" />
+            <span asp-validation-for="GameImageId" class="text-danger"></span>
+        </div>*@
+                <input type="hidden" asp-for="GameId" value="@ViewData["GameID"]" />
+                @*<div class="form-group">
+            <label asp-for="GameId" class="control-label"></label>
+            <select asp-for="GameId" class="form-control" asp-items="ViewBag.GameId"></select>
+        </div>*@
+                <div class="form-group">
+                    @*<label asp-for="GameImagePath" class="control-label"></label>
+            <input asp-for="GameImagePath" class="form-control" />
+            <span asp-validation-for="GameImagePath" class="text-danger"></span>*@
+                    <input type="file" name="imageFile" id="imageFile" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" name="isThumbnail" id="isThumbnail" value="true" /><label for="isThumbnail" class="control-label" style="display: inline-block;">&nbsp;Use as Thumbnail</label>
+                    <input type="hidden" value="false" name="isThumbnail" />
+                </div>
+                <div class="form-buttons text-center">
+                    <input type="submit" value="Upload Image" class="btn btn--primary" />
+                    <a href="javascript:history.back()" class="btn">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

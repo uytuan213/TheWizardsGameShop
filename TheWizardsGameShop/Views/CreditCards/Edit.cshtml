@@ -1,6 +1,9 @@
 ﻿@model TheWizardsGameShop.Models.CreditCard
 
-@{ ViewData["Title"] = "Edit Credit Card"; }
+@{ 
+    ViewData["Title"] = "Edit Credit Card";
+    var creditCardNumberDisplay = Model.CreditCardNumber.Substring(12, 4).PadLeft(16, '*');
+}
 
 <div class="page contents" id="pageCreditCards" --data-theme="my-account">
     <div class="page-header flex-center">
@@ -12,9 +15,11 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="CreditCardId" />
                 <input type="hidden" asp-for="UserId" />
+                <input type="hidden" asp-for="CreditCardNumber" />
+                <input type="hidden" asp-for="Cvc" />
                 <div class="form-group">
                     <label asp-for="CreditCardNumber" class="control-label"></label>
-                    <input asp-for="CreditCardNumber" class="form-control" readonly />
+                    <input type="text" class="form-control" value="@creditCardNumberDisplay" readonly />
                     <span asp-validation-for="CreditCardNumber" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -25,7 +30,7 @@
                         </div>
                         <div style="width: 40%;">
                             <label asp-for="Cvc" class="control-label"></label>
-                            <input asp-for="Cvc" class="form-control" autocomplete="off" />
+                            <input type="text" class="form-control" value="***" readonly />
                         </div>
                     </div>
 

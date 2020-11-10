@@ -64,11 +64,16 @@
                     <h4>Click to add to your favorites</h4>
                     <hr />
                     <div class="list">
-                        @foreach (var item in ViewBag.GameCategories)
+                        @if (ViewBag.GameCategories != null)
                         {
-            <div class="item clickable flex-center" onclick="handleGameCategoryClick(@item.GameCategoryId);">
-                @item.GameCategory1
-            </div>}
+                    @foreach (var item in ViewBag.GameCategories)
+                    {
+                    <div class="item clickable flex-center" onclick="handleGameCategoryClick(@item.GameCategoryId);">
+                        @item.GameCategory1
+                    </div>} }
+                                else
+                                {
+                    <div class="list__message flex-center">You've favourited all.</div>}
                     </div>
                 </section>
 

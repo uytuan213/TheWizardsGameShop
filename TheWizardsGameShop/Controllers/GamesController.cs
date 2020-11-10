@@ -73,12 +73,13 @@ namespace TheWizardsGameShop.Controllers
             int totalGames = _context.Game.Count();
             ViewBag.TotalPages = GetTotalPages(totalGames);
 
-            var games = _context.Game.Include(g => g.GameCategory)
+            var games = _context.Game.Include(g => g.GamePlatform)
+                                     .Include(g => g.GameCategory)
                                      .Include(g => g.GameStatusCodeNavigation)
                                      .Include(g => g.GameImage)
                                      .Skip((pageNo - 1) * PAGE_SIZE)
                                      .Take(PAGE_SIZE);
-            if (games.Count() == 0)
+            if (games == null || games.Count() == 0)
             {
                 TempData["errorMessage"] = "This page does not exist";
                 return NotFound();
@@ -127,6 +128,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: Games/Create
         public IActionResult Create()
         {
+            ViewData["GamePlatformId"] = new SelectList(_context.Platform, "PlatformId", "PlatformName");
             ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1");
             ViewData["GameStatusCode"] = new SelectList(_context.GameStatus, "GameStatusCode", "GameStatus1");
             return View();
@@ -137,7 +139,7 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GameId,GameStatusCode,GameCategoryId,GameName,GameDescription,GamePrice,GameQty")] Game game,
+        public async Task<IActionResult> Create([Bind("GameId,GameStatusCode,GamePlatformId,GameCategoryId,GameName,GameDescription,GamePrice,GameQty")] Game game,
             [FromForm(Name="gameFile")] IFormFile gameFile = null)
         {
             if (ModelState.IsValid)
@@ -146,13 +148,14 @@ namespace TheWizardsGameShop.Controllers
                 await _context.SaveChangesAsync();
                 if (gameFile != null)
                 {
-                    var newGame = _context.Game.Last();
+                    var newGame = await _context.Game.LastOrDefaultAsync();
                     newGame.GameDigitalPath = UploadedFile(newGame.GameId, gameFile);
                     _context.Update(newGame);
                     await _context.SaveChangesAsync();
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Admin));
             }
+            ViewData["GamePlatformId"] = new SelectList(_context.Platform, "PlatformId", "PlatformName");
             ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1", game.GameCategoryId);
             ViewData["GameStatusCode"] = new SelectList(_context.GameStatus, "GameStatusCode", "GameStatus1", game.GameStatusCode);
             return View(game);
@@ -171,6 +174,7 @@ namespace TheWizardsGameShop.Controllers
             {
                 return NotFound();
             }
+            ViewData["GamePlatformId"] = new SelectList(_context.Platform, "PlatformId", "PlatformName");
             ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1", game.GameCategoryId);
             ViewData["GameStatusCode"] = new SelectList(_context.GameStatus, "GameStatusCode", "GameStatus1", game.GameStatusCode);
             return View(game);
@@ -181,7 +185,7 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GameId,GameStatusCode,GameCategoryId,GameName,GameDescription,GamePrice,GameQty")] Game game,
+        public async Task<IActionResult> Edit(int id, [Bind("GameId,GameStatusCode,GamePlatformId,GameCategoryId,GameName,GameDescription,GamePrice,GameQty")] Game game,
             [FromForm(Name = "gameFile")] IFormFile gameFile = null)
         {
             if (id != game.GameId)
@@ -222,8 +226,9 @@ namespace TheWizardsGameShop.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Admin));
             }
+            ViewData["GamePlatformId"] = new SelectList(_context.Platform, "PlatformId", "PlatformName");
             ViewData["GameCategoryId"] = new SelectList(_context.GameCategory, "GameCategoryId", "GameCategory1", game.GameCategoryId);
             ViewData["GameStatusCode"] = new SelectList(_context.GameStatus, "GameStatusCode", "GameStatus1", game.GameStatusCode);
             return View(game);
@@ -257,7 +262,7 @@ namespace TheWizardsGameShop.Controllers
             var game = await _context.Game.FindAsync(id);
             _context.Game.Remove(game);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Admin));
         }
 
         // GET: Games/Search

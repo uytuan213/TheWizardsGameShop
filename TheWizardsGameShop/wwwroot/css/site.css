@@ -4,7 +4,7 @@
     --nav-height: 40px;
     --footer-height: 100px;
     --page-header-height: 200px;
-    --page-header-long-height: 500px;
+    --page-header-long-height: 400px;
     --page-header-short-height: 100px;
     --page-box-shadow: 0 30px 50px rgba(0, 0, 0, 0.05);
     --page-box-shadow-darker: 0 30px 50px rgba(0, 0, 0, 0.2);
@@ -557,6 +557,7 @@ footer {
     padding: 0 var(--spacing-xl);
     background-size: cover;
     background-position: center 25%;
+    position: relative;
 }
 
 .page-header.nobackground {
@@ -708,8 +709,10 @@ input[type=password].form-control {
 }
 
 input[type=text].form-control.narrow,
-input[type=password].form-control.narrow {
+input[type=password].form-control.narrow,
+input[type=number].form-control.narrow {
     width: 60%;
+    max-width: 200px;
     margin-right: 2%;
 }
 
@@ -1058,8 +1061,36 @@ input[type=number].form-control:read-only {
     background-color: rgba(255, 255, 255, 0.9);
 }
 
+
 #pageGames .page-header {
     animation: page-header 0.2s var(--timing-ease-out-smoother);
+}
+
+#pageGames .page-header::after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 50%;
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
+}
+
+#pageGames .page-body {
+    padding: var(--spacing-xxl);
+}
+
+#pageGames .page-body section {
+    line-height: 1.5;
+}
+
+#pageGames .page-body h3 {
+    margin-bottom: var(--spacing);
+}
+
+#pageGames .page-body hr {
+    margin: var(--spacing-xl) 0;
 }
 
 #pageGames #game-info {
@@ -1101,33 +1132,33 @@ input[type=number].form-control:read-only {
     display: inline-block;
 }
 
-    #pageGames #game-info__rate__user__select {
-        position: absolute;
-        top: calc(100% + var(--spacing-xxs));
-        left: calc(50% - 70px);
-        width: 140px;
-        text-align: center;
-        background: white;
-        border: var(--border-thicker);
-        padding: var(--spacing-xs);
-        letter-spacing: -3px;
-        line-height: 0;
-        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05);
-        animation: fade-in-downward-s 0.1s var(--timing-ease-out-smoother);
-        display: none;
-    }
+#pageGames #game-info__rate__user__select {
+    position: absolute;
+    top: calc(100% + var(--spacing-xxs));
+    left: calc(50% - 70px);
+    width: 140px;
+    text-align: center;
+    background: white;
+    border: var(--border-thicker);
+    padding: var(--spacing-xs);
+    letter-spacing: -3px;
+    line-height: 0;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05);
+    animation: fade-in-downward-s 0.1s var(--timing-ease-out-smoother);
+    display: none;
+}
 
-        #pageGames #game-info__rate__user__select a {
-            color: var(--color-text-lighter);
-        }
+    #pageGames #game-info__rate__user__select a {
+        color: var(--color-text-lighter);
+    }
 
 #pageGames #game-info__rate__user__select a.hover {
     color: orange;
 }
 
-    #pageGames #game-info__rate__user__select .material-icons {
-        font-size: 14pt;
-    }
+#pageGames #game-info__rate__user__select .material-icons {
+    font-size: 14pt;
+}
 
 #pageGames #game-info__rate__icon {
     position: relative;
@@ -1184,6 +1215,19 @@ input[type=number].form-control:read-only {
 #pageGames #game-info__price {
     font-size: 1.25em;
     font-weight: 600;
+}
+
+#pageGames #game-requirements .item {
+    width: fit-content;
+    border: var(--border-thicker);
+    border-radius: var(--border-radius);
+    background: white;
+    padding: var(--spacing-xxs) var(--spacing);
+    font-size: 1.25em;
+}
+
+#pageGames #game-requirements .item__icon {
+    margin-right: var(--spacing-xs);
 }
 
 .shell {

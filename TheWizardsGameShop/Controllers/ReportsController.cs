@@ -29,6 +29,7 @@ namespace TheWizardsGameShop.Controllers
             webReport.Report.Load($".//Reports//{reportName}.frx");
             webReport.ShowPreparedReport = false;
             webReport.ShowExports = false;
+            webReport.ShowZoomButton = false;
 
             ViewBag.report = webReport;
             return View();

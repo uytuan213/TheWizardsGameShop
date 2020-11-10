@@ -1,63 +1,29 @@
 ﻿@model TheWizardsGameShop.Models.Game
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete Game";
+    ViewData["HeaderMode"] = "Employee";
 }
 
-<h1>Delete</h1>
-
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Game</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GameName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GameName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GameDescription)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GameDescription)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GamePrice)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GamePrice)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GameQty)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GameQty)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GameDigitalPath)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GameDigitalPath)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GameCategory)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GameCategory.GameCategory1)
-        </dd class>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GameStatusCodeNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GameStatusCodeNavigation.GameStatusCode)
-        </dd class>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="GameId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+<div class="page contents" id="pageError">
+    <div class="page-body">
+        <span class="material-icons">notification_important</span>
+        @if (ViewData["WarningPageTitle"] != null || ViewData["WarningPageMessage"] != null)
+        {
+        <h2>@ViewData["WarningPageTitle"]</h2>
+        <h4>@ViewData["WarningPageMessage"]</h4>
+        }
+        else
+        {
+        <h2>Are you sure?</h2>
+        <h4>Please be aware that the game cannot be restored once deleted.</h4>
+        }
+        <div style="margin-top: 20px;">
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="GameId" />
+                <input type="submit" value="Delete" class="btn btn--primary" />
+                <a href="javascript:history.back()" class="btn">Cancel</a>
+            </form>
+        </div>
+    </div>
 </div>
