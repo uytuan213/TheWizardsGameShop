@@ -6,12 +6,12 @@
 
 <div class="page contents" id="pageGames" --data-theme="games">
     <div class="page-header short flex-center-vertical">
-        <h1><span class="material-icons">category</span>Search result for @ViewData["SearchKeyword"]</h1>
+        <h1><span class="material-icons">search</span>Search result for @ViewData["SearchKeyword"]</h1>
     </div>
     <div class="page-body">
-        <p class="page-tabs">
-            
-        </p>
+        <div class="page-submenu">
+            @*<a asp-controller="Home" asp-action="Index" class="item">&lt; Home</a>*@
+        </div>
         <table class="table">
             <thead>
                 <tr>
@@ -42,7 +42,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model != null)
+                @if (Model != null && ViewBag.Count > 0)
                 {
 
                 @foreach (var item in Model)
@@ -58,7 +58,7 @@
                         @*@Html.DisplayFor(modelItem => item.GameDescription)*@
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.GamePrice)
+                        $@Html.DisplayFor(modelItem => item.GamePrice)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.GameQty)
@@ -70,9 +70,15 @@
                         @Html.DisplayFor(modelItem => item.GameCategory.GameCategory1)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.GameStatusCodeNavigation.GameStatusCode)
+                        @Html.DisplayFor(modelItem => item.GameStatusCodeNavigation.GameStatus1)
                     </td>
                 </tr>}
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" style="text-align: center; font-size: 1.25em; width: 100%; padding: var(--spacing) 0;">No games found</td>
+                    </tr>
                 }
             </tbody>
         </table>

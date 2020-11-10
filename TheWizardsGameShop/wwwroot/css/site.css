@@ -342,6 +342,7 @@ textarea {
 .tab.selected {
     color: var(--color-brand);
     font-weight: 600;
+    text-decoration: underline;
 }
 
 .tab.selected::after {

@@ -43,21 +43,27 @@ namespace TheWizardsGameShop.Controllers
             }
             else
             {
-                totalGames = _context.Game.Where(g => g.GameCategoryId.Equals(categoryId)).Count();
+                totalGames = _context.Game
+                    .Include(g => g.GameCategory)
+                    .Where(g => g.GameCategory.GameCategoryId == categoryId)
+                    .Count();
                 games = _context.Game.Include(g => g.GameCategory)
                                      .Include(g => g.GameStatusCodeNavigation)
                                      .Include(g => g.GameImage)
-                                     .Where(g => g.GameCategoryId.Equals(categoryId))
+                                     .Where(g => g.GameCategory.GameCategoryId == categoryId)
                                      .Skip((pageNo - 1) * PAGE_SIZE)
                                      .Take(PAGE_SIZE);
             }
 
             ViewBag.totalPages = GetTotalPages(totalGames);
-            if (games.Count() == 0)
-            {
-                TempData["errorMessage"] = "This page does not exist";
-                return NotFound();
-            }
+            ViewBag.Count = totalGames;
+            ViewBag.PageNo = pageNo;
+            ViewBag.CategoryId = categoryId;
+            //if (games.Count() == 0)
+            //{
+            //    TempData["errorMessage"] = "This page does not exist";
+            //    return NotFound();
+            //}
             return View(await games.ToListAsync());
         }
 
@@ -79,11 +85,11 @@ namespace TheWizardsGameShop.Controllers
                                      .Include(g => g.GameImage)
                                      .Skip((pageNo - 1) * PAGE_SIZE)
                                      .Take(PAGE_SIZE);
-            if (games == null || games.Count() == 0)
-            {
-                TempData["errorMessage"] = "This page does not exist";
-                return NotFound();
-            }
+            //if (games == null || games.Count() == 0)
+            //{
+            //    TempData["errorMessage"] = "This page does not exist";
+            //    return NotFound();
+            //}
 
             ViewBag.PageNo = pageNo;
             return View(await games.ToListAsync());
@@ -287,10 +293,11 @@ namespace TheWizardsGameShop.Controllers
                                                 .Skip((pageNo - 1) * PAGE_SIZE)
                                                 .Take(PAGE_SIZE);
 
+                ViewData["SearchKeyword"] = keyword;
+                ViewBag.Count = totalGames;
                 return View(await searchResult.ToListAsync());
             }
 
-            ViewData["SearchKeyword"] = keyword;
             return View();
         }
 

@@ -4,17 +4,56 @@
     ViewData["Title"] = "Games";
 }
 
-<div class="page contents" id="pageGames">
-    <div class="page-header flex-center">
-        <h1>Games</h1>
+<div class="page contents" id="pageGames" --data-theme="games">
+    <div class="page-header short flex-center-vertical">
+        <h1><span class="material-icons">category</span>Browse Games</h1>
     </div>
     <div class="page-body">
-        <p class="page-tabs">
-            
+        <div class="page-submenu flex-col-3">
+            <div class="col">
+                <a asp-controller="Home" asp-action="Index" class="item">&lt; Home</a>
+            </div>
+
+            <div class="col page-tabs flex-center">
+                <a id="browse-tab-all" asp-action="Index" class="tab">All</a>
+                <a id="browse-tab-action" href="?categoryId=1" class="tab">Action</a>
+                <a id="browse-tab-fighting" href="?categoryId=2" class="tab">Fighting</a>
+                <a id="browse-tab-musicparty" href="?categoryId=3" class="tab">Music & Party</a>
+                <a id="browse-tab-puzzle" href="?categoryId=4" class="tab">Puzzle</a>
+                <a id="browse-tab-rpg" href="?categoryId=5" class="tab">RPG</a>
+                <a id="browse-tab-shooter" href="?categoryId=6" class="tab">Shooter</a>
+                <a id="browse-tab-simulation" href="?categoryId=7" class="tab">Simulation</a>
+                <a id="browse-tab-sports" href="?categoryId=8" class="tab">Sports</a>
+                <a id="browse-tab-strategy" href="?categoryId=9" class="tab">Strategy</a>
+            </div>
+
+            <div class="col"></div>
+        </div>
+
+        <p class="page-number text-center">
+            <a href="?pageNo=1" class="link">&lt;&lt;</a>
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                @if (i == ViewBag.PageNo)
+                {
+                    <a nohref class="link bold">@i</a>
+                }
+                else
+                {
+                    <a href="?categoryId=@ViewBag.CategoryId&pageNo=@i" class="link">@i</a>
+                }
+
+            }
+            <a href="?categoryId=@ViewBag.CategoryId&pageNo=@ViewBag.TotalPages" class="link">&gt;&gt;</a>
         </p>
+        </p>
+
         <table class="table">
             <thead>
                 <tr>
+                    <th>
+
+                    </th>
                     <th>
                         @Html.DisplayNameFor(model => model.GameName)
                     </th>
@@ -36,38 +75,72 @@
                     <th>
                         @Html.DisplayNameFor(model => model.GameStatusCodeNavigation)
                     </th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @if (Model != null && ViewBag.Count > 0)
                 {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.GameName)
-        </td>
-        <td>
-            @*@Html.DisplayFor(modelItem => item.GameDescription)*@
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GamePrice)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GameQty)
-        </td>
-        <td>
-            @*@Html.DisplayFor(modelItem => item.GameDigitalPath)*@
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GameCategory.GameCategory1)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GameStatusCodeNavigation.GameStatusCode)
-        </td>
-        <td>
-            <a asp-action="Details" asp-route-id="@item.GameId">Details</a>
-        </td>
-    </tr>}
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <img src="/images/@Html.DisplayFor(modelItem => item.GameId)/00.png" style="width: 80px;" />
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.GameId" class="link">@Html.DisplayFor(modelItem => item.GameName)</a>
+                            </td>
+                            <td>
+                                @*@Html.DisplayFor(modelItem => item.GameDescription)*@
+                            </td>
+                            <td>
+                                $@Html.DisplayFor(modelItem => item.GamePrice)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.GameQty)
+                            </td>
+                            <td>
+                                @*@Html.DisplayFor(modelItem => item.GameDigitalPath)*@
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.GameCategory.GameCategory1)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.GameStatusCodeNavigation.GameStatus1)
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" style="text-align: center; font-size: 1.25em; width: 100%; padding: var(--spacing) 0;">There are no games in this category yet.</td>
+                    </tr>
+                }
             </tbody>
         </table>
-</div>
+    </div>
+
+    <script>
+    if (location.search.indexOf("categoryId=1") != -1) {
+        $("#browse-tab-action").addClass("selected");
+    } else if (location.search.indexOf("categoryId=2") != -1) {
+        $("#browse-tab-fighting").addClass("selected");
+    } else if (location.search.indexOf("categoryId=3") != -1) {
+        $("#browse-tab-musicparty").addClass("selected");
+    } else if (location.search.indexOf("categoryId=4") != -1) {
+        $("#browse-tab-puzzle").addClass("selected");
+    } else if (location.search.indexOf("categoryId=5") != -1) {
+        $("#browse-tab-rpg").addClass("selected");
+    } else if (location.search.indexOf("categoryId=6") != -1) {
+        $("#browse-tab-shooter").addClass("selected");
+    } else if (location.search.indexOf("categoryId=7") != -1) {
+        $("#browse-tab-simulation").addClass("selected");
+    } else if (location.search.indexOf("categoryId=8") != -1) {
+        $("#browse-tab-sports").addClass("selected");
+    } else if (location.search.indexOf("categoryId=9") != -1) {
+        $("#browse-tab-strategy").addClass("selected");
+    } else if (location.search == "" || location.search.indexOf("categoryId=&") != -1 || location.search.endsWith("categoryId=")) {
+        $("#browse-tab-all").addClass("selected");
+    }
+    </script>
