@@ -21,18 +21,18 @@
                     <th>
                         @Html.DisplayNameFor(model => model.GameName)
                     </th>
-                    <th>
-                        @*@Html.DisplayNameFor(model => model.GameDescription)*@
-                    </th>
+                    @*<th>
+                        @Html.DisplayNameFor(model => model.GameDescription)
+                    </th>*@
                     <th>
                         @Html.DisplayNameFor(model => model.GamePrice)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.GameQty)
                     </th>
-                    <th>
-                        @*@Html.DisplayNameFor(model => model.GameDigitalPath)*@
-                    </th>
+                    @*<th>
+                        @Html.DisplayNameFor(model => model.GameDigitalPath)
+                    </th>*@
                     <th>
                         @Html.DisplayNameFor(model => model.GameCategory)
                     </th>
@@ -54,18 +54,18 @@
                     <td>
                         <a asp-action="Details" asp-route-id="@item.GameId" class="link">@Html.DisplayFor(modelItem => item.GameName)</a>
 </td>
-                    <td>
-                        @*@Html.DisplayFor(modelItem => item.GameDescription)*@
-                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.GameDescription)
+                    </td>*@
                     <td>
                         $@Html.DisplayFor(modelItem => item.GamePrice)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.GameQty)
                     </td>
-                    <td>
-                        @*@Html.DisplayFor(modelItem => item.GameDigitalPath)*@
-                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.GameDigitalPath)
+                    </td>*@
                     <td>
                         @Html.DisplayFor(modelItem => item.GameCategory.GameCategory1)
                     </td>

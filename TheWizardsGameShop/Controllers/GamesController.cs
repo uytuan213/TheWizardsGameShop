@@ -13,6 +13,7 @@ namespace TheWizardsGameShop.Controllers
     public class GamesController : Controller
     {
         public const int PAGE_SIZE = 15;
+        public const int HOME_COUNT = 3;
         public const int SEARCH_SUGGESTIONS_COUNT = 10;
         private readonly TheWizardsGameShopContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -38,6 +39,7 @@ namespace TheWizardsGameShop.Controllers
                 games = _context.Game.Include(g => g.GameCategory)
                                      .Include(g => g.GameStatusCodeNavigation)
                                      .Include(g => g.GameImage)
+                                     .OrderByDescending(g => g.GameId)
                                      .Skip((pageNo - 1) * PAGE_SIZE)
                                      .Take(PAGE_SIZE);
             }
@@ -51,6 +53,7 @@ namespace TheWizardsGameShop.Controllers
                                      .Include(g => g.GameStatusCodeNavigation)
                                      .Include(g => g.GameImage)
                                      .Where(g => g.GameCategory.GameCategoryId == categoryId)
+                                     .OrderByDescending(g => g.GameId)
                                      .Skip((pageNo - 1) * PAGE_SIZE)
                                      .Take(PAGE_SIZE);
             }
@@ -83,6 +86,7 @@ namespace TheWizardsGameShop.Controllers
                                      .Include(g => g.GameCategory)
                                      .Include(g => g.GameStatusCodeNavigation)
                                      .Include(g => g.GameImage)
+                                     .OrderByDescending(g => g.GameId)
                                      .Skip((pageNo - 1) * PAGE_SIZE)
                                      .Take(PAGE_SIZE);
             //if (games == null || games.Count() == 0)
@@ -328,11 +332,22 @@ namespace TheWizardsGameShop.Controllers
                                                 .OrderBy(g => g.GameName)
                                                 .Take(SEARCH_SUGGESTIONS_COUNT);
 
+                ViewData["SearchKeyword"] = keyword;
                 return PartialView(await searchResult.ToListAsync());
             }
 
             ViewData["SearchKeyword"] = keyword;
             return PartialView();
+        }
+
+        public async Task<IActionResult> Home(int categoryId)
+        {
+            var searchResult = _context.Game.Include(g => g.GameImage)
+                                                .Where(g => g.GameCategory.GameCategoryId == categoryId)
+                                                .OrderByDescending(g => g.GameId)
+                                                .Take(HOME_COUNT);
+
+            return PartialView(await searchResult.ToListAsync());
         }
 
         public IActionResult SearchByCategory()

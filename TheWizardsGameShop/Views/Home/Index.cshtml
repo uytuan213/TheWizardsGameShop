@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<TheWizardsGameShop.Models.Game>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -10,29 +12,19 @@
 
 <div class="page contents" id="pageHome">
     <div class="page-body">
+        <p class="text-center"><a asp-controller="Games" asp-action="Index" class="btn btn--primary btn--home">Browse Games</a></p>
         <section>
-            <h2>RPG</h2>
-            <div class="list">
-                <div class="item"><br /><br /><br /><br /><br /><br /></div>
-                <div class="item"><br /><br /><br /><br /><br /></div>
-                <div class="item"><br /><br /><br /><br /><br /></div>
-            </div>
+            <h2><a href="/Games?categoryId=1">Action</a></h2>
+            <iframe src="/Games/Home?categoryId=1" class="home-list-iframe" frameborder="0" scrolling="auto" onload="resizeIframe(this);">Loading...</iframe>
         </section>
         <section>
-            <h2>Shooting</h2>
-            <div class="list">
-                <div class="item"><br /><br /><br /><br /><br /><br /></div>
-                <div class="item"><br /><br /><br /><br /><br /></div>
-                <div class="item"><br /><br /><br /><br /><br /></div>
-            </div>
+            <h2><a href="/Games?categoryId=5">RPG</a></h2>
+            <iframe src="/Games/Home?categoryId=5" class="home-list-iframe" frameborder="0" scrolling="auto" onload="resizeIframe(this);">Loading...</iframe>
         </section>
         <section>
-            <h2>Casual</h2>
-            <div class="list">
-                <div class="item"><br /><br /><br /><br /><br /><br /></div>
-                <div class="item"><br /><br /><br /><br /><br /></div>
-                <div class="item"><br /><br /><br /><br /><br /></div>
-            </div>
+            <h2><a href="/Games?categoryId=8">Sports</a></h2>
+            <iframe src="/Games/Home?categoryId=8" class="home-list-iframe" frameborder="0" scrolling="auto" onload="resizeIframe(this);">Loading...</iframe>
         </section>
+        <p class="text-center"><a asp-controller="Games" asp-action="Index" class="btn btn--primary btn--home">Browse Games</a></p>
     </div>
 </div>
