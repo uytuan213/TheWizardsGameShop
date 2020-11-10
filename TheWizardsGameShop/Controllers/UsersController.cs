@@ -278,7 +278,7 @@ namespace TheWizardsGameShop.Controllers
                 }
                 else
                 {
-                    TempData["Message"] = $"Please try again in {TOTAL_WAIT_IN_SECOND - t.TotalSeconds} second(s).";
+                    TempData["Message"] = $"Please try again in {Math.Round(TOTAL_WAIT_IN_SECOND - t.TotalSeconds)} second(s).";
                     return View(users);
                 }
             }
