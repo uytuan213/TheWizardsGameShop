@@ -5,6 +5,12 @@ namespace TheWizardsGameShop.Models
 {
     public partial class Address
     {
+        public Address()
+        {
+            WizardsOrderMailingAddress = new HashSet<WizardsOrder>();
+            WizardsOrderShippingAddress = new HashSet<WizardsOrder>();
+        }
+
         public int AddressId { get; set; }
         public int UserId { get; set; }
         public string Street1 { get; set; }
@@ -17,5 +23,7 @@ namespace TheWizardsGameShop.Models
         public virtual AddressType AddressType { get; set; }
         public virtual Province ProvinceCodeNavigation { get; set; }
         public virtual WizardsUser User { get; set; }
+        public virtual ICollection<WizardsOrder> WizardsOrderMailingAddress { get; set; }
+        public virtual ICollection<WizardsOrder> WizardsOrderShippingAddress { get; set; }
     }
 }

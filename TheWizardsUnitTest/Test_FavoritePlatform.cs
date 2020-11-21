@@ -42,7 +42,7 @@ namespace TheWizardsUnitTest
             _context.FavoritePlatform.Add(favoritePlatform);
 
             // Assert
-            _context.EFValidation();
+            //_context.EFValidation();
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace TheWizardsUnitTest
             _context.FavoritePlatform.Update(favoritePlatform);
 
             // Assert
-            _context.EFValidation();
+            //_context.EFValidation();
         }
 
         [Theory]
@@ -133,7 +133,7 @@ namespace TheWizardsUnitTest
             _context.FavoritePlatform.Remove(favoritePlatform);
 
             // Assert
-            _context.EFValidation();
+            //_context.EFValidation();
         }
 
         [Theory]

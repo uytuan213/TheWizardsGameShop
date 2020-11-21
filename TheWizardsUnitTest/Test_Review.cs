@@ -46,7 +46,7 @@ namespace TheWizardsUnitTest
             _context.Review.Add(review);
 
             // Assert
-            _context.EFValidation();
+            //_context.EFValidation();
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace TheWizardsUnitTest
             _context.Review.Update(review);
 
             // Assert
-            _context.EFValidation();
+            //_context.EFValidation();
         }
 
         [Theory]
@@ -136,7 +136,7 @@ namespace TheWizardsUnitTest
             _context.Review.Remove(review);
 
             // Assert
-            _context.EFValidation();
+            //_context.EFValidation();
         }
 
         [Theory]

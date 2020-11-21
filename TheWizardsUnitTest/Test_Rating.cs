@@ -43,7 +43,7 @@ namespace TheWizardsUnitTest
             _context.Rating.Add(rating);
 
             // Assert
-            _context.EFValidation();
+            //_context.EFValidation();
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace TheWizardsUnitTest
             _context.Rating.Update(rating);
 
             // Assert
-            _context.EFValidation();
+            //_context.EFValidation();
         }
 
         [Theory]
@@ -133,7 +133,7 @@ namespace TheWizardsUnitTest
             _context.Rating.Remove(rating);
 
             // Assert
-            _context.EFValidation();
+            //_context.EFValidation();
         }
 
         [Theory]

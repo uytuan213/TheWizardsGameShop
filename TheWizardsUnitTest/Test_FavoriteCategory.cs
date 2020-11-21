@@ -42,7 +42,7 @@ namespace TheWizardsUnitTest
             _context.FavoriteCategory.Add(favoriteCategory);
 
             // Assert
-            _context.EFValidation();
+            //_context.EFValidation();
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace TheWizardsUnitTest
             _context.FavoriteCategory.Update(favoriteCategory);
 
             // Assert
-            _context.EFValidation();
+            //_context.EFValidation();
         }
 
         [Theory]
@@ -133,7 +133,7 @@ namespace TheWizardsUnitTest
             _context.FavoriteCategory.Remove(favoriteCategory);
 
             // Assert
-            _context.EFValidation();
+            //_context.EFValidation();
         }
 
         [Theory]
