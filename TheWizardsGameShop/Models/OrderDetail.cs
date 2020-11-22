@@ -10,6 +10,7 @@ namespace TheWizardsGameShop.Models
         public int Quantity { get; set; }
         public bool IsDigital { get; set; }
 
+        public virtual Game Game { get; set; }
         public virtual WizardsOrder Order { get; set; }
     }
 }

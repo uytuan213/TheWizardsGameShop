@@ -227,6 +227,12 @@ namespace TheWizardsGameShop.Models
             {
                 entity.HasKey(e => new { e.OrderId, e.GameId });
 
+                entity.HasOne(d => d.Game)
+                    .WithMany(p => p.OrderDetail)
+                    .HasForeignKey(d => d.GameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderDetail_Game");
+
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderDetail)
                     .HasForeignKey(d => d.OrderId)
