@@ -12,7 +12,7 @@ namespace TheWizardsGameShop.Models
 
         public int OrderId { get; set; }
         public int UserId { get; set; }
-        public double Total { get; set; }
+        public decimal Total { get; set; }
         public int CreditCardId { get; set; }
         public int MailingAddressId { get; set; }
         public int ShippingAddressId { get; set; }

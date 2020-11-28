@@ -318,7 +318,9 @@ namespace TheWizardsGameShop.Controllers
                 if (isMatch)
                 {
                     CreateUserSession(userResult);
-
+                    
+                    // Count friend requests received
+                    ViewData["friendRequestCount"] = RelationshipHelper.countRequestsReceived(userResult.UserId, _context);
                     TempData["Message"] = "";
 
                     if (!String.IsNullOrEmpty(actionName) && !String.IsNullOrEmpty(controllerName))

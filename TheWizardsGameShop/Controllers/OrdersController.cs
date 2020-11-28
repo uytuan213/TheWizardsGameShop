@@ -12,6 +12,7 @@ namespace TheWizardsGameShop.Controllers
 {
     public class OrdersController : Controller
     {
+        private const float TAX = 0.13f;
         private TheWizardsGameShopContext _context;
 
         public OrdersController(TheWizardsGameShopContext context)
@@ -87,6 +88,8 @@ namespace TheWizardsGameShop.Controllers
 
             return View(order);
         }
+
+
 
         // GET: OrdersController/Edit/5
         public async Task<ActionResult> Edit(int id)
@@ -170,6 +173,22 @@ namespace TheWizardsGameShop.Controllers
         public bool OrderExists(int id)
         {
             return _context.WizardsOrder.Any(e => e.OrderId== id);
+        }
+
+        private async Task<decimal> calculateTotal(int orderId)
+        {
+            decimal total = 0;
+            var ods = await _context.OrderDetail.Include(od => od.Game).Where(od => od.OrderId == orderId).ToListAsync();
+
+            // calculate total before tax
+            foreach(var od in ods)
+            {
+                total += od.Game.GamePrice * od.Quantity;
+            }
+
+            //total after tax
+            total = total * (decimal)(1 + TAX);
+            return total;
         }
     }
 }

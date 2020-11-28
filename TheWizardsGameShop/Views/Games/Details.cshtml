@@ -135,8 +135,8 @@
             </div>
             <div id="game-info__buy" class="col">
                 <p id="game-info__price">$@Html.DisplayFor(model => model.GamePrice)</p>
-                <a nohref id="game-info__buy__btn" class="btn btn--primary flex-center"><span class="material-icons">add_shopping_cart</span>Add to Cart</a>
-
+                <a href="/Games/AddToCart?gameId=@Model.GameId" id="game-info__buy__btn" class="btn btn--primary flex-center"><span class="material-icons">add_shopping_cart</span>Add to Cart</a>
+                <a href="/Games/Download?id=@Model.GameId" id="game-info__buy__btn" class="btn btn--primary flex-center"><span class="material-icons">add_shopping_cart</span>Download</a>
                 <p id="game-info__qty">Available: @Html.DisplayFor(model => model.GameQty)</p>
                 @*<p id="game-info__status">@Html.DisplayFor(model => model.GameStatusCodeNavigation.GameStatusCode)</p>*@
             </div>

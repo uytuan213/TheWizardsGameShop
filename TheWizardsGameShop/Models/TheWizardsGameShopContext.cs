@@ -345,6 +345,8 @@ namespace TheWizardsGameShop.Models
                 entity.HasKey(e => e.OrderId)
                     .HasName("PK_Order");
 
+                entity.Property(e => e.Total).HasColumnType("smallmoney");
+
                 entity.HasOne(d => d.CreditCard)
                     .WithMany(p => p.WizardsOrder)
                     .HasForeignKey(d => d.CreditCardId)

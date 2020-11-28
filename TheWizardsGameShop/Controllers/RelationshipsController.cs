@@ -21,7 +21,11 @@ namespace TheWizardsGameShop.Controllers
         // GET: Relationships
         public async Task<IActionResult> Index()
         {
-            var theWizardsGameShopContext = _context.Relationship.Include(r => r.SenderNavigation).Include(r => r.ReceiverNavigation);
+            if (!UserHelper.IsLoggedIn(this)) UserHelper.RequireLogin(this);
+            var id = UserHelper.GetSessionUserId(this);
+            var theWizardsGameShopContext = _context.Relationship.Include(r => r.SenderNavigation).Include(r => r.ReceiverNavigation).Where(r => (bool)r.IsAccepted);
+
+            ViewData["friendRequests"] = RelationshipHelper.getRequestsReceived(id, _context);
             return View(await theWizardsGameShopContext.ToListAsync());
         }
 
@@ -48,8 +52,6 @@ namespace TheWizardsGameShop.Controllers
         // GET: Relationships/Create
         public IActionResult Create()
         {
-            ViewData["Sender"] = new SelectList(_context.WizardsUser, "UserId", "Email");
-            ViewData["Receiver"] = new SelectList(_context.WizardsUser, "UserId", "Email");
             return View();
         }
 
@@ -58,16 +60,16 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Sender,Receiver,IsFamily")] Relationship relationship)
+        public async Task<IActionResult> Create([Bind("Sender,Receiver,IsFamily,IsAccepted")] Relationship relationship)
         {
             if (ModelState.IsValid)
             {
+                relationship.IsAccepted = false;
                 _context.Add(relationship);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Sender"] = new SelectList(_context.WizardsUser, "UserId", "Email", relationship.Sender);
-            ViewData["Receiver"] = new SelectList(_context.WizardsUser, "UserId", "Email", relationship.Receiver);
+
             return View(relationship);
         }
 
@@ -94,7 +96,7 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Sender,Receiver,IsFamily")] Relationship relationship)
+        public async Task<IActionResult> Edit(int id, [Bind("Sender,Receiver,IsFamily,IsAccepted")] Relationship relationship)
         {
             if (id != relationship.Sender)
             {

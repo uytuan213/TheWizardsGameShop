@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using TheWizardsGameShop.Models;
 
 namespace TheWizardsGameShop.Controllers
@@ -15,6 +17,7 @@ namespace TheWizardsGameShop.Controllers
         public const int PAGE_SIZE = 15;
         public const int HOME_COUNT = 3;
         public const int SEARCH_SUGGESTIONS_COUNT = 10;
+        private const string SESSION_CART = "cart";
         private readonly TheWizardsGameShopContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
@@ -369,6 +372,46 @@ namespace TheWizardsGameShop.Controllers
                                             .Take(PAGE_SIZE);
 
             return View(await searchResult.ToListAsync());
+        }
+
+        public FileContentResult Download(int id)
+        {
+            var downloadPath = Path.Combine(_webHostEnvironment.WebRootPath, $"download\\{id}");
+            if (!Directory.Exists(downloadPath))
+            {
+                // TODO: return null will break the website, should be change
+                return null;
+            }
+
+            var filePath = Directory.GetFiles(downloadPath).First();
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+            var fileName = filePath.Substring(filePath.LastIndexOf('\\') + 1);
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Text.Plain, fileName);
+        }
+
+
+        public IActionResult AddToCart(int gameId, int quantity = 1)
+        {
+            if (!UserHelper.IsLoggedIn(this)) UserHelper.RequireLogin(this);
+            
+            var str = HttpContext.Session.GetString(SESSION_CART);
+            List<CartItem> cart = CartHelper.getCartFromSession(this);
+
+            if (cart.Any(c => c.Game.GameId == gameId))
+            {
+                var item = cart.Where(c => c.Game.GameId == gameId).First();
+                item.Quantity++;
+            }
+            else
+            {
+                var item = new CartItem() { Game = _context.Game.Find(gameId), Quantity = quantity };
+                cart.Add(item);
+            }
+
+            str = JsonConvert.SerializeObject(cart);
+            HttpContext.Session.SetString(SESSION_CART, str);
+
+            return RedirectToAction("Details", new { id = gameId});
         }
 
         public double CalculateAvgRating(int gameId)
