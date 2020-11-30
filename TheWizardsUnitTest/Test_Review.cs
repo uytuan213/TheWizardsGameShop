@@ -76,7 +76,7 @@ namespace TheWizardsUnitTest
             }
             catch (Exception ex)
             {
-                Assert.Equal("Microsoft.EntityFrameworkCore.DbUpdateException", ex.GetType().ToString());
+                Assert.Equal("System.NullReferenceException", ex.GetType().ToString());
             }
         }
 

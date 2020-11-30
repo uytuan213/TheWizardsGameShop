@@ -146,7 +146,7 @@ namespace TheWizardsUnitTest
             }
             catch (Exception ex)
             {
-                Assert.Equal("Xunit.Sdk.IsTypeException", ex.GetType().ToString());
+                Assert.Equal("Microsoft.EntityFrameworkCore.DbUpdateException", ex.GetType().ToString());
             }
         }
 
