@@ -10,5 +10,6 @@ namespace TheWizardsGameShop
     {
         public Game Game { get; set; }
         public int Quantity { get; set; }
+        public bool IsDigital { get; set; }
     }
 }

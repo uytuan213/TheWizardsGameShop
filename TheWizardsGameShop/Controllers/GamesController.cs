@@ -390,7 +390,7 @@ namespace TheWizardsGameShop.Controllers
         }
 
 
-        public IActionResult AddToCart(int gameId, int quantity = 1)
+        public IActionResult AddToCart(int gameId, int quantity = 1, bool isDigital=false)
         {
             if (!UserHelper.IsLoggedIn(this)) UserHelper.RequireLogin(this);
             
@@ -404,7 +404,7 @@ namespace TheWizardsGameShop.Controllers
             }
             else
             {
-                var item = new CartItem() { Game = _context.Game.Find(gameId), Quantity = quantity };
+                var item = new CartItem() { Game = _context.Game.Find(gameId), Quantity = quantity, IsDigital = isDigital };
                 cart.Add(item);
             }
 
