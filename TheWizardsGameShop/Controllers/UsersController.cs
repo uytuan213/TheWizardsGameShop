@@ -375,10 +375,7 @@ namespace TheWizardsGameShop.Controllers
         [HttpGet]
         public IActionResult Logout()
         {
-            HttpContext.Session.Remove("userId");
-            HttpContext.Session.Remove("userName");
-            HttpContext.Session.Remove("userRole");
-            HttpContext.Session.Remove("loggedInTime");
+            HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
 

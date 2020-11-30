@@ -109,12 +109,19 @@ namespace TheWizardsGameShop.Controllers
 
             var str = HttpContext.Session.GetString(SESSION_CART);
             List<CartItem> cart = CartHelper.getCartFromSession(this);
+            var qtyInStock = _context.Game.Find(id).GameQty;
 
             if (cart.Any(c => c.Game.GameId == id))
             {
                 // Add quantity by one if the game exists in the cart
                 var item = cart.Where(c => c.Game.GameId == id).First();
                 item.Quantity = item.Quantity + quantity;
+                if (!isDigital && qtyInStock < item.Quantity)
+                {
+                    HttpContext.Session.SetString("modalTitle", "Error!");
+                    HttpContext.Session.SetString("modalMessage", $"There are only {qtyInStock} item(s) in stock.");
+                    return RedirectToAction("Index");
+                }
                 if (item.Quantity <= 0)
                 {
                     cart.Remove(item);
@@ -122,6 +129,13 @@ namespace TheWizardsGameShop.Controllers
             }
             else
             {
+                if (!isDigital && qtyInStock < quantity)
+                {
+                    HttpContext.Session.SetString("modalTitle", "Error!");
+                    HttpContext.Session.SetString("modalMessage", "Does not have enough of this game in stock.");
+                    return RedirectToAction("Index");
+                }
+
                 // Add the game to the cart
                 var item = new CartItem() { Game = _context.Game.Find(id), Quantity = quantity, IsDigital = isDigital };
                 if (quantity > 0) cart.Add(item);
