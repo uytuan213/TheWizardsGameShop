@@ -43,11 +43,7 @@ namespace TheWizardsUnitTest
             _testContext.FavoritePlatform.Add(favoritePlatform);
 
             // Assert
-<<<<<<< HEAD
             _testContext.EFValidation();
-=======
-            //_context.EFValidation();
->>>>>>> abb706896c0972368724a52409ae80583b5c947c
         }
 
         [Fact]
@@ -91,11 +87,7 @@ namespace TheWizardsUnitTest
             _testContext.FavoritePlatform.Update(favoritePlatform);
 
             // Assert
-<<<<<<< HEAD
             _testContext.EFValidation();
-=======
-            //_context.EFValidation();
->>>>>>> abb706896c0972368724a52409ae80583b5c947c
         }
 
         [Theory]
@@ -142,11 +134,7 @@ namespace TheWizardsUnitTest
             _testContext.FavoritePlatform.Remove(favoritePlatform);
 
             // Assert
-<<<<<<< HEAD
             _testContext.EFValidation();
-=======
-            //_context.EFValidation();
->>>>>>> abb706896c0972368724a52409ae80583b5c947c
         }
 
         [Theory]

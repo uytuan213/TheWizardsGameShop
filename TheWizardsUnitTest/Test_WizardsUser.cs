@@ -100,11 +100,7 @@ namespace TheWizardsUnitTest
             _testContext.TestWizardsUser.Add(user);
 
             // Assert
-<<<<<<< HEAD
             _testContext.EFValidation();
-=======
-            //_context.EFValidation();
->>>>>>> abb706896c0972368724a52409ae80583b5c947c
         }
 
         [Theory]
@@ -122,11 +118,7 @@ namespace TheWizardsUnitTest
             _testContext.TestWizardsUser.Add(user);
 
             // Assert
-<<<<<<< HEAD
             Assert.ThrowsAny<Exception>(() => _testContext.EFValidation());
-=======
-            //Assert.ThrowsAny<Exception>(() => _context.EFValidation());
->>>>>>> abb706896c0972368724a52409ae80583b5c947c
         }
 
         [Theory]
@@ -143,11 +135,7 @@ namespace TheWizardsUnitTest
             _testContext.TestWizardsUser.Add(user);
 
             // Assert
-<<<<<<< HEAD
             Assert.ThrowsAny<Exception>(() => _testContext.EFValidation());
-=======
-            //Assert.ThrowsAny<Exception>(() => _context.EFValidation());
->>>>>>> abb706896c0972368724a52409ae80583b5c947c
         }
 
         [Theory]
@@ -165,11 +153,7 @@ namespace TheWizardsUnitTest
             _testContext.TestWizardsUser.Add(user);
 
             // Assert
-<<<<<<< HEAD
             Assert.ThrowsAny<Exception>(() => _testContext.EFValidation());
-=======
-            //Assert.ThrowsAny<Exception>(() => _context.EFValidation());
->>>>>>> abb706896c0972368724a52409ae80583b5c947c
         }
 
         [Theory]
@@ -187,11 +171,7 @@ namespace TheWizardsUnitTest
             _testContext.TestWizardsUser.Add(user);
 
             // Assert
-<<<<<<< HEAD
             Assert.ThrowsAny<Exception>(() => _testContext.EFValidation());
-=======
-            //Assert.ThrowsAny<Exception>(() => _context.EFValidation());
->>>>>>> abb706896c0972368724a52409ae80583b5c947c
         }
 
         [Fact]
@@ -204,11 +184,7 @@ namespace TheWizardsUnitTest
             _testContext.TestWizardsUser.Update(user);
 
             // Assert
-<<<<<<< HEAD
             _testContext.EFValidation();
-=======
-            //_context.EFValidation();
->>>>>>> abb706896c0972368724a52409ae80583b5c947c
         }
 
         [Theory]
@@ -256,11 +232,7 @@ namespace TheWizardsUnitTest
             _testContext.TestWizardsUser.Remove(user);
 
             // Assert
-<<<<<<< HEAD
             _testContext.EFValidation();
-=======
-            //_context.EFValidation();
->>>>>>> abb706896c0972368724a52409ae80583b5c947c
         }
 
         [Theory]

@@ -101,11 +101,7 @@ namespace TheWizardsUnitTest
             _testContext.TestGame.Add(game);
 
             // Assert
-<<<<<<< HEAD
             _testContext.EFValidation();
-=======
-            //_context.EFValidation();
->>>>>>> abb706896c0972368724a52409ae80583b5c947c
         }
 
         [Theory]
@@ -124,11 +120,7 @@ namespace TheWizardsUnitTest
             _testContext.TestGame.Add(game);
 
             // Assert
-<<<<<<< HEAD
             Assert.ThrowsAny<Exception>(() => _testContext.EFValidation());
-=======
-            //Assert.ThrowsAny<Exception>(() => _context.EFValidation());
->>>>>>> abb706896c0972368724a52409ae80583b5c947c
         }
 
         [Fact]
@@ -141,11 +133,7 @@ namespace TheWizardsUnitTest
             _testContext.TestGame.Update(game);
 
             // Assert
-<<<<<<< HEAD
             _testContext.EFValidation();
-=======
-            //_context.EFValidation();
->>>>>>> abb706896c0972368724a52409ae80583b5c947c
         }
 
         [Theory]
@@ -192,11 +180,7 @@ namespace TheWizardsUnitTest
             _testContext.TestGame.Remove(game);
 
             // Assert
-<<<<<<< HEAD
             _testContext.EFValidation();
-=======
-            //_context.EFValidation();
->>>>>>> abb706896c0972368724a52409ae80583b5c947c
         }
 
         [Theory]
