@@ -35,6 +35,7 @@ namespace TheWizardsGameShop.Controllers
         // GET: Carts/Checkout
         public ActionResult Checkout()
         {
+            //ViewData["Address"] = new SelectList(_context.Province, "AddressId", "Address1");
             return View();
         }
 
@@ -102,7 +103,7 @@ namespace TheWizardsGameShop.Controllers
         }
 
         // GET: Carts/Add/5
-        public IActionResult Add(int id, int quantity = 1, bool goToCart = true)
+        public IActionResult Add(int id, int quantity = 1, bool isDigital = false, bool goToCart = true)
         {
             if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
@@ -122,7 +123,7 @@ namespace TheWizardsGameShop.Controllers
             else
             {
                 // Add the game to the cart
-                var item = new CartItem() { Game = _context.Game.Find(id), Quantity = quantity };
+                var item = new CartItem() { Game = _context.Game.Find(id), Quantity = quantity, IsDigital = isDigital };
                 if (quantity > 0) cart.Add(item);
             }
 

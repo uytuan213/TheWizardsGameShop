@@ -79,6 +79,13 @@ namespace TheWizardsGameShop.Controllers
             {
                 _context.Add(order);
                 await _context.SaveChangesAsync();
+                var cart = CartHelper.getCartFromSession(this);
+                foreach (var item in cart)
+                {
+                    OrderDetail od = new OrderDetail() { OrderId = order.OrderId, GameId = item.Game.GameId, Quantity = item.Quantity, IsDigital = item.IsDigital };
+                    _context.Add(od);
+                }
+                await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
