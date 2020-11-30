@@ -12,6 +12,7 @@ namespace TheWizardsUnitTest
     public class Test_Review
     {
         TheWizardsGameShopContext _context = new TheWizardsGameShopContext();
+        TheWizardsUnitTestContext _testContext = new TheWizardsUnitTestContext();
         Review review;
 
         private void InitializeReview()
@@ -43,10 +44,10 @@ namespace TheWizardsUnitTest
             InitializeReview();
 
             // Act
-            _context.Review.Add(review);
+            _testContext.Review.Add(review);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Fact]
@@ -86,10 +87,10 @@ namespace TheWizardsUnitTest
             InitializeReview();
 
             // Act
-            _context.Review.Update(review);
+            _testContext.Review.Update(review);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]
@@ -133,10 +134,10 @@ namespace TheWizardsUnitTest
             InitializeReview();
 
             // Act
-            _context.Review.Remove(review);
+            _testContext.Review.Remove(review);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]

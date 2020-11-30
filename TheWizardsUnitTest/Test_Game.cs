@@ -13,8 +13,9 @@ namespace TheWizardsUnitTest
     public class Test_Game
     {
         TheWizardsGameShopContext _context = new TheWizardsGameShopContext();
+        TheWizardsUnitTestContext _testContext = new TheWizardsUnitTestContext();
         IWebHostEnvironment _webHostEnvironment;
-        Game game;
+        TestGame game;
 
         private void InitializeGame()
         {
@@ -27,7 +28,7 @@ namespace TheWizardsUnitTest
                 // TODO: nothing...
             }
 
-            game = new Game()
+            game = new TestGame()
             {
                 GameId = 200,
                 GameStatusCode = "A",
@@ -97,10 +98,10 @@ namespace TheWizardsUnitTest
             InitializeGame();
 
             // Act
-            _context.Game.Add(game);
+            _testContext.TestGame.Add(game);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]
@@ -116,10 +117,10 @@ namespace TheWizardsUnitTest
             game.GamePrice = decimal.TryParse(value, out price) ? price : 0.0001m;
 
             // Act
-            _context.Game.Add(game);
+            _testContext.TestGame.Add(game);
 
             // Assert
-            Assert.ThrowsAny<Exception>(() => _context.EFValidation());
+            Assert.ThrowsAny<Exception>(() => _testContext.EFValidation());
         }
 
         [Fact]
@@ -129,10 +130,10 @@ namespace TheWizardsUnitTest
             InitializeGame();
 
             // Act
-            _context.Game.Update(game);
+            _testContext.TestGame.Update(game);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]
@@ -176,10 +177,10 @@ namespace TheWizardsUnitTest
             InitializeGame();
 
             // Act
-            _context.Game.Remove(game);
+            _testContext.TestGame.Remove(game);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]

@@ -35,8 +35,5 @@ namespace TheWizardsUnitTest
         {
             Assert.Equal(ValidationResult.Success, validationInstance.Run_IsValid(DateTime.Now.AddDays(-7)));
         }
-
-
-
     }
 }

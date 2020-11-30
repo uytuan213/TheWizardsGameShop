@@ -1,5 +1,4 @@
-﻿using Castle.Components.DictionaryAdapter;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,8 @@ namespace TheWizardsUnitTest
     public class Test_WizardsUser
     {
         TheWizardsGameShopContext _context = new TheWizardsGameShopContext();
-        WizardsUser user;
+        TheWizardsUnitTestContext _testContext = new TheWizardsUnitTestContext();
+        TestWizardsUser user;
 
         private void InitializeUser()
         {
@@ -26,7 +26,7 @@ namespace TheWizardsUnitTest
                 // TODO: nothing...
             }
 
-            user = new WizardsUser()
+            user = new TestWizardsUser()
             {
                 UserId = 26,
                 UserName = "Test0099",
@@ -97,10 +97,10 @@ namespace TheWizardsUnitTest
             InitializeUser();
 
             // Act
-            _context.WizardsUser.Add(user);
+            _testContext.TestWizardsUser.Add(user);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]
@@ -115,10 +115,10 @@ namespace TheWizardsUnitTest
             user.UserName = value;
 
             // Act
-            _context.WizardsUser.Add(user);
+            _testContext.TestWizardsUser.Add(user);
 
             // Assert
-            Assert.ThrowsAny<Exception>(() => _context.EFValidation());
+            Assert.ThrowsAny<Exception>(() => _testContext.EFValidation());
         }
 
         [Theory]
@@ -132,10 +132,10 @@ namespace TheWizardsUnitTest
             user.PasswordHash = value;
 
             // Act
-            _context.WizardsUser.Add(user);
+            _testContext.TestWizardsUser.Add(user);
 
             // Assert
-            Assert.ThrowsAny<Exception>(() => _context.EFValidation());
+            Assert.ThrowsAny<Exception>(() => _testContext.EFValidation());
         }
 
         [Theory]
@@ -150,10 +150,10 @@ namespace TheWizardsUnitTest
             user.Phone = value;
 
             // Act
-            _context.WizardsUser.Add(user);
+            _testContext.TestWizardsUser.Add(user);
 
             // Assert
-            Assert.ThrowsAny<Exception>(() => _context.EFValidation());
+            Assert.ThrowsAny<Exception>(() => _testContext.EFValidation());
         }
 
         [Theory]
@@ -168,10 +168,10 @@ namespace TheWizardsUnitTest
             user.Email = value;
 
             // Act
-            _context.WizardsUser.Add(user);
+            _testContext.TestWizardsUser.Add(user);
 
             // Assert
-            Assert.ThrowsAny<Exception>(() => _context.EFValidation());
+            Assert.ThrowsAny<Exception>(() => _testContext.EFValidation());
         }
 
         [Fact]
@@ -181,10 +181,10 @@ namespace TheWizardsUnitTest
             InitializeUser();
 
             // Act
-            _context.WizardsUser.Update(user);
+            _testContext.TestWizardsUser.Update(user);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]
@@ -229,10 +229,10 @@ namespace TheWizardsUnitTest
             InitializeUser();
 
             // Act
-            _context.WizardsUser.Remove(user);
+            _testContext.TestWizardsUser.Remove(user);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]

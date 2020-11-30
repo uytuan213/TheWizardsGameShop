@@ -12,6 +12,7 @@ namespace TheWizardsUnitTest
     public class Test_FavoriteCategory
     {
         TheWizardsGameShopContext _context = new TheWizardsGameShopContext();
+        TheWizardsUnitTestContext _testContext = new TheWizardsUnitTestContext();
         FavoriteCategory favoriteCategory;
 
         private void InitializeFavoriteCategory()
@@ -39,10 +40,10 @@ namespace TheWizardsUnitTest
             InitializeFavoriteCategory();
 
             // Act
-            _context.FavoriteCategory.Add(favoriteCategory);
+            _testContext.FavoriteCategory.Add(favoriteCategory);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Fact]
@@ -83,10 +84,10 @@ namespace TheWizardsUnitTest
             InitializeFavoriteCategory();
 
             // Act
-            _context.FavoriteCategory.Update(favoriteCategory);
+            _testContext.FavoriteCategory.Update(favoriteCategory);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]
@@ -130,10 +131,10 @@ namespace TheWizardsUnitTest
             InitializeFavoriteCategory();
 
             // Act
-            _context.FavoriteCategory.Remove(favoriteCategory);
+            _testContext.FavoriteCategory.Remove(favoriteCategory);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]

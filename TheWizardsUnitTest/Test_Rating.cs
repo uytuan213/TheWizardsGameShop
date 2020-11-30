@@ -12,6 +12,7 @@ namespace TheWizardsUnitTest
     public class Test_Rating
     {
         TheWizardsGameShopContext _context = new TheWizardsGameShopContext();
+        TheWizardsUnitTestContext _testContext = new TheWizardsUnitTestContext();
         Rating rating;
 
         private void InitializeRating()
@@ -40,10 +41,10 @@ namespace TheWizardsUnitTest
             InitializeRating();
 
             // Act
-            _context.Rating.Add(rating);
+            _testContext.Rating.Add(rating);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Fact]
@@ -83,10 +84,10 @@ namespace TheWizardsUnitTest
             InitializeRating();
 
             // Act
-            _context.Rating.Update(rating);
+            _testContext.Rating.Update(rating);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]
@@ -130,10 +131,10 @@ namespace TheWizardsUnitTest
             InitializeRating();
 
             // Act
-            _context.Rating.Remove(rating);
+            _testContext.Rating.Remove(rating);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]

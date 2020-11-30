@@ -12,7 +12,8 @@ namespace TheWizardsUnitTest
     public class Test_CreditCard
     {
         TheWizardsGameShopContext _context = new TheWizardsGameShopContext();
-        CreditCard creditCard;
+        TheWizardsUnitTestContext _testContext = new TheWizardsUnitTestContext();
+        TestCreditCard creditCard;
 
         private void InitializeCreditCard()
         {
@@ -25,7 +26,7 @@ namespace TheWizardsUnitTest
                 // TODO: nothing...
             }
 
-            creditCard = new CreditCard()
+            creditCard = new TestCreditCard()
             {
                 CreditCardId = 75,
                 UserId = 99,
@@ -43,10 +44,10 @@ namespace TheWizardsUnitTest
             InitializeCreditCard();
 
             // Act
-            _context.CreditCard.Add(creditCard);
+            _testContext.TestCreditCard.Add(creditCard);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]
@@ -60,10 +61,10 @@ namespace TheWizardsUnitTest
             creditCard.CreditCardNumber = value;
 
             // Act
-            _context.CreditCard.Add(creditCard);
+            _testContext.TestCreditCard.Add(creditCard);
 
             // Assert
-            Assert.ThrowsAny<Exception>(() => _context.EFValidation());
+            Assert.ThrowsAny<Exception>(() => _testContext.EFValidation());
         }
 
         [Theory]
@@ -78,10 +79,10 @@ namespace TheWizardsUnitTest
             creditCard.ExpiryDate = value;
 
             // Act
-            _context.CreditCard.Add(creditCard);
+            _testContext.TestCreditCard.Add(creditCard);
 
             // Assert
-            Assert.ThrowsAny<Exception>(() => _context.EFValidation());
+            Assert.ThrowsAny<Exception>(() => _testContext.EFValidation());
         }
 
         [Theory]
@@ -96,10 +97,10 @@ namespace TheWizardsUnitTest
             creditCard.Cvc = value;
 
             // Act
-            _context.CreditCard.Add(creditCard);
+            _testContext.TestCreditCard.Add(creditCard);
 
             // Assert
-            Assert.ThrowsAny<Exception>(() => _context.EFValidation());
+            Assert.ThrowsAny<Exception>(() => _testContext.EFValidation());
         }
 
         [Fact]
@@ -109,10 +110,10 @@ namespace TheWizardsUnitTest
             InitializeCreditCard();
 
             // Act
-            _context.CreditCard.Update(creditCard);
+            _testContext.TestCreditCard.Update(creditCard);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]
@@ -156,10 +157,10 @@ namespace TheWizardsUnitTest
             InitializeCreditCard();
 
             // Act
-            _context.CreditCard.Remove(creditCard);
+            _testContext.TestCreditCard.Remove(creditCard);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TheWizardsGameShop.Controllers;
+﻿using TheWizardsGameShop.Controllers;
 using TheWizardsGameShop.Models;
 using Xunit;
 
@@ -12,7 +9,7 @@ namespace TheWizardsUnitTest
         TheWizardsGameShopContext _context = new TheWizardsGameShopContext();
 
         [Theory]
-        [InlineData("3")]
+        [InlineData("1")]
         public void InvalidAddressId_Rejected(string value)
         {
             int addressId = int.Parse(value);
@@ -22,7 +19,7 @@ namespace TheWizardsUnitTest
         }
 
         [Theory]
-        [InlineData("1")]
+        [InlineData("21")]
         public void ValidAddressId_Accepted(string value)
         {
             int addressId = int.Parse(value);

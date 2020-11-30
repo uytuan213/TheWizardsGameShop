@@ -14,7 +14,8 @@ namespace TheWizardsUnitTest
     public class Test_Address
     {
         TheWizardsGameShopContext _context = new TheWizardsGameShopContext();
-        Address address;
+        TheWizardsUnitTestContext _testContext = new TheWizardsUnitTestContext();
+        TestAddress address;
 
         private void InitializeAddress()
         {
@@ -27,7 +28,7 @@ namespace TheWizardsUnitTest
                 // TODO: nothing...
             }
 
-            address = new Address()
+            address = new TestAddress()
             {
                 AddressId = 100,
                 UserId = 99,
@@ -47,10 +48,10 @@ namespace TheWizardsUnitTest
             InitializeAddress();
 
             // Act
-            _context.Address.Add(address);
+            _testContext.TestAddress.Add(address);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]
@@ -62,10 +63,10 @@ namespace TheWizardsUnitTest
             address.ProvinceCode = value;
 
             // Act
-            _context.Address.Add(address);
+            _testContext.TestAddress.Add(address);
 
             // Assert
-            Assert.ThrowsAny<Exception>(() => _context.EFValidation());
+            Assert.ThrowsAny<Exception>(() => _testContext.EFValidation());
         }
 
         [Theory]
@@ -80,10 +81,10 @@ namespace TheWizardsUnitTest
             address.PostalCode = value;
 
             // Act
-            _context.Address.Add(address);
+            _testContext.TestAddress.Add(address);
 
             // Assert
-            Assert.ThrowsAny<Exception>(() => _context.EFValidation());
+            Assert.ThrowsAny<Exception>(() => _testContext.EFValidation());
         }
 
         [Fact]
@@ -93,10 +94,10 @@ namespace TheWizardsUnitTest
             InitializeAddress();
 
             // Act
-            _context.Address.Update(address);
+            _testContext.TestAddress.Update(address);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]
@@ -140,10 +141,10 @@ namespace TheWizardsUnitTest
             InitializeAddress();
 
             // Act
-            _context.Address.Remove(address);
+            _testContext.TestAddress.Remove(address);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]

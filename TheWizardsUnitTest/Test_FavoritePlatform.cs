@@ -12,6 +12,7 @@ namespace TheWizardsUnitTest
     public class Test_FavoritePlatform
     {
         TheWizardsGameShopContext _context = new TheWizardsGameShopContext();
+        TheWizardsUnitTestContext _testContext = new TheWizardsUnitTestContext();
         FavoritePlatform favoritePlatform;
 
         private void InitializeFavoritePlatform()
@@ -39,10 +40,10 @@ namespace TheWizardsUnitTest
             InitializeFavoritePlatform();
 
             // Act
-            _context.FavoritePlatform.Add(favoritePlatform);
+            _testContext.FavoritePlatform.Add(favoritePlatform);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Fact]
@@ -83,10 +84,10 @@ namespace TheWizardsUnitTest
             InitializeFavoritePlatform();
 
             // Act
-            _context.FavoritePlatform.Update(favoritePlatform);
+            _testContext.FavoritePlatform.Update(favoritePlatform);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]
@@ -130,10 +131,10 @@ namespace TheWizardsUnitTest
             InitializeFavoritePlatform();
 
             // Act
-            _context.FavoritePlatform.Remove(favoritePlatform);
+            _testContext.FavoritePlatform.Remove(favoritePlatform);
 
             // Assert
-            _context.EFValidation();
+            _testContext.EFValidation();
         }
 
         [Theory]

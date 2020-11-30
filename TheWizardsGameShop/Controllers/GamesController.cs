@@ -380,7 +380,7 @@ namespace TheWizardsGameShop.Controllers
             return avg;
         }
 
-        private bool GameExists(int id)
+        public bool GameExists(int id)
         {
             return _context.Game.Any(e => e.GameId == id);
         }
