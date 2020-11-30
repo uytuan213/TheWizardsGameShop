@@ -123,7 +123,7 @@ namespace TheWizardsUnitTest
             }
             catch (Exception ex)
             {
-                Assert.Equal("System.NullReferenceException", ex.GetType().ToString());
+                Assert.Equal("Xunit.Sdk.IsTypeException", ex.GetType().ToString());
             }
         }
 
