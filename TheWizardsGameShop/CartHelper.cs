@@ -27,5 +27,14 @@ namespace TheWizardsGameShop
                     new List<CartItem>();
             return cart.Sum(c => c.Quantity);
         }
+
+        public static decimal getTotalAmount(Controller ctr)
+        {
+            var str = ctr.HttpContext.Session.GetString(SESSION_CART);
+            var cart = str != null ?
+                    JsonConvert.DeserializeObject<List<CartItem>>(str) :
+                    new List<CartItem>();
+            return cart.Sum(c => c.Game.GamePrice * c.Quantity);
+        }
     }
 }

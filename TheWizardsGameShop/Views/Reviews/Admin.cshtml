@@ -7,61 +7,65 @@
 
 <div class="page contents" id="pageReviews" --data-theme="employee-portal">
     <div class="page-header short flex-center-vertical">
-        <h1><span class="material-icons">comment</span>Reviews</h1>
+        <h1><span class="material-icons">rate_review</span>Publish Reviews</h1>
     </div>
     <div class="page-body">
         <p class="page-submenu">
             <a asp-controller="Users" asp-action="Employee" class="item">&lt; Back to Menu</a>
-            <span class="float-right">
-                <a asp-action="Create" class="btn btn--s btn--primary">Add Game</a>
-            </span>
         </p>
         <table class="table">
             <thead>
                 <tr>
+                    @*<th>
+                        @Html.DisplayNameFor(model => model.IsPublished)
+                    </th>*@
+                    <th style="width: 200px;">
+                        @Html.DisplayNameFor(model => model.ReviewDate)
+                    </th>
+                    <th style="width: 160px;">
+                        @Html.DisplayNameFor(model => model.Game)
+                    </th>
+                    <th style="width: 140px;">
+                        @Html.DisplayNameFor(model => model.User)
+                    </th>
                     <th>
                         @Html.DisplayNameFor(model => model.ReviewContent)
                     </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ReviewDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.IsPublished)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Game)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.User)
-                    </th>
-                    <th></th>
+                    <th style="width: 170px;"></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReviewContent)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReviewDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsPublished)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Game.GameDigitalPath)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.User.Email)
-        </td>
-        <td>
-            <a asp-action="Edit" asp-route-id="@item.ReviewId">Edit</a> |
-            <a asp-action="Details" asp-route-id="@item.ReviewId">Details</a> |
-            <a asp-action="Delete" asp-route-id="@item.ReviewId">Delete</a>
-        </td>
-    </tr>
+                <tr>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.IsPublished)
+                    </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReviewDate)
+                    </td>
+                    <td style="width: 160px; max-width: 160px; overflow: hidden; word-break: keep-all; white-space: nowrap; text-overflow: ellipsis;">
+                        @Html.DisplayFor(modelItem => item.Game.GameName)
+                    </td>
+                    <td style="width: 140px;
+        max-width: 140px;
+        overflow: hidden;
+        word-break: keep-all;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    ">
+                        @Html.DisplayFor(modelItem => item.User.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReviewContent)
+                    </td>
+                    <td>
+                        <a asp-action="Publish" asp-route-id="@item.ReviewId" class="btn btn--s" id="btn-publish-@item.ReviewId" style="display: none;">Publish</a>
+                        <a class="btn btn--s" onclick="confirm('Approve Review', 'The review will be published. Do you want to continue?', 'Approve', 'btn-publish-@item.ReviewId');">Approve</a>
+                        <a asp-action="Delete" asp-route-id="@item.ReviewId" class="btn btn--s" id="btn-delete-@item.ReviewId" style="display: none;">Delete</a>
+                        <a class="btn btn--s" onclick="confirm('Delete Review', 'Are you sure to delete the review?', 'Delete', 'btn-delete-@item.ReviewId');">Delete</a>
+                    </td>
+                </tr>
 }
             </tbody>
         </table>

@@ -249,21 +249,40 @@ namespace TheWizardsGameShop.Controllers
 
         // GET: User/Login
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(String? actionName, String? controllerName, String? id, String? path, String? queryString, String? previousPath, String? previousQueryString)
         {
+            if (UserHelper.IsLoggedIn(this)) {
+                TempData["AlreadyLoggedIn"] = true;
+            }
+
             if (HttpContext.Session.GetInt32("loginAttempts") == null)
             {
                 HttpContext.Session.SetInt32("loginAttempts", 1);
             }
+
+            //if (actionName == null && path == null && TempData["RequestedActionName"] == null && TempData["RequestedPath"] == null)
+            //{
+            //    TempData["RequestedPath"] = previousPath;
+            //    TempData["RequestedQueryString"] = previousQueryString;
+            //}
+            if (previousPath != null)
+            {
+                TempData["RequestedPath"] = previousPath;
+                TempData["RequestedQueryString"] = previousQueryString;
+            }
+
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(String? actionName, String? controllerName, [Bind("UserName, PasswordHash")] WizardsUser users)
+        public async Task<IActionResult> Login(String? actionName, String? controllerName, String? id, String? path, String? queryString, [Bind("UserName, PasswordHash")] WizardsUser users)
         {
             TempData["LoginMessage"] = UserHelper.NOT_LOGGED_IN_MESSAGE;
             TempData["RequestedActionName"] = actionName;
             TempData["RequestedControllerName"] = controllerName;
+            TempData["RequestedId"] = id;
+            TempData["RequestedPath"] = path;
+            TempData["RequestedQueryString"] = queryString;
 
             // If user is blocked because of going over the login attempts
             if (HttpContext.Session.GetString("isBlock") != null)
@@ -323,9 +342,12 @@ namespace TheWizardsGameShop.Controllers
                     ViewData["friendRequestCount"] = RelationshipHelper.countRequestsReceived(userResult.UserId, _context);
                     TempData["Message"] = "";
 
-                    if (!String.IsNullOrEmpty(actionName) && !String.IsNullOrEmpty(controllerName))
+                    if (!String.IsNullOrEmpty(path))
                     {
-                        return RedirectToAction(actionName, controllerName);
+                        return Redirect(path + queryString);
+                    } else if (!String.IsNullOrEmpty(actionName) && !String.IsNullOrEmpty(controllerName))
+                    {
+                        return RedirectToAction(actionName, controllerName, id != null ? new { id = id } : null);
                     }
                     return RedirectToAction("Index", "Home");
                 }
@@ -368,11 +390,11 @@ namespace TheWizardsGameShop.Controllers
         }
 
         [HttpGet]
-        public IActionResult CloseModal()
+        public IActionResult CloseModal(string path, string queryString)
         {
             HttpContext.Session.Remove("modalTitle");
             HttpContext.Session.Remove("modalMessage");
-            return RedirectToAction("Index", "Home");
+            return Redirect(path + queryString);
         }
 
         [HttpPost]

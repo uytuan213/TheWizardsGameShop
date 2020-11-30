@@ -1,51 +1,41 @@
 ﻿@model TheWizardsGameShop.Models.Review
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Write a Review";
 }
 
-<h1>Create</h1>
-
-<h4>Review</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ReviewContent" class="control-label"></label>
-                <input asp-for="ReviewContent" class="form-control" />
-                <span asp-validation-for="ReviewContent" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="GameId" class="control-label"></label>
-                <select asp-for="GameId" class ="form-control" asp-items="ViewBag.GameId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="ReviewDate" class="control-label"></label>
-                <input asp-for="ReviewDate" class="form-control" />
-                <span asp-validation-for="ReviewDate" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsPublished" /> @Html.DisplayNameFor(model => model.IsPublished)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="page contents" id="pageGames" --data-theme="employee-portal">
+    <div class="page-header short flex-center-vertical">
+        <h1><span class="material-icons">rate_review</span>Write a Review</h1>
+    </div>
+    <div class="row page-body">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <input type="hidden" asp-for="IsPublished" />
+                <input type="hidden" asp-for="UserId" value="@ViewBag.UserId" />
+                <input type="hidden" asp-for="GameId" value="@ViewBag.GameId" />
+                <input type="hidden" asp-for="ReviewDate" value="@ViewBag.ReviewDate" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    @*<label asp-for="ReviewContent" class="control-label"></label>*@
+                    @*<input asp-for="ReviewContent" class="form-control" />*@
+                    <textarea name="ReviewContent" class="form-control" rows="15"></textarea>
+                    <span asp-validation-for="ReviewContent" class="text-danger"></span>
+                </div>
+                @*<div class="form-group form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="IsPublished" /> @Html.DisplayNameFor(model => model.IsPublished)
+            </label>
+        </div>*@
+                <div class="form-buttons text-center">
+                    <input type="submit" value="Submit" class="btn btn--primary" />
+                    <a href="/Games/Details/@ViewBag.GameId" class="btn">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

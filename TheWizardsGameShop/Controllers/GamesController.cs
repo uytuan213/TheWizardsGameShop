@@ -17,7 +17,6 @@ namespace TheWizardsGameShop.Controllers
         public const int PAGE_SIZE = 15;
         public const int HOME_COUNT = 3;
         public const int SEARCH_SUGGESTIONS_COUNT = 10;
-        private const string SESSION_CART = "cart";
         private readonly TheWizardsGameShopContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
@@ -121,20 +120,19 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
 
-            ViewData["AvgRating"] = CalculateAvgRating((int)id);
-            ViewData["GameReviews"] = _context.Review.Include(r => r.User).Where(r => r.GameId.Equals(id) && r.IsPublished);
+            var gameReviews = _context.Review.Include(r => r.User).Where(r => r.GameId.Equals(id) && r.IsPublished).OrderByDescending(r => r.ReviewDate).ToList();
             if (UserHelper.IsLoggedIn(this))
             {
                 var userId = UserHelper.GetSessionUserId(this);
-                var userReview = await _context.Review.FirstOrDefaultAsync(r => r.GameId.Equals(id) && r.UserId.Equals(userId));
+                var userReview = await _context.Review.Include(r => r.User).FirstOrDefaultAsync(r => r.GameId.Equals(id) && r.UserId.Equals(userId));
                 var userRating = await _context.Rating.FirstOrDefaultAsync(r => r.GameId.Equals(id) && r.UserId.Equals(userId));
+                gameReviews = _context.Review.Include(r => r.User).Where(r => r.GameId.Equals(id) && r.IsPublished && r.UserId != userId).ToList();
                 ViewData["UserReview"] = userReview;
-                if (userRating != null)
-                {
-                    ViewData["UserRatingRate"] = userRating.Rate;
-                }
+                if (userRating != null) ViewData["UserRatingRate"] = userRating.Rate;
             }
 
+            ViewData["AvgRating"] = CalculateAvgRating((int)id);
+            ViewData["GameReviews"] = gameReviews;
             return View(game);
         }
 
@@ -387,31 +385,6 @@ namespace TheWizardsGameShop.Controllers
             var fileBytes = System.IO.File.ReadAllBytes(filePath);
             var fileName = filePath.Substring(filePath.LastIndexOf('\\') + 1);
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Text.Plain, fileName);
-        }
-
-
-        public IActionResult AddToCart(int gameId, int quantity = 1)
-        {
-            if (!UserHelper.IsLoggedIn(this)) UserHelper.RequireLogin(this);
-            
-            var str = HttpContext.Session.GetString(SESSION_CART);
-            List<CartItem> cart = CartHelper.getCartFromSession(this);
-
-            if (cart.Any(c => c.Game.GameId == gameId))
-            {
-                var item = cart.Where(c => c.Game.GameId == gameId).First();
-                item.Quantity++;
-            }
-            else
-            {
-                var item = new CartItem() { Game = _context.Game.Find(gameId), Quantity = quantity };
-                cart.Add(item);
-            }
-
-            str = JsonConvert.SerializeObject(cart);
-            HttpContext.Session.SetString(SESSION_CART, str);
-
-            return RedirectToAction("Details", new { id = gameId});
         }
 
         public double CalculateAvgRating(int gameId)

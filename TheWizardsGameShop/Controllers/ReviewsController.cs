@@ -23,15 +23,15 @@ namespace TheWizardsGameShop.Controllers
         public async Task<IActionResult> Index()
         {
             if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
-            var theWizardsGameShopContext = _context.Review.Include(r => r.Game).Where(c => c.UserId.Equals(HttpContext.Session.GetInt32("userId")));
+            var theWizardsGameShopContext = _context.Review.Include(r => r.Game).Where(r => r.UserId.Equals(HttpContext.Session.GetInt32("userId"))).OrderByDescending(r => r.ReviewDate);
             return View(await theWizardsGameShopContext.ToListAsync());
         }
 
         // GET: Reviews/Admin
-        public async Task<IActionResult> Admin()
+        public async Task<IActionResult> Admin(bool showAll = false)
         {
             if (!UserHelper.IsEmployee(this)) return UserHelper.RequireEmployee(this);
-            var theWizardsGameShopContext = _context.Review.Include(r => r.Game).Where(c => c.UserId.Equals(HttpContext.Session.GetInt32("userId")));
+            var theWizardsGameShopContext = _context.Review.Include(r => r.Game).Where(r => showAll || !r.IsPublished).OrderByDescending(r => r.ReviewDate);
             return View(await theWizardsGameShopContext.ToListAsync());
         }
 
@@ -68,11 +68,12 @@ namespace TheWizardsGameShop.Controllers
         }
 
         // GET: Reviews/Create
-        public IActionResult Create()
+        public IActionResult Create(int gameId)
         {
             if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
             ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
+            ViewData["GameId"] = gameId;
             return View();
         }
 
@@ -83,18 +84,19 @@ namespace TheWizardsGameShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ReviewId,ReviewContent,UserId,GameId")] Review review)
         {
+            if (UserHelper.IsLoggedIn(this))
+            {
+                ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
+            }
+
             if (ModelState.IsValid)
             {
                 review.ReviewDate = DateTime.Now;
                 review.IsPublished = false;
                 _context.Add(review);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-
-            if (UserHelper.IsLoggedIn(this))
-            {
-                ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
+                return RedirectToAction("Details", "Games", new { id = review.GameId });
+                //return RedirectToAction(nameof(Index));
             }
 
             return View(review);
@@ -119,7 +121,6 @@ namespace TheWizardsGameShop.Controllers
                 RequireLogin(this);
             }
 
-            ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
             return View(review);
         }
 
@@ -155,12 +156,31 @@ namespace TheWizardsGameShop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-
-            if (UserHelper.IsLoggedIn(this))
-            {
-                ViewData["UserId"] = HttpContext.Session.GetInt32("userId");
-            }
             return View(review);
+        }
+
+        // GET: Reviews/Publish/5
+        public async Task<IActionResult> Publish(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            if (!UserHelper.IsEmployee(this)) return UserHelper.RequireEmployee(this);
+            await PublishConfirmed(Convert.ToInt32(id));
+            return RedirectToAction(nameof(Admin));
+        }
+
+        // POST: Reviews/Publish/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PublishConfirmed(int id)
+        {
+            var review = await _context.Review.FindAsync(id);
+            review.IsPublished = true;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Admin));
         }
 
         // GET: Reviews/Delete/5
@@ -180,7 +200,9 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
 
-            return View(review);
+            await DeleteConfirmed(Convert.ToInt32(id));
+            return RedirectToAction(nameof(Admin));
+            //return View(review);
         }
 
         // POST: Reviews/Delete/5
@@ -191,7 +213,7 @@ namespace TheWizardsGameShop.Controllers
             var review = await _context.Review.FindAsync(id);
             _context.Review.Remove(review);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Admin));
         }
 
         private bool ReviewExists(int id)

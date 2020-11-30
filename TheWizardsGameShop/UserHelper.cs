@@ -50,8 +50,11 @@ namespace TheWizardsGameShop
         /// <returns>Login action</returns>
         public static RedirectToActionResult RequireLogin(Controller ctr, string message = NOT_LOGGED_IN_MESSAGE)
         {
-            string actionName = ctr.ControllerContext.RouteData.Values["action"].ToString();
-            string controllerName = ctr.ControllerContext.RouteData.Values["controller"].ToString();
+            var actionName = ctr.ControllerContext.RouteData.Values["action"].ToString();
+            var controllerName = ctr.ControllerContext.RouteData.Values["controller"].ToString();
+            var id = ctr.ControllerContext.RouteData.Values["id"];
+            var path = ctr.ControllerContext.HttpContext.Request.Path.Value;
+            var queryString = ctr.ControllerContext.HttpContext.Request.QueryString.Value;
 
             // Pass if already logged in
             if (IsLoggedIn(ctr)) return null;
@@ -60,6 +63,9 @@ namespace TheWizardsGameShop
             ctr.TempData["LoginMessage"] = message;
             ctr.TempData["RequestedActionName"] = actionName;
             ctr.TempData["RequestedControllerName"] = controllerName;
+            ctr.TempData["RequestedId"] = id != null ? id.ToString() : null;
+            ctr.TempData["RequestedPath"] = path;
+            ctr.TempData["RequestedQueryString"] = queryString;
 
             // Redirect to login page
             return ctr.RedirectToAction("Login", "Users");

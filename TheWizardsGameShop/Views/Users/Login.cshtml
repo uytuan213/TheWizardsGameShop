@@ -2,20 +2,27 @@
 
 @{ ViewData["Title"] = "Login"; }
 
+@if (TempData["AlreadyLoggedIn"] != null && (bool)TempData["AlreadyLoggedIn"] == true)
+{
+    <script>
+        window.history.back();
+    </script>
+}
+
 <div class="page contents" id="pageLogin" --data-theme="my-account">
     <div class="page-header flex-center text-center">
         <div>
             <h1>Login</h1>
             @if (TempData["LoginMessage"] != null)
             {
-                <h4>
-                    @TempData["LoginMessage"]
-                </h4> }
-            else
-            {
-                <h4>
-                    Welcome to The Wizards' Game Shop!
-                </h4>}
+        <h4>
+            @TempData["LoginMessage"]
+        </h4> }
+    else
+    {
+        <h4>
+            Welcome to The Wizards' Game Shop!
+        </h4>}
         </div>
     </div>
     <div class="row page-body">
@@ -24,6 +31,11 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" name="actionName" value="@TempData["RequestedActionName"]" />
                 <input type="hidden" name="controllerName" value="@TempData["RequestedControllerName"]" />
+                <input type="hidden" name="id" value="@TempData["RequestedId"]" />
+                <input type="hidden" name="path" value="@TempData["RequestedPath"]" />
+                <input type="hidden" name="queryString" value="@TempData["RequestedQueryString"]" />
+                <input type="hidden" name="previousPath" id="previousPath" />
+                <input type="hidden" name="previousQueryString" id="previousQueryString" />
                 <div class="form-group">
                     <label asp-for="UserName" class="control-label"></label>
                     <input asp-for="UserName" class="form-control" required />
@@ -46,3 +58,4 @@
     </div>
 
 </div>
+
