@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using TheWizardsGameShop.Models;
 
 namespace TheWizardsGameShop.Controllers
@@ -118,20 +120,19 @@ namespace TheWizardsGameShop.Controllers
                 return NotFound();
             }
 
-            ViewData["AvgRating"] = CalculateAvgRating((int)id);
-            ViewData["GameReviews"] = _context.Review.Include(r => r.User).Where(r => r.GameId.Equals(id) && r.IsPublished);
+            var gameReviews = _context.Review.Include(r => r.User).Where(r => r.GameId.Equals(id) && r.IsPublished).OrderByDescending(r => r.ReviewDate).ToList();
             if (UserHelper.IsLoggedIn(this))
             {
                 var userId = UserHelper.GetSessionUserId(this);
-                var userReview = await _context.Review.FirstOrDefaultAsync(r => r.GameId.Equals(id) && r.UserId.Equals(userId));
+                var userReview = await _context.Review.Include(r => r.User).FirstOrDefaultAsync(r => r.GameId.Equals(id) && r.UserId.Equals(userId));
                 var userRating = await _context.Rating.FirstOrDefaultAsync(r => r.GameId.Equals(id) && r.UserId.Equals(userId));
+                gameReviews = _context.Review.Include(r => r.User).Where(r => r.GameId.Equals(id) && r.IsPublished && r.UserId != userId).ToList();
                 ViewData["UserReview"] = userReview;
-                if (userRating != null)
-                {
-                    ViewData["UserRatingRate"] = userRating.Rate;
-                }
+                if (userRating != null) ViewData["UserRatingRate"] = userRating.Rate;
             }
 
+            ViewData["AvgRating"] = CalculateAvgRating((int)id);
+            ViewData["GameReviews"] = gameReviews;
             return View(game);
         }
 
@@ -369,6 +370,21 @@ namespace TheWizardsGameShop.Controllers
                                             .Take(PAGE_SIZE);
 
             return View(await searchResult.ToListAsync());
+        }
+
+        public FileContentResult Download(int id)
+        {
+            var downloadPath = Path.Combine(_webHostEnvironment.WebRootPath, $"download\\{id}");
+            if (!Directory.Exists(downloadPath))
+            {
+                // TODO: return null will break the website, should be change
+                return null;
+            }
+
+            var filePath = Directory.GetFiles(downloadPath).First();
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+            var fileName = filePath.Substring(filePath.LastIndexOf('\\') + 1);
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Text.Plain, fileName);
         }
 
         public double CalculateAvgRating(int gameId)

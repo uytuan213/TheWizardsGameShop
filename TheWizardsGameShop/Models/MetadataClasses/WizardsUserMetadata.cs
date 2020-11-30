@@ -101,8 +101,8 @@ namespace TheWizardsGameShop.Models
         public virtual Gender GenderNavigation { get; set; }
         public virtual ICollection<Address> Address { get; set; }
         public virtual ICollection<CreditCard> CreditCard { get; set; }
-        public virtual ICollection<Relationship> RelationshipUserId1Navigation { get; set; }
-        public virtual ICollection<Relationship> RelationshipUserId2Navigation { get; set; }
+        public virtual ICollection<Relationship> RelationshipSenderNavigation { get; set; }
+        public virtual ICollection<Relationship> RelationshipReceiverNavigation { get; set; }
         public virtual ICollection<UserRole> UserRole { get; set; }
     }
 }

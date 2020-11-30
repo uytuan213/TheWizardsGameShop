@@ -39,21 +39,18 @@
 <body>
     @if (ViewData["BackgroundImage"] != null)
     {
-    <div class="game-background" style="background-image: url('@ViewData["BackgroundImage"]');">
-    </div>
-    }
+<div class="game-background" style="background-image: url('@ViewData["BackgroundImage"]');">
+</div>}
 
     <header class="flex-center">
         <nav class="nav contents flex-center-vertical">
             @if (headerMode != "Employee")
             {
-                <a class="nav-logo" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/logo.png" title="The Wizards' Game Shop" alt="The Wizards' Game Shop" /></a>
-            }
+<a class="nav-logo" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/logo.png" title="The Wizards' Game Shop" alt="The Wizards' Game Shop" /></a> }
             else
             {
-                <a class="nav-logo" asp-area="" asp-controller="Users" asp-action="Employee"><img src="~/images/logo.png" title="The Wizards' Game Shop" alt="The Wizards' Game Shop" /></a>
-                <div class="nav-mode">Employee</div>
-            }
+<a class="nav-logo" asp-area="" asp-controller="Users" asp-action="Employee"><img src="~/images/logo.png" title="The Wizards' Game Shop" alt="The Wizards' Game Shop" /></a>
+                <div class="nav-mode">Employee</div>            }
 
             @*<ul class="nav-menu flex-center-vertical">
                     <li>
@@ -65,48 +62,53 @@
                 </ul>*@
             @if (headerMode != "Employee")
             {
-                <div class="nav-search">
-                    <form asp-controller="Games" asp-action="Search" method="get" class="nav-search">
-                        <input placeholder="Search" id="nav-search-input" name="keyword" value="@ViewData["SearchKeyword"]" autocomplete="off" />
-                        <button type="submit" class="nav-search-btn"><span class="material-icons">search</span></button>
-                    </form>
-                    <div class="nav-search-suggestions" id="nav-search-suggestions" style="display: none;">
-                        @*@Html.Partial("~/Views/Games/SearchSuggestions.cshtml")*@
-                        <iframe src="" id="nav-search-suggestions-iframe" frameborder="0" scrolling="auto" onload="resizeIframe(this);">Loading...</iframe>
-                    </div>
-                </div>
-            }
+<div class="nav-search">
+    <form asp-controller="Games" asp-action="Search" method="get" class="nav-search">
+        <input placeholder="Search" id="nav-search-input" name="keyword" value="@ViewData["SearchKeyword"]" autocomplete="off" />
+        <button type="submit" class="nav-search-btn"><span class="material-icons">search</span></button>
+    </form>
+    <div class="nav-search-suggestions" id="nav-search-suggestions" style="display: none;">
+        @*@Html.Partial("~/Views/Games/SearchSuggestions.cshtml")*@
+        <iframe src="" id="nav-search-suggestions-iframe" frameborder="0" scrolling="auto" onload="resizeIframe(this);">Loading...</iframe>
+    </div>
+</div>            }
             <ul class="nav-menu flex-center-vertical absolute-right">
                 @if (isLoggedIn)
                 {
-                    @if (headerMode == "Employee")
-                    {
-                        <li>
-                            <a nohref class="account flex-center-vertical" style="pointer-events: none;"><span class="material-icons">account_circle</span>@session.GetString("userName")</a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li>
-                            <a asp-area="" asp-controller="Users" asp-action="Menu" class="account flex-center-vertical"><span class="material-icons">account_circle</span>@session.GetString("userName")</a>
-                        </li>
-                        <li>
-                            <a onclick="alert('Not available', 'Coming soon');">Cart</a>
-                        </li>
-                    }
-                    <li>
-                        <a asp-area="" asp-controller="Users" asp-action="Logout">Logout</a>
-                    </li>
-                }
+    @if (headerMode == "Employee")
+    {
+<li>
+    <a nohref class="account flex-center-vertical" style="pointer-events: none;"><span class="material-icons">account_circle</span>@session.GetString("userName")</a>
+</li> }
                 else
                 {
+<li>
+    <a asp-area="" asp-controller="Users" asp-action="Menu" class="account flex-center-vertical"><span class="material-icons">account_circle</span>@session.GetString("userName")</a>
+</li>
                     <li>
-                        <a asp-area="" asp-controller="Users" asp-action="Login">Login</a>
-                    </li>
+                        <a href="/Carts">Cart</a>
+                    </li>}
                     <li>
-                        <a asp-area="" asp-controller="Users" asp-action="Create">Sign Up</a>
+                        <a asp-area="" asp-controller="Users" asp-action="Logout">Logout</a>
+                    </li> }
+                                else
+                                {
+                    <li>
+                        @*<a asp-area="" asp-controller="Users" asp-action="Login">Login</a>*@
+                        <a id="btn-login">Login</a>
+
+                        <script>
+                            var url = "/Users/Login";
+                            if (window.location.pathname !== '/Users/Login') {
+                                document.getElementById("btn-login").setAttribute("href", url + "?previousPath=" + window.location.pathname + "&previousQueryString=" + window.location.search);
+                            } else {
+                                document.getElementById("btn-login").setAttribute("href", "#");
+                            }
+                        </script>
                     </li>
-                }
+                                    <li>
+                                        <a asp-area="" asp-controller="Users" asp-action="Create">Sign Up</a>
+                                    </li>}
             </ul>
         </nav>
     </header>
@@ -134,17 +136,21 @@
 
     @if (showModal)
     {
-        <div class="modal" id="cmodal">
-            <div class="modal-blocker" onclick="closeModal();"></div>
-            <div class="modal-window">
-                <h2 id="cmodal-title">@modalTitle</h2>
-                <p id="cmodal-message">@modalMessage</p>
-                <p class="modal-buttons" id="cmodal-buttons">
-                    <a class="btn btn--primary" id="cmodal-ok" asp-controller="Users" asp-action="CloseModal">OK</a>
-                </p>
-            </div>
+    <div class="modal" id="cmodal">
+        <div class="modal-blocker" onclick="closeModal();"></div>
+        <div class="modal-window">
+            <h2 id="cmodal-title">@modalTitle</h2>
+            <p id="cmodal-message">@modalMessage</p>
+            <p class="modal-buttons" id="cmodal-buttons">
+                @*<a class="btn btn--primary" id="cmodal-ok" asp-controller="Users" asp-action="CloseModal">OK</a>*@
+                <a class="btn btn--primary" id="cmodal-ok">OK</a>
+            </p>
         </div>
-    }
+    </div>
+    <script>
+        var url = "/Users/CloseModal";
+        document.getElementById("cmodal-ok").setAttribute("href", url + "?path=" + window.location.pathname + "&queryString=" + window.location.search);
+    </script>}
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

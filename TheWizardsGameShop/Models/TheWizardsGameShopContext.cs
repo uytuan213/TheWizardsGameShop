@@ -25,12 +25,15 @@ namespace TheWizardsGameShop.Models
         public virtual DbSet<GameImage> GameImage { get; set; }
         public virtual DbSet<GameStatus> GameStatus { get; set; }
         public virtual DbSet<Gender> Gender { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetail { get; set; }
+        public virtual DbSet<OrderStatus> OrderStatus { get; set; }
         public virtual DbSet<Platform> Platform { get; set; }
         public virtual DbSet<Province> Province { get; set; }
         public virtual DbSet<Rating> Rating { get; set; }
         public virtual DbSet<Relationship> Relationship { get; set; }
         public virtual DbSet<Review> Review { get; set; }
         public virtual DbSet<UserRole> UserRole { get; set; }
+        public virtual DbSet<WizardsOrder> WizardsOrder { get; set; }
         public virtual DbSet<WizardsRole> WizardsRole { get; set; }
         public virtual DbSet<WizardsUser> WizardsUser { get; set; }
 
@@ -196,7 +199,6 @@ namespace TheWizardsGameShop.Models
                 entity.HasOne(d => d.Game)
                     .WithMany(p => p.GameImage)
                     .HasForeignKey(d => d.GameId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_GameImage_Game");
             });
 
@@ -219,6 +221,33 @@ namespace TheWizardsGameShop.Models
                 entity.Property(e => e.Gender1)
                     .HasColumnName("Gender")
                     .HasMaxLength(10);
+            });
+
+            modelBuilder.Entity<OrderDetail>(entity =>
+            {
+                entity.HasKey(e => new { e.OrderId, e.GameId });
+
+                entity.HasOne(d => d.Game)
+                    .WithMany(p => p.OrderDetail)
+                    .HasForeignKey(d => d.GameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderDetail_Game");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.OrderDetail)
+                    .HasForeignKey(d => d.OrderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderDetail_WizardsOrder");
+            });
+
+            modelBuilder.Entity<OrderStatus>(entity =>
+            {
+                entity.Property(e => e.OrderStatusId).ValueGeneratedNever();
+
+                entity.Property(e => e.OrderStatus1)
+                    .IsRequired()
+                    .HasColumnName("OrderStatus")
+                    .HasMaxLength(50);
             });
 
             modelBuilder.Entity<Platform>(entity =>
@@ -259,19 +288,19 @@ namespace TheWizardsGameShop.Models
 
             modelBuilder.Entity<Relationship>(entity =>
             {
-                entity.HasKey(e => new { e.UserId1, e.UserId2 });
+                entity.HasKey(e => new { e.Sender, e.Receiver });
 
-                entity.HasOne(d => d.UserId1Navigation)
-                    .WithMany(p => p.RelationshipUserId1Navigation)
-                    .HasForeignKey(d => d.UserId1)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Relationship_Users");
-
-                entity.HasOne(d => d.UserId2Navigation)
-                    .WithMany(p => p.RelationshipUserId2Navigation)
-                    .HasForeignKey(d => d.UserId2)
+                entity.HasOne(d => d.ReceiverNavigation)
+                    .WithMany(p => p.RelationshipReceiverNavigation)
+                    .HasForeignKey(d => d.Receiver)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Relationship_Users1");
+
+                entity.HasOne(d => d.SenderNavigation)
+                    .WithMany(p => p.RelationshipSenderNavigation)
+                    .HasForeignKey(d => d.Sender)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Relationship_Users");
             });
 
             modelBuilder.Entity<Review>(entity =>
@@ -309,6 +338,44 @@ namespace TheWizardsGameShop.Models
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UserRole_WizardsUser");
+            });
+
+            modelBuilder.Entity<WizardsOrder>(entity =>
+            {
+                entity.HasKey(e => e.OrderId)
+                    .HasName("PK_Order");
+
+                entity.Property(e => e.Total).HasColumnType("smallmoney");
+
+                entity.HasOne(d => d.CreditCard)
+                    .WithMany(p => p.WizardsOrder)
+                    .HasForeignKey(d => d.CreditCardId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_WizardsOrder_CreditCard");
+
+                entity.HasOne(d => d.MailingAddress)
+                    .WithMany(p => p.WizardsOrderMailingAddress)
+                    .HasForeignKey(d => d.MailingAddressId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_WizardsOrder_MailingAddress");
+
+                entity.HasOne(d => d.OrderStatus)
+                    .WithMany(p => p.WizardsOrder)
+                    .HasForeignKey(d => d.OrderStatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_WizardsOrder_OrderStatus");
+
+                entity.HasOne(d => d.ShippingAddress)
+                    .WithMany(p => p.WizardsOrderShippingAddress)
+                    .HasForeignKey(d => d.ShippingAddressId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_WizardsOrder_ShippingAddress");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.WizardsOrder)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_WizardsOrder_WizardsUser");
             });
 
             modelBuilder.Entity<WizardsRole>(entity =>

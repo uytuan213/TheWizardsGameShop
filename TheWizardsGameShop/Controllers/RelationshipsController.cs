@@ -21,7 +21,11 @@ namespace TheWizardsGameShop.Controllers
         // GET: Relationships
         public async Task<IActionResult> Index()
         {
-            var theWizardsGameShopContext = _context.Relationship.Include(r => r.UserId1Navigation).Include(r => r.UserId2Navigation);
+            if (!UserHelper.IsLoggedIn(this)) UserHelper.RequireLogin(this);
+            var id = UserHelper.GetSessionUserId(this);
+            var theWizardsGameShopContext = _context.Relationship.Include(r => r.SenderNavigation).Include(r => r.ReceiverNavigation).Where(r => (bool)r.IsAccepted);
+
+            ViewData["friendRequests"] = RelationshipHelper.getRequestsReceived(id, _context);
             return View(await theWizardsGameShopContext.ToListAsync());
         }
 
@@ -34,9 +38,9 @@ namespace TheWizardsGameShop.Controllers
             }
 
             var relationship = await _context.Relationship
-                .Include(r => r.UserId1Navigation)
-                .Include(r => r.UserId2Navigation)
-                .FirstOrDefaultAsync(m => m.UserId1 == id);
+                .Include(r => r.SenderNavigation)
+                .Include(r => r.ReceiverNavigation)
+                .FirstOrDefaultAsync(m => m.Sender == id);
             if (relationship == null)
             {
                 return NotFound();
@@ -48,8 +52,6 @@ namespace TheWizardsGameShop.Controllers
         // GET: Relationships/Create
         public IActionResult Create()
         {
-            ViewData["UserId1"] = new SelectList(_context.WizardsUser, "UserId", "Email");
-            ViewData["UserId2"] = new SelectList(_context.WizardsUser, "UserId", "Email");
             return View();
         }
 
@@ -58,16 +60,16 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId1,UserId2,IsFamily")] Relationship relationship)
+        public async Task<IActionResult> Create([Bind("Sender,Receiver,IsFamily,IsAccepted")] Relationship relationship)
         {
             if (ModelState.IsValid)
             {
+                relationship.IsAccepted = false;
                 _context.Add(relationship);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId1"] = new SelectList(_context.WizardsUser, "UserId", "Email", relationship.UserId1);
-            ViewData["UserId2"] = new SelectList(_context.WizardsUser, "UserId", "Email", relationship.UserId2);
+
             return View(relationship);
         }
 
@@ -84,8 +86,8 @@ namespace TheWizardsGameShop.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId1"] = new SelectList(_context.WizardsUser, "UserId", "Email", relationship.UserId1);
-            ViewData["UserId2"] = new SelectList(_context.WizardsUser, "UserId", "Email", relationship.UserId2);
+            ViewData["Sender"] = new SelectList(_context.WizardsUser, "UserId", "Email", relationship.Sender);
+            ViewData["Receiver"] = new SelectList(_context.WizardsUser, "UserId", "Email", relationship.Receiver);
             return View(relationship);
         }
 
@@ -94,9 +96,9 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId1,UserId2,IsFamily")] Relationship relationship)
+        public async Task<IActionResult> Edit(int id, [Bind("Sender,Receiver,IsFamily,IsAccepted")] Relationship relationship)
         {
-            if (id != relationship.UserId1)
+            if (id != relationship.Sender)
             {
                 return NotFound();
             }
@@ -110,7 +112,7 @@ namespace TheWizardsGameShop.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RelationshipExists(relationship.UserId1))
+                    if (!RelationshipExists(relationship.Sender))
                     {
                         return NotFound();
                     }
@@ -121,8 +123,8 @@ namespace TheWizardsGameShop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId1"] = new SelectList(_context.WizardsUser, "UserId", "Email", relationship.UserId1);
-            ViewData["UserId2"] = new SelectList(_context.WizardsUser, "UserId", "Email", relationship.UserId2);
+            ViewData["Sender"] = new SelectList(_context.WizardsUser, "UserId", "Email", relationship.Sender);
+            ViewData["Receiver"] = new SelectList(_context.WizardsUser, "UserId", "Email", relationship.Receiver);
             return View(relationship);
         }
 
@@ -135,9 +137,9 @@ namespace TheWizardsGameShop.Controllers
             }
 
             var relationship = await _context.Relationship
-                .Include(r => r.UserId1Navigation)
-                .Include(r => r.UserId2Navigation)
-                .FirstOrDefaultAsync(m => m.UserId1 == id);
+                .Include(r => r.SenderNavigation)
+                .Include(r => r.ReceiverNavigation)
+                .FirstOrDefaultAsync(m => m.Sender == id);
             if (relationship == null)
             {
                 return NotFound();
@@ -159,7 +161,7 @@ namespace TheWizardsGameShop.Controllers
 
         private bool RelationshipExists(int id)
         {
-            return _context.Relationship.Any(e => e.UserId1 == id);
+            return _context.Relationship.Any(e => e.Sender == id);
         }
     }
 }

@@ -38,7 +38,7 @@
                     <span id="game-info__rate__user" class="clickable" onclick="$('#game-info__rate__user__select').toggle();">
                         @if (ViewData["UserRatingRate"] == null)
                         {
-                            <span>Rate this game</span>
+            <span>Rate this game</span>
 
                             <span id="game-info__rate__user__select">
                                 <a id="game-info__rate__user__select__1" href="/Ratings/Create?gameId=@Model.GameId&rate=1"><span class="material-icons">star</span></a>
@@ -49,7 +49,7 @@
                             </span> }
                         else
                         {
-                            <span>My Rating: @ViewData["UserRatingRate"]</span>
+            <span>My Rating: @ViewData["UserRatingRate"]</span>
 
                             <span id="game-info__rate__user__select">
                                 <a id="game-info__rate__user__select__1" href="/Ratings/Edit?gameId=@Model.GameId&rate=1"><span class="material-icons">star</span></a>
@@ -62,14 +62,12 @@
 
                     @if (ViewData["UserRatingRate"] != null)
                     {
-                        <script>
+        <script>
                         var rate = @ViewData["UserRatingRate"];
-                        </script>
-                    }
+        </script> }
                     else
                     {
-                        <script>var rate = 0;</script>
-                    }
+        <script>var rate = 0;</script>}
 
                     <script>
                         var eraseHighlight = function () {
@@ -135,15 +133,15 @@
             </div>
             <div id="game-info__buy" class="col">
                 <p id="game-info__price">$@Html.DisplayFor(model => model.GamePrice)</p>
-                <a nohref id="game-info__buy__btn" class="btn btn--primary flex-center"><span class="material-icons">add_shopping_cart</span>Add to Cart</a>
-
+                <a href="/Carts/Add/@Model.GameId?goToCart=false" id="game-info__buy__btn" class="btn btn--primary flex-center"><span class="material-icons">add_shopping_cart</span>Add to Cart</a>
+                <a href="/Games/Download?id=@Model.GameId" id="game-info__buy__btn" class="btn btn--primary flex-center"><span class="material-icons">add_shopping_cart</span>Download</a>
                 <p id="game-info__qty">Available: @Html.DisplayFor(model => model.GameQty)</p>
                 @*<p id="game-info__status">@Html.DisplayFor(model => model.GameStatusCodeNavigation.GameStatusCode)</p>*@
             </div>
         </div>
         @*<p class="page-submenu">
-            <a href="javascript:history.back()" class="item">&lt; Back</a>
-        </p>*@
+                <a href="javascript:history.back()" class="item">&lt; Back</a>
+            </p>*@
         <section>
             <h3>@Html.DisplayNameFor(model => model.GameDescription)</h3>
             <p>
@@ -158,24 +156,19 @@
                     <p class="item__icon">
                         @if (Model.GamePlatform.PlatformName == "PC")
                         {
-                            <i class="cib-windows"></i>
-                        }
+            <i class="cib-windows"></i> }
                         else if (Model.GamePlatform.PlatformName == "PS4")
                         {
-                            <i class="cib-playstation"></i>
-                        }
+            <i class="cib-playstation"></i> }
                         else if (Model.GamePlatform.PlatformName == "Xbox One")
                         {
-                            <i class="cib-xbox"></i>
-                        }
+            <i class="cib-xbox"></i> }
                         else if (Model.GamePlatform.PlatformName == "Switch")
                         {
-                            <i class="cib-nintendo-switch"></i>
-                        }
+            <i class="cib-nintendo-switch"></i> }
                         else if (Model.GamePlatform.PlatformName == "2DS")
                         {
-                            <i class="cib-nintendo-3ds"></i>
-                        }
+            <i class="cib-nintendo-3ds"></i>}
                     </p>
                     @Model.GamePlatform.PlatformName
                 </div>
@@ -183,7 +176,57 @@
         </section>
         <hr />
         <section>
-            <h3>User Reviews</h3>
+            <h3>
+                User Reviews
+                @if (ViewBag.UserReview == null)
+                {<span class="float-right" style="font-size: 12pt;">
+                        <a asp-controller="Reviews" asp-action="Create" asp-route-gameId="@Model.GameId" class="btn btn--s">
+                            Write a Review
+                        </a>
+                    </span>}
+            </h3>
+
+            @if (ViewBag.UserReview != null)
+            {<table class="game-reviews game-reviews--my">
+                    <tbody>
+
+                        <tr>
+                            <td class="game-reviews-username">
+                                <b>My Review</b>
+                            </td>
+                            <td class="game-reviews-content">
+                                @ViewBag.UserReview.ReviewContent
+                            </td>
+                            <td class="game-reviews-date">
+                                @ViewBag.UserReview.ReviewDate
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>}
+            
+
+            <table class="game-reviews">
+                <tbody>
+                    @if (ViewBag.GameReviews != null) foreach (var item in ViewBag.GameReviews)
+                        {
+        <tr>
+            <td class="game-reviews-username">
+                @item.User.UserName
+            </td>
+            <td class="game-reviews-content">
+                @item.ReviewContent
+            </td>
+            <td class="game-reviews-date">
+                @item.ReviewDate
+            </td>
+        </tr>}
+                </tbody>
+            </table>
+
+
+
+
         </section>
     </div>
 </div>

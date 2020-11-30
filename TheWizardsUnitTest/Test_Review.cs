@@ -47,7 +47,11 @@ namespace TheWizardsUnitTest
             _testContext.Review.Add(review);
 
             // Assert
+<<<<<<< HEAD
             _testContext.EFValidation();
+=======
+            //_context.EFValidation();
+>>>>>>> abb706896c0972368724a52409ae80583b5c947c
         }
 
         [Fact]
@@ -90,7 +94,11 @@ namespace TheWizardsUnitTest
             _testContext.Review.Update(review);
 
             // Assert
+<<<<<<< HEAD
             _testContext.EFValidation();
+=======
+            //_context.EFValidation();
+>>>>>>> abb706896c0972368724a52409ae80583b5c947c
         }
 
         [Theory]
@@ -137,7 +145,11 @@ namespace TheWizardsUnitTest
             _testContext.Review.Remove(review);
 
             // Assert
+<<<<<<< HEAD
             _testContext.EFValidation();
+=======
+            //_context.EFValidation();
+>>>>>>> abb706896c0972368724a52409ae80583b5c947c
         }
 
         [Theory]

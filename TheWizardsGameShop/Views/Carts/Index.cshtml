@@ -1,0 +1,54 @@
+﻿@model List<CartItem>
+
+@{ ViewData["Title"] = "My Cart"; }
+
+<div class="page contents" id="pageCart" --data-theme="my-account">
+    <div class="page-header short flex-center-vertical">
+        <h1><span class="material-icons">shopping_cart</span>My Cart</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.Count > 0)
+                {
+                    <table class="table">
+                        <tbody>
+                            @foreach (var item in Model) { 
+                            <tr>
+                                <td style="width: 100px;">
+                                    <img src="/images/@item.Game.GameId/00.png" style="width: 80px;" />
+                                </td>
+                                <td style="width: 300px;">
+                                    <a asp-controller="Games" asp-action="Details" asp-route-id="@item.Game.GameId" class="link">@item.Game.GameName</a>
+                                </td>
+                                <td style="width: 80px;">
+                                    $@Html.DisplayFor(modelItem => item.Game.GamePrice)
+                                </td>
+                                <td style="width: 80px;">
+                                    <div class="flex-center">
+                                        <a href="/Carts/Add/@item.Game.GameId" class="cart-quantity-button"><span class="material-icons">add_circle</span></a>
+                                        @Html.DisplayFor(modelItem => item.Quantity)
+                                        <a href="/Carts/Add/@item.Game.GameId?quantity=-1" class="cart-quantity-button"><span class="material-icons">remove_circle</span></a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a asp-action="Delete" asp-route-id="@item.Game.GameId" class="btn btn--s">Remove</a>
+                                </td>
+                            </tr>
+                            }
+                            <tr>
+                                <td colspan="2"></td>
+                                <td><b>$@ViewBag.TotalAmount.ToString("N2")</b></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="text-center">
+                        <a asp-action="Checkout" class="btn btn--primary">Checkout</a>
+                    </div>
+        }
+        else
+        {
+                    <div style="text-align: center; font-size: 1.25em; width: 100%; padding: var(--spacing) 0;">Cart empty!</div>
+                    }
+    </div>
+</div>

@@ -8,6 +8,7 @@ namespace TheWizardsGameShop.Models
         public Game()
         {
             GameImage = new HashSet<GameImage>();
+            OrderDetail = new HashSet<OrderDetail>();
             Rating = new HashSet<Rating>();
             Review = new HashSet<Review>();
         }
@@ -26,6 +27,7 @@ namespace TheWizardsGameShop.Models
         public virtual Platform GamePlatform { get; set; }
         public virtual GameStatus GameStatusCodeNavigation { get; set; }
         public virtual ICollection<GameImage> GameImage { get; set; }
+        public virtual ICollection<OrderDetail> OrderDetail { get; set; }
         public virtual ICollection<Rating> Rating { get; set; }
         public virtual ICollection<Review> Review { get; set; }
     }
