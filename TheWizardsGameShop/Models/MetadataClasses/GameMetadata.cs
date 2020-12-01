@@ -51,7 +51,7 @@ namespace TheWizardsGameShop.Models
             ErrorMessage = "Must be numeric")]
         public short GameQty { get; set; }
 
-        [Display(Name = "Path")]
+        [Display(Name = "Game Digital Path")]
         public string GameDigitalPath { get; set; }
 
         [Display(Name = "Category")]

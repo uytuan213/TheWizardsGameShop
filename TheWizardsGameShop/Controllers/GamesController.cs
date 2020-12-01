@@ -204,8 +204,7 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GameId,GameStatusCode,GamePlatformId,GameCategoryId,GameName,GameDescription,GamePrice,GameQty")] Game game,
-            [FromForm(Name = "gameFile")] IFormFile gameFile = null)
+        public async Task<IActionResult> Edit(int id, [Bind("GameId,GameStatusCode,GamePlatformId,GameCategoryId,GameName,GameDescription,GamePrice,GameQty,GameDigitalPath")] Game game)
         {
             if (id != game.GameId)
             {
@@ -216,7 +215,7 @@ namespace TheWizardsGameShop.Controllers
             {
                 try
                 {
-                    if (gameFile != null)
+                    /*if (gameFile != null)
                     {
                         var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, $"download\\{game.GameId}");
                         // Delete the old game file if exists
@@ -229,7 +228,7 @@ namespace TheWizardsGameShop.Controllers
                             }
                         }
                         game.GameDigitalPath = UploadedFile(game.GameId, gameFile);
-                    }
+                    }*/
 
                     _context.Update(game);
                     await _context.SaveChangesAsync();
