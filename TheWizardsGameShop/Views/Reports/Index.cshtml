@@ -20,7 +20,8 @@
                 <a id="report-tab-gamedetail" href="?reportName=GameDetailsReport" class="tab">Game Detail</a>
                 <a id="report-tab-memberlist" href="?reportName=MemberReport" class="tab">Member List</a>
                 @*<a id="report-tab-memberdetail" asp-action="Index" class="tab" disabled>Member Detail</a>*@
-                <a id="report-tab-sales" href="?reportName=SalesReport" class="tab" >Sales</a>
+                <a id="report-tab-sales" href="?reportName=SalesReport" class="tab">Sales</a>
+                <a id="report-tab-orders" href="?reportName=OrderReport" class="tab">Orders</a>
             </div>
 
             <div class="col"></div>
@@ -36,6 +37,10 @@
         $("#report-tab-memberlist").addClass("selected");
     } else if (location.search.indexOf("reportName=GameDetailsReport") != -1) {
         $("#report-tab-gamedetail").addClass("selected");
+    } else if (location.search.indexOf("reportName=SalesReport") != -1) {
+        $("#report-tab-sales").addClass("selected");
+    } else if (location.search.indexOf("reportName=OrderReport") != -1) {
+        $("#report-tab-orders").addClass("selected");
     } else if (location.search == "" || location.search.indexOf("reportName=GameReport") != -1) {
         $("#report-tab-gamelist").addClass("selected");
     }
