@@ -64,14 +64,18 @@ namespace TheWizardsGameShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string receiverUserName, [Bind("Sender,Receiver,IsFamily,IsAccepted")] Relationship relationship)
         {
-            if (ModelState.IsValid)
+            var receiver = _context.WizardsUser.Where(u => u.UserName == receiverUserName).FirstOrDefault();
+            if (receiver != null)
             {
-                relationship.IsAccepted = false;
-                _context.Add(relationship);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                relationship.Receiver = receiver.UserId;
+                /*if (ModelState.IsValid)
+                {*/
+                    relationship.IsAccepted = false;
+                    _context.Add(relationship);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                //}
             }
-
             var sessionUserId = UserHelper.GetSessionUserId(this);
             ViewData["UserId"] = sessionUserId;
             return View(relationship);

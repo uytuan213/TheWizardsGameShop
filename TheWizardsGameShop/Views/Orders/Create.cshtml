@@ -15,9 +15,9 @@
         <div class="col-md-4">
             <form asp-action="Create" class="narrow">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="UserId" value="ViewBag.UserId" />
-                <input type="hidden" asp-for="OrderStatusId" value="ViewBag.OrderStatusId" />
-                <input type="hidden" asp-for="Total" value="ViewBag.Total" />
+                <input type="hidden" asp-for="UserId" value="@ViewBag.UserId" />
+                <input type="hidden" asp-for="OrderStatusId" value="@ViewBag.OrderStatusId" />
+                <input type="hidden" asp-for="Total" value="@ViewBag.Total" />
                 <div class="form-group">
                     <label asp-for="Total" class="control-label"></label>
                     <span class="text-danger" style="font-size: 1.25em; font-weight: 600;">$@ViewBag.Total.ToString("N2")</span>
