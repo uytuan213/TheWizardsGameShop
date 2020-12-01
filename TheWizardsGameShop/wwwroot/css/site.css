@@ -994,7 +994,7 @@ input[type=number].form-control:read-only {
     margin: 0 auto var(--spacing-xxs) auto;
 }
 
-/* Addresses, Credit Cards Page */
+/* Addresses, Credit Cards, People Page */
 #pageAddresses .page-header,
 #pageCreditCards .page-header,
 #pagePeople .page-header {

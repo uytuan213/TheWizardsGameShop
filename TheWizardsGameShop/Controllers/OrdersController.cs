@@ -32,7 +32,22 @@ namespace TheWizardsGameShop.Controllers
                                               .Include(o => o.CreditCard)
                                               .Include(o => o.MailingAddress)
                                               .Include(o => o.ShippingAddress)
-                                              .Where(o => o.UserId == UserHelper.GetSessionUserId(this));
+                                              .Where(o => o.UserId == UserHelper.GetSessionUserId(this))
+                                              .OrderByDescending(o => o.OrderId);
+            return View(await orders.ToListAsync());
+        }
+
+        // GET: OrdersController
+        public async Task<ActionResult> Admin()
+        {
+            if (!UserHelper.IsEmployee(this)) return UserHelper.RequireEmployee(this);
+
+            var orders = _context.WizardsOrder.Include(o => o.OrderStatus)
+                                              .Include(o => o.CreditCard)
+                                              .Include(o => o.MailingAddress)
+                                              .Include(o => o.ShippingAddress)
+                                              .OrderByDescending(o => o.OrderId)
+                                              ;
             return View(await orders.ToListAsync());
         }
 
@@ -170,6 +185,30 @@ namespace TheWizardsGameShop.Controllers
             ViewData["ShippingAddresses"] = new SelectList(_context.Address.Include(a => a.AddressType).Where(a => a.AddressTypeId == 2), "AddressId", "Street1");
 
             return View(order);
+        }
+
+        // GET: OrdersController/Complete/5
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Complete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            await CompleteConfirmed(Convert.ToInt32(id));
+            return RedirectToAction(nameof(Admin));
+        }
+
+        // POST: OrdersController/Complete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CompleteConfirmed(int id)
+        {
+            var order = await _context.WizardsOrder.FindAsync(id);
+            order.OrderStatusId = 2;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Admin));
         }
 
         public bool OrderExists(int id)
