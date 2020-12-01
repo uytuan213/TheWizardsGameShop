@@ -22,7 +22,7 @@
             </a>
             @foreach (var item in Model)
             {
-                <div class="item text-center">
+                <div class="item text-center flex-center">
                     @if (item.ReceiverNavigation.UserName == @session.GetString("userName"))
                     {
                         <h3>
@@ -56,10 +56,10 @@
         <hr />
 
         <h3>Requests received</h3>
-        <div class="list">
-            @foreach (var item in ViewBag.friendRequests)
+        <div class="list" style="min-height: 200px;">
+            @if (ViewBag.friendRequests != null ) foreach(var item in ViewBag.friendRequests)
             {
-                <div class="item text-center">
+                <div class="item text-center flex-center">
                     <h3>
                         @item.SenderNavigation.UserName
                     </h3>

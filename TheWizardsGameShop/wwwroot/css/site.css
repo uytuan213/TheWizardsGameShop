@@ -1018,14 +1018,22 @@ input[type=number].form-control:read-only {
     min-height: 180px;
 }
 
-#pageAddresses .list .item.add,
-#pageCreditCards .list .item.add,
-#pagePeople .list .item.add {
-    border-style: dashed;
-    border-width: 2px;
-    font-size: 1.25em;
-    text-align: center;
-}
+    #pagePeople .list .item h3 {
+        width: 100%;
+    }
+
+    #pagePeople .list .item p {
+        width: 100%;
+    }
+
+    #pageAddresses .list .item.add,
+    #pageCreditCards .list .item.add,
+    #pagePeople .list .item.add {
+        border-style: dashed;
+        border-width: 2px;
+        font-size: 1.25em;
+        text-align: center;
+    }
 
 #pageAddresses .list .item.add p,
 #pageCreditCards .list .item.add p,

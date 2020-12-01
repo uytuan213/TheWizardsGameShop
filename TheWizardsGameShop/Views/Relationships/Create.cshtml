@@ -13,7 +13,7 @@
             <a asp-controller="Relationships" asp-action="Index" class="item">&lt; Back to List</a>
         </p>
         <div class="col-md-4">
-            <form asp-action="Create" class="narrow text-center">
+            <form asp-action="Create" class="text-center">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Sender" value="@ViewBag.UserId" />
                 <input type="hidden" asp-for="Receiver" />

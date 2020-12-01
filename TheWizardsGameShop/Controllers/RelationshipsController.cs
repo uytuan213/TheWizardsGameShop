@@ -73,8 +73,12 @@ namespace TheWizardsGameShop.Controllers
                     relationship.IsAccepted = false;
                     _context.Add(relationship);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
+                TempData["Message"] = "Request has been sent successfully!";
                 //}
+            } else
+            {
+                TempData["Message"] = "Username does not exist.";
             }
             var sessionUserId = UserHelper.GetSessionUserId(this);
             ViewData["UserId"] = sessionUserId;
@@ -136,18 +140,48 @@ namespace TheWizardsGameShop.Controllers
             return View(relationship);
         }
 
-        // GET: Relationships/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+
+
+        // GET: Relationships/Accept/5
+        public async Task<IActionResult> Accept(int? senderId)
         {
-            if (id == null)
+            if (senderId == null)
             {
                 return NotFound();
             }
 
+            await AcceptConfirmed(Convert.ToInt32(senderId));
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Relationships/Accept/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AcceptConfirmed(int senderId)
+        {
+            var sessionUserId = UserHelper.GetSessionUserId(this);
+            var relationship = await _context.Relationship
+                   .Include(r => r.SenderNavigation)
+                   .Include(r => r.ReceiverNavigation)
+                   .FirstOrDefaultAsync(m => m.ReceiverNavigation.UserId == sessionUserId && m.SenderNavigation.UserId == senderId);
+            relationship.IsAccepted = true;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Relationships/Delete/5
+        public async Task<IActionResult> Delete(int? senderId)
+        {
+            if (senderId == null)
+            {
+                return NotFound();
+            }
+
+            var sessionUserId = UserHelper.GetSessionUserId(this);
             var relationship = await _context.Relationship
                 .Include(r => r.SenderNavigation)
                 .Include(r => r.ReceiverNavigation)
-                .FirstOrDefaultAsync(m => m.Sender == id);
+                   .FirstOrDefaultAsync(m => m.ReceiverNavigation.UserId == sessionUserId && m.SenderNavigation.UserId == senderId);
             if (relationship == null)
             {
                 return NotFound();
@@ -159,9 +193,13 @@ namespace TheWizardsGameShop.Controllers
         // POST: Relationships/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int senderId)
         {
-            var relationship = await _context.Relationship.FindAsync(id);
+            var sessionUserId = UserHelper.GetSessionUserId(this);
+            var relationship = await _context.Relationship
+                .Include(r => r.SenderNavigation)
+                .Include(r => r.ReceiverNavigation)
+                   .FirstOrDefaultAsync(m => m.ReceiverNavigation.UserId == sessionUserId && m.SenderNavigation.UserId == senderId);
             _context.Relationship.Remove(relationship);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
