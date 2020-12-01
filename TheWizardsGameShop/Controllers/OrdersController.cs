@@ -68,7 +68,6 @@ namespace TheWizardsGameShop.Controllers
             var sessionUserId = UserHelper.GetSessionUserId(this);
             var cardList = _context.CreditCard.Where(c => c.UserId == sessionUserId);
             await cardList.ForEachAsync(c => c.CreditCardNumber = Base64Helper.decode(c.CreditCardNumber));
-
             ViewData["UserId"] = sessionUserId;
             ViewData["CreditCardId"] = new SelectList(cardList, "CreditCardId", "CreditCardNumber");
             ViewData["MailingAddressId"] = new SelectList(_context.Address.Include(a => a.AddressType).Where(a => a.AddressTypeId == 1 && a.UserId == sessionUserId), "AddressId", "Street1");
@@ -109,9 +108,15 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewData["CreditCardId"] = new SelectList(_context.CreditCard.Where(c => c.UserId == UserHelper.GetSessionUserId(this)), "CreditCardId", "CreditCardNumber");
-            ViewData["MailingAddressId"] = new SelectList(_context.Address.Include(a => a.AddressType).Where(a => a.AddressTypeId == 1), "AddressId", "Street1");
-            ViewData["ShippingAddressId"] = new SelectList(_context.Address.Include(a => a.AddressType).Where(a => a.AddressTypeId == 2), "AddressId", "Street1");
+            var sessionUserId = UserHelper.GetSessionUserId(this);
+            var cardList = _context.CreditCard.Where(c => c.UserId == sessionUserId);
+            await cardList.ForEachAsync(c => c.CreditCardNumber = Base64Helper.decode(c.CreditCardNumber));
+            ViewData["UserId"] = sessionUserId;
+            ViewData["CreditCardId"] = new SelectList(cardList, "CreditCardId", "CreditCardNumber");
+            ViewData["MailingAddressId"] = new SelectList(_context.Address.Include(a => a.AddressType).Where(a => a.AddressTypeId == 1 && a.UserId == sessionUserId), "AddressId", "Street1");
+            ViewData["ShippingAddressId"] = new SelectList(_context.Address.Include(a => a.AddressType).Where(a => a.AddressTypeId == 2 && a.UserId == sessionUserId), "AddressId", "Street1");
+            ViewData["OrderStatusId"] = "1"; // Default to Processing
+            ViewData["Total"] = calculateTotal(CartHelper.getCartFromSession(this));
 
             return View(order);
         }
