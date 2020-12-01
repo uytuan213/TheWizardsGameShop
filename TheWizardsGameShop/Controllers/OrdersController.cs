@@ -34,6 +34,7 @@ namespace TheWizardsGameShop.Controllers
                                               .Include(o => o.ShippingAddress)
                                               .Where(o => o.UserId == UserHelper.GetSessionUserId(this))
                                               .OrderByDescending(o => o.OrderId);
+
             return View(await orders.ToListAsync());
         }
 
@@ -46,8 +47,9 @@ namespace TheWizardsGameShop.Controllers
                                               .Include(o => o.CreditCard)
                                               .Include(o => o.MailingAddress)
                                               .Include(o => o.ShippingAddress)
-                                              .OrderByDescending(o => o.OrderId)
-                                              ;
+                                              .Include(o => o.User)
+                                              .Where(o => o.OrderStatusId == 1)
+                                              .OrderByDescending(o => o.OrderId);
             return View(await orders.ToListAsync());
         }
 
@@ -192,7 +194,7 @@ namespace TheWizardsGameShop.Controllers
         }
 
         // GET: OrdersController/Complete/5
-        [ValidateAntiForgeryToken]
+        /*[ValidateAntiForgeryToken]*/
         public async Task<ActionResult> Complete(int? id)
         {
             if (id == null)
