@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="11/30/2020 21:46:57" ReportInfo.Modified="11/30/2020 21:53:41" ReportInfo.CreatorVersion="2020.4.0.0">
+  <Styles Name="Blue">
+    <Style Name="Title" Font="Arial, 12pt, style=Bold"/>
+    <Style Name="Header" Fill.Color="LightSkyBlue" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Group" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Data" Font="Arial, 10pt"/>
+    <Style Name="Footer" Fill.Color="LightSkyBlue" Font="Arial, 10pt"/>
+    <Style Name="EvenRows" Fill.Color="AliceBlue" Font="Arial, 10pt"/>
+  </Styles>
+  <Dictionary>
+    <MsSqlDataConnection Name="Connection" ConnectionString="rijcmlqSGyBFYfdtD9D3zXPH6+3K449fTePUqElMWn1DxMUA2miMYeJnUqAKJ4yuPf/5z+3qkbLHg+KTu0weUaZ01vyDBEg7rEzEhrzUtr8CkpHus78kKFLOOI4Kp2MT+XvFcOH8Lf7scm8J1Ia9tdurZdk9pVHbcOu99rqel0cFDTQkY1rYNtYdFav5WMvhSs8aTM6V4DxyJEP9EYtQWyUffqJr4+V5xJZIZXDnzk4lEb/ooQ=">
+      <TableDataSource Name="Table" DataType="System.Int32" Enabled="true" SelectCommand="SELECT O.OrderId, U.UserName,G.GameName, OD.Quantity, O.Total, OD.IsDigital, G.GamePrice&#13;&#10;FROM ((&quot;OrderDetail&quot; OD INNER JOIN &quot;WizardsOrder&quot; O ON OD.OrderId = O.OrderId &#13;&#10;) INNER JOIN &quot;Game&quot; G ON OD.GameId = G.GameId &#13;&#10;) INNER JOIN &quot;WizardsUser&quot; U ON U.UserId = O.UserId &#13;&#10;GROUP BY O.OrderId, U.UserName,G.GameName, OD.Quantity, O.Total, OD.IsDigital, G.GamePrice">
+        <Column Name="OrderId" DataType="System.Int32"/>
+        <Column Name="UserName" DataType="System.String"/>
+        <Column Name="GameName" DataType="System.String"/>
+        <Column Name="Quantity" DataType="System.Int32"/>
+        <Column Name="Total" DataType="System.Decimal"/>
+        <Column Name="IsDigital" DataType="System.Boolean" BindableControl="CheckBox"/>
+        <Column Name="GamePrice" DataType="System.Decimal"/>
+      </TableDataSource>
+    </MsSqlDataConnection>
+  </Dictionary>
+  <ReportPage Name="Page1" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="56.7">
+      <TextObject Name="Text1" Width="718.2" Height="56.7" Dock="Fill" Text="Orders report" HorzAlign="Center" VertAlign="Center" Font="Arial, 12pt, style=Bold" Style="Title"/>
+    </ReportTitleBand>
+    <GroupHeaderBand Name="GroupHeader1" Top="60.7" Width="718.2" Height="18.9" Condition="[Table.OrderId]">
+      <TextObject Name="Text16" Width="718.2" Height="18.9" Dock="Fill" Text="[Table.OrderId]" Font="Arial, 10pt, style=Bold" Style="Group"/>
+      <DataBand Name="Data1" Top="83.6" Width="718.2" Height="122.85" DataSource="Table">
+        <TextObject Name="Text4" Width="85.05" Height="18.9" Fill.Color="LightSkyBlue" Text="UserName" Font="Arial, 10pt, style=Bold" Style="Header"/>
+        <TextObject Name="Text5" Left="85.05" Width="633.15" Height="18.9" Text="[Table.UserName]" Font="Arial, 10pt" Style="Data"/>
+        <TextObject Name="Text6" Top="18.9" Width="85.05" Height="18.9" Fill.Color="LightSkyBlue" Text="GameName" Font="Arial, 10pt, style=Bold" Style="Header"/>
+        <TextObject Name="Text7" Left="85.05" Top="18.9" Width="633.15" Height="18.9" Text="[Table.GameName]" Font="Arial, 10pt" Style="Data"/>
+        <TextObject Name="Text8" Top="37.8" Width="85.05" Height="18.9" Fill.Color="LightSkyBlue" Text="Quantity" Font="Arial, 10pt, style=Bold" Style="Header"/>
+        <TextObject Name="Text9" Left="85.05" Top="37.8" Width="633.15" Height="18.9" Text="[Table.Quantity]" Font="Arial, 10pt" Style="Data"/>
+        <TextObject Name="Text10" Top="56.7" Width="85.05" Height="18.9" Fill.Color="LightSkyBlue" Text="Total" Font="Arial, 10pt, style=Bold" Style="Header"/>
+        <TextObject Name="Text11" Left="85.05" Top="56.7" Width="633.15" Height="18.9" Text="[Table.Total]" Font="Arial, 10pt" Style="Data"/>
+        <TextObject Name="Text12" Top="75.6" Width="85.05" Height="18.9" Fill.Color="LightSkyBlue" Text="IsDigital" Font="Arial, 10pt, style=Bold" Style="Header"/>
+        <TextObject Name="Text13" Left="85.05" Top="75.6" Width="633.15" Height="18.9" Text="[Table.IsDigital]" Font="Arial, 10pt" Style="Data"/>
+        <TextObject Name="Text14" Top="94.5" Width="85.05" Height="18.9" Fill.Color="LightSkyBlue" Text="GamePrice" Font="Arial, 10pt, style=Bold" Style="Header"/>
+        <TextObject Name="Text15" Left="85.05" Top="94.5" Width="633.15" Height="18.9" Text="[Table.GamePrice]" Font="Arial, 10pt" Style="Data"/>
+      </DataBand>
+      <GroupFooterBand Name="GroupFooter1" Top="210.45" Width="718.2" Height="18.9"/>
+    </GroupHeaderBand>
+    <PageFooterBand Name="PageFooter1" Top="233.35" Width="718.2" Height="18.9">
+      <TextObject Name="Text17" Width="718.2" Height="18.9" Dock="Fill" Fill.Color="LightSkyBlue" Text="[PageN]" HorzAlign="Right" Font="Arial, 10pt" Style="Footer"/>
+    </PageFooterBand>
+  </ReportPage>
+</Report>
