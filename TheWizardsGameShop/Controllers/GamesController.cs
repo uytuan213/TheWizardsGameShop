@@ -121,7 +121,7 @@ namespace TheWizardsGameShop.Controllers
             {
                 return NotFound();
             }
-
+            var isPurchased = false;
             var gameReviews = _context.Review.Include(r => r.User).Where(r => r.GameId.Equals(id) && r.IsPublished).OrderByDescending(r => r.ReviewDate).ToList();
             if (UserHelper.IsLoggedIn(this))
             {
@@ -132,10 +132,9 @@ namespace TheWizardsGameShop.Controllers
                 ViewData["UserReview"] = userReview;
                 if (userRating != null) ViewData["UserRatingRate"] = userRating.Rate;
 
-                var isPurchased = _context.WizardsOrder.Join(_context.OrderDetail, o => o.OrderId, od => od.OrderId, (o, od) => new { order = o, detail = od }).Any(x => x.detail.GameId == id);
-                ViewData["IsPurchased"] = isPurchased;
+                isPurchased = _context.WizardsOrder.Join(_context.OrderDetail, o => o.OrderId, od => od.OrderId, (o, od) => new { order = o, detail = od }).Any(x => x.detail.GameId == id);
             }
-
+            ViewData["IsPurchased"] = isPurchased;
             ViewData["AvgRating"] = CalculateAvgRating((int)id);
             ViewData["GameReviews"] = gameReviews;
             return View(game);
