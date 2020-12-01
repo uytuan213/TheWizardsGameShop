@@ -58,7 +58,7 @@ namespace TheWizardsGameShop.Controllers
         }
 
         // GET: OrdersController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
             if (!UserHelper.IsLoggedIn(this))
             {
@@ -66,17 +66,21 @@ namespace TheWizardsGameShop.Controllers
             }
 
             var sessionUserId = UserHelper.GetSessionUserId(this);
+            var cardList = _context.CreditCard.Where(c => c.UserId == sessionUserId);
+            await cardList.ForEachAsync(c => c.CreditCardNumber = Base64Helper.decode(c.CreditCardNumber));
 
-            ViewData["CreditCardId"] = new SelectList(_context.CreditCard.Where(c => c.UserId == sessionUserId), "CreditCardId", "CreditCardNumber");
+            ViewData["CreditCardId"] = new SelectList(cardList, "CreditCardId", "CreditCardNumber");
             ViewData["MailingAddressId"] = new SelectList(_context.Address.Include(a => a.AddressType).Where(a => a.AddressTypeId == 1 && a.UserId == sessionUserId), "AddressId", "Street1");
             ViewData["ShippingAddressId"] = new SelectList(_context.Address.Include(a => a.AddressType).Where(a => a.AddressTypeId == 2 && a.UserId == sessionUserId), "AddressId", "Street1");
+            ViewData["OrderStatusId"] = new SelectList(_context.OrderStatus, "OrderStatusId", "OrderStatus1");
+            ViewData["Total"] = calculateTotal(CartHelper.getCartFromSession(this));
             return View();
         }
 
         // POST: OrdersController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind("OrderId, UserId, CreditCardId, MailingAddressId, ShippingAddressId")] WizardsOrder order)
+        public async Task<ActionResult> Create([Bind("OrderId, UserId, CreditCardId, MailingAddressId, ShippingAddressId, OrderStatusId")] WizardsOrder order)
         {
             if (ModelState.IsValid)
             {
@@ -84,11 +88,22 @@ namespace TheWizardsGameShop.Controllers
                 order.Total = calculateTotal(cart);
                 _context.Add(order);
                 await _context.SaveChangesAsync();
+
                 foreach (var item in cart)
                 {
+                    // Update order details
                     OrderDetail od = new OrderDetail() { OrderId = order.OrderId, GameId = item.Game.GameId, Quantity = item.Quantity, IsDigital = item.IsDigital };
                     _context.Add(od);
+
+                    // Update game quantity
+                    if (!item.IsDigital)
+                    {
+                        var game = _context.Game.Find(item.Game.GameId);
+                        game.GameQty = (short)(game.GameQty - item.Quantity);
+                        _context.Update(game);
+                    }
                 }
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
