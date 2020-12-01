@@ -42,55 +42,6 @@ namespace TheWizardsUnitTest
         }
 
         [Fact]
-        public async void TestLogin_ValidUser_ShouldSuccess()
-        {
-            // Arrange
-            UsersController controller = new UsersController(_context);
-            InitializeUser();
-
-            try
-            {
-                // Act
-                var result = await controller.Details(user.UserId);
-
-                // Assert
-                Assert.IsType<ViewResult>(result);
-                ViewResult viewResult = (ViewResult)result;
-                Assert.NotNull(viewResult.ViewData.ModelState);
-                Assert.NotEmpty(viewResult.ViewData.ModelState.Keys);
-
-                foreach (string item in viewResult.ViewData.ModelState.Keys)
-                {
-                    Assert.Equal("", item);
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-        }
-
-        [Theory]
-        [InlineData("99")]
-        public async void TestLogin_InvalidUser_ShouldFail(string value)
-        {
-            // Arrange
-            UsersController controller = new UsersController(_context);
-            InitializeUser();
-            user.UserId = int.Parse(value);
-
-            try
-            {
-                // Act
-                var result = await controller.Details(user.UserId);
-            }
-            // Assert
-            catch (Exception ex)
-            {
-                Assert.Equal("Xunit.Sdk.IsTypeException", ex.GetType().ToString());
-            }
-        }
-
-        [Fact]
         public void TestCreate_ValidUser_ShouldSuccess()
         {
             // Arrange

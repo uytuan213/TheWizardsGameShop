@@ -48,22 +48,8 @@ namespace TheWizardsUnitTest
         }
 
         public virtual DbSet<TestAddress> TestAddress { get; set; }
-        //public virtual DbSet<AddressType> AddressType { get; set; }
         public virtual DbSet<TestCreditCard> TestCreditCard { get; set; }
-        //public virtual DbSet<FavoriteCategory> FavoriteCategory { get; set; }
-        //public virtual DbSet<FavoritePlatform> FavoritePlatform { get; set; }
         public virtual DbSet<TestGame> TestGame { get; set; }
-        //public virtual DbSet<GameCategory> GameCategory { get; set; }
-        //public virtual DbSet<GameImage> GameImage { get; set; }
-        //public virtual DbSet<GameStatus> GameStatus { get; set; }
-        //public virtual DbSet<Gender> Gender { get; set; }
-        //public virtual DbSet<Platform> Platform { get; set; }
-        //public virtual DbSet<Province> Province { get; set; }
-        //public virtual DbSet<Rating> Rating { get; set; }
-        //public virtual DbSet<Relationship> Relationship { get; set; }
-        //public virtual DbSet<Review> Review { get; set; }
-        //public virtual DbSet<UserRole> UserRole { get; set; }
-        //public virtual DbSet<WizardsRole> WizardsRole { get; set; }
         public virtual DbSet<TestWizardsUser> TestWizardsUser { get; set; }
     }
 }
