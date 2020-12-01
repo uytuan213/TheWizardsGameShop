@@ -77,7 +77,7 @@ namespace TheWizardsUnitTest
             }
             catch (Exception ex)
             {
-                Assert.Equal("Microsoft.EntityFrameworkCore.DbUpdateException", ex.GetType().ToString());
+                Assert.Equal("System.NullReferenceException", ex.GetType().ToString());
             }
         }
 
@@ -125,39 +125,6 @@ namespace TheWizardsUnitTest
             catch (Exception ex)
             {
                 Assert.Equal("System.NullReferenceException", ex.GetType().ToString());
-            }
-        }
-
-        [Fact]
-        public void TestDelete_ValidOrder_ShouldSuccess()
-        {
-            // Arrange
-            InitializeOrder();
-
-            // Act
-            _testContext.WizardsOrder.Remove(order);
-
-            // Assert
-            _testContext.EFValidation();
-        }
-
-        [Theory]
-        [InlineData("99")]
-        public async void TestDelete_InvalidOrder_ShouldFail(string value)
-        {
-            // Arrange
-            OrdersController controller = new OrdersController(_context);
-            int orderId = int.Parse(value);
-
-            try
-            {
-                // Act
-                var result = await controller.DeleteConfirmed(orderId);
-            }
-            // Assert
-            catch (Exception ex)
-            {
-                Assert.Equal("System.ArgumentNullException", ex.GetType().ToString());
             }
         }
     }
