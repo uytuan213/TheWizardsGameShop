@@ -84,7 +84,17 @@ namespace TheWizardsGameShop.Controllers
         // GET: Carts/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            List<CartItem> cart = CartHelper.getCartFromSession(this);
+            var item = cart.Where(c => c.Game.GameId == id).FirstOrDefault();
+            if (item != null)
+            {
+                cart.Remove(item);
+
+                //Update cart session
+                var str = JsonConvert.SerializeObject(cart);
+                HttpContext.Session.SetString(SESSION_CART, str);
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Carts/Delete/5
@@ -107,7 +117,6 @@ namespace TheWizardsGameShop.Controllers
         {
             if (!UserHelper.IsLoggedIn(this)) return UserHelper.RequireLogin(this);
 
-            var str = HttpContext.Session.GetString(SESSION_CART);
             List<CartItem> cart = CartHelper.getCartFromSession(this);
             var qtyInStock = _context.Game.Find(id).GameQty;
 
@@ -141,7 +150,7 @@ namespace TheWizardsGameShop.Controllers
                 if (quantity > 0) cart.Add(item);
             }
 
-            str = JsonConvert.SerializeObject(cart);
+            var str = JsonConvert.SerializeObject(cart);
             HttpContext.Session.SetString(SESSION_CART, str);
 
             if (goToCart)
