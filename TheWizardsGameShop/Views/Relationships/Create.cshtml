@@ -20,11 +20,11 @@
                 <input type="hidden" asp-for="IsAccepted" />
                 <div class="form-group">
                     <label class="control-label">Enter the username of your friend or family you want to add</label>
-                    <input name="receiverUserName" id="receiverUserName" class="form-control" />
+                    <input name="receiverUserName" id="receiverUserName" class="form-control" required />
                 </div>
                 <div class="form-group form-check">
                     <label class="form-check-label">
-                        <input class="form-check-input" asp-for="IsFamily" /> @Html.DisplayNameFor(model => model.IsFamily)
+                        <input class="form-check-input" asp-for="IsFamily" /> Add as a family member instead of friend
                     </label>
                 </div>
                 <span class="text-danger">@TempData["Message"]</span>

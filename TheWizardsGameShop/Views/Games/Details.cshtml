@@ -139,9 +139,9 @@
                         {
             <p id="game-info__price">$@Html.DisplayFor(model => model.GamePrice)</p>}
 
-                @if (Model.GamePrice == 0 && Model.GameDigitalPath != null) // Free Game Download
+                @if ((Model.GamePrice == 0 && Model.GameDigitalPath != null) || (bool)ViewData["IsPurchased"]) // Free/Purchased Game Download 
                 {
-            <a href="/Carts/Download/@Model.GameId" id="game-info__buy__btn" class="btn btn--primary flex-center"><span class="material-icons">add_shopping_cart</span>Download</a> }
+            <a href="/Carts/Download/@Model.GameId" id="game-info__buy__btn" class="btn btn--primary flex-center"><span class="material-icons">save_alt</span>Download</a> }
         else if (Model.GameQty > 0 && Model.GameDigitalPath != null) // Both physical and digital available
         {
             <a href="/Carts/Add/@Model.GameId?goToCart=false" id="game-info__buy__btn" class="btn btn--primary flex-center"><span class="material-icons">add_shopping_cart</span>Add to Cart</a> }

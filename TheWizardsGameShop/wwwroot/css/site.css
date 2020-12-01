@@ -261,6 +261,11 @@ textarea {
     border-width: 1px !important;
 }
 
+.btn.disabled {
+    filter: grayscale(1);
+    pointer-events: none;
+}
+
 .btn:hover,
 .btn:active,
 .btn:focus {
