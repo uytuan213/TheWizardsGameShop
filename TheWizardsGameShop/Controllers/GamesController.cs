@@ -115,6 +115,8 @@ namespace TheWizardsGameShop.Controllers
                 .Include(g => g.GameStatusCodeNavigation)
                 .Include(g => g.GameImage)
                 .FirstOrDefaultAsync(m => m.GameId == id);
+
+
             if (game == null)
             {
                 return NotFound();
@@ -129,6 +131,9 @@ namespace TheWizardsGameShop.Controllers
                 gameReviews = _context.Review.Include(r => r.User).Where(r => r.GameId.Equals(id) && r.IsPublished && r.UserId != userId).ToList();
                 ViewData["UserReview"] = userReview;
                 if (userRating != null) ViewData["UserRatingRate"] = userRating.Rate;
+
+                var isPurchased = _context.WizardsOrder.Join(_context.OrderDetail, o => o.OrderId, od => od.OrderId, (o, od) => new { order = o, detail = od }).Any(x => x.detail.GameId == id);
+                ViewData["IsPurchased"] = isPurchased;
             }
 
             ViewData["AvgRating"] = CalculateAvgRating((int)id);

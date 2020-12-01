@@ -36,5 +36,10 @@ namespace TheWizardsGameShop
                     new List<CartItem>();
             return cart.Sum(c => c.Game.GamePrice * c.Quantity);
         }
+
+        public static void clearCart(Controller ctr)
+        {
+            ctr.HttpContext.Session.Remove(SESSION_CART);
+        }
     }
 }

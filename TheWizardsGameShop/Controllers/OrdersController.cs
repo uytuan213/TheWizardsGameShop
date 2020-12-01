@@ -124,6 +124,7 @@ namespace TheWizardsGameShop.Controllers
                 }
 
                 await _context.SaveChangesAsync();
+                CartHelper.clearCart(this);
                 return RedirectToAction("Index");
             }
 
