@@ -9,7 +9,7 @@
     <div class="page-body">
         @if (Model.Count > 0)
                 {
-                    <table class="table">
+                    <table class="table" id="cart-table">
                         <tbody>
                             @foreach (var item in Model) { 
                             <tr>
@@ -24,12 +24,12 @@
                                 </td>
                                 <td style="width: 80px;">
                                     <div class="flex-center">
-                                        <a href="/Carts/Add/@item.Game.GameId" class="cart-quantity-button"><span class="material-icons">add_circle</span></a>
-                                        @Html.DisplayFor(modelItem => item.Quantity)
                                         <a href="/Carts/Add/@item.Game.GameId?quantity=-1" class="cart-quantity-button"><span class="material-icons">remove_circle</span></a>
+                                        @Html.DisplayFor(modelItem => item.Quantity)
+                                        <a href="/Carts/Add/@item.Game.GameId" class="cart-quantity-button"><span class="material-icons">add_circle</span></a>
                                     </div>
                                 </td>
-                                <td>
+                                <td style="width: 50px;">
                                     <a asp-action="Delete" asp-route-id="@item.Game.GameId" class="btn btn--s">Remove</a>
                                 </td>
                             </tr>
@@ -37,13 +37,13 @@
                             <tr>
                                 <td colspan="2"></td>
                                 <td><b>$@ViewBag.TotalAmount.ToString("N2")</b></td>
-                                <td></td>
+                                <td colspan="2"></td>
                             </tr>
                         </tbody>
                     </table>
 
                     <div class="text-center">
-                        <a asp-action="Checkout" class="btn btn--primary">Checkout</a>
+                        <a asp-controller="Orders" asp-action="Create" class="btn btn--primary">Checkout</a>
                     </div>
         }
         else

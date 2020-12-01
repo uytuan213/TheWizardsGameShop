@@ -1335,11 +1335,14 @@ input[type=number].form-control:read-only {
 
 }
 
-#pageReviews. table td {
+#pageReviews .table td {
     vertical-align: top;
 }
 
 /* Cart Page */
+#pageCart #cart-table {
+    margin-bottom: var(--spacing);
+}
 #pageCart .cart-quantity-button {
     margin: 0 var(--spacing-xs);
     color: var(--color-brand);

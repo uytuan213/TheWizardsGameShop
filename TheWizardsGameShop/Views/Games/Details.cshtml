@@ -132,10 +132,42 @@
                 </div>
             </div>
             <div id="game-info__buy" class="col">
-                <p id="game-info__price">$@Html.DisplayFor(model => model.GamePrice)</p>
-                <a href="/Carts/Add/@Model.GameId?goToCart=false" id="game-info__buy__btn" class="btn btn--primary flex-center"><span class="material-icons">add_shopping_cart</span>Add to Cart</a>
+                @if (Model.GamePrice == 0)
+                {
+            <p id="game-info__price">FREE</p> }
+                        else
+                        {
+            <p id="game-info__price">$@Html.DisplayFor(model => model.GamePrice)</p>}
+
+                @if (Model.GamePrice == 0 && Model.GameDigitalPath != null) // Free Game Download
+                {
+            <a href="/Carts/Download/@Model.GameId" id="game-info__buy__btn" class="btn btn--primary flex-center"><span class="material-icons">add_shopping_cart</span>Download</a> }
+        else if (Model.GameQty > 0 && Model.GameDigitalPath != null) // Both physical and digital available
+        {
+            <a href="/Carts/Add/@Model.GameId?goToCart=false" id="game-info__buy__btn" class="btn btn--primary flex-center"><span class="material-icons">add_shopping_cart</span>Add to Cart</a> }
+        else if (Model.GameQty > 0) // Physical only
+        {
+            <a href="/Carts/Add/@Model.GameId?goToCart=false" id="game-info__buy__btn" class="btn btn--primary flex-center"><span class="material-icons">add_shopping_cart</span>Add to Cart</a> }
+        else if (Model.GameDigitalPath != null) // Digital only
+        {
+            <a href="/Carts/Add/@Model.GameId?goToCart=false&isDigital=true" id="game-info__buy__btn" class="btn btn--primary flex-center"><span class="material-icons">add_shopping_cart</span>Add to Cart</a>}
+        else // Not available
+        {
+            <a nohref id="game-info__buy__btn" class="btn btn--primary flex-center disabled" disabled><span class="material-icons">add_shopping_cart</span>Add to Cart</a>}
+
+
                 <a href="/Games/Download?id=@Model.GameId" id="game-info__buy__btn" class="btn btn--primary flex-center"><span class="material-icons">add_shopping_cart</span>Download</a>
-                <p id="game-info__qty">Available: @Html.DisplayFor(model => model.GameQty)</p>
+                <p id="game-info__qty">
+                    Availability<br />
+                    Physical Copy: @Html.DisplayFor(model => model.GameQty) left<br />
+                    Download:
+                    @if (Model.GameDigitalPath == null)
+                    {
+            <span>Not available</span> }
+        else
+        {
+            <span>Available</span>}
+                </p>
                 @*<p id="game-info__status">@Html.DisplayFor(model => model.GameStatusCodeNavigation.GameStatusCode)</p>*@
             </div>
         </div>

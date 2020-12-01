@@ -26,15 +26,15 @@
                 <p>Favourites</p>
                 <h5>Edit favourite game categories and platforms</h5>
             </a>
-            <a class="item flex-center" onclick="alert('Not available', 'Coming soon');" disabled>
+            <a asp-controller="Relationships" asp-action="Index" class="item flex-center">
                 <span class="material-icons">people_alt</span>
                 <p>People</p>
                 <h5>Manage friends and family</h5>
             </a>
-            <a class="item flex-center" onclick="alert('Not available', 'Coming soon');" disabled>
-                <span class="material-icons">receipt</span>
-                <p>Order History</p>
-                <h5>View your order history</h5>
+            <a asp-controller="Orders" asp-action="Index" class="item flex-center">
+                <span class="material-icons">receipt_long</span>
+                <p>Orders</p>
+                <h5>View your past and ongoing orders</h5>
             </a>
         </div>
     </div>

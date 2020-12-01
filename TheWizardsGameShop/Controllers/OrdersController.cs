@@ -64,9 +64,12 @@ namespace TheWizardsGameShop.Controllers
             {
                 return UserHelper.RequireLogin(this);
             }
-            ViewData["CreditCards"] = new SelectList(_context.CreditCard.Where(c => c.UserId == UserHelper.GetSessionUserId(this)), "CreditCardId", "CreditCardNumber");
-            ViewData["MailingAddresses"] = new SelectList(_context.Address.Include(a => a.AddressType).Where(a => a.AddressTypeId == 1), "AddressId", "Street1");
-            ViewData["ShippingAddresses"] = new SelectList(_context.Address.Include(a => a.AddressType).Where(a => a.AddressTypeId == 2), "AddressId", "Street1");
+
+            var sessionUserId = UserHelper.GetSessionUserId(this);
+
+            ViewData["CreditCardId"] = new SelectList(_context.CreditCard.Where(c => c.UserId == sessionUserId), "CreditCardId", "CreditCardNumber");
+            ViewData["MailingAddressId"] = new SelectList(_context.Address.Include(a => a.AddressType).Where(a => a.AddressTypeId == 1 && a.UserId == sessionUserId), "AddressId", "Street1");
+            ViewData["ShippingAddressId"] = new SelectList(_context.Address.Include(a => a.AddressType).Where(a => a.AddressTypeId == 2 && a.UserId == sessionUserId), "AddressId", "Street1");
             return View();
         }
 
@@ -90,9 +93,9 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewData["CreditCards"] = new SelectList(_context.CreditCard.Where(c => c.UserId == UserHelper.GetSessionUserId(this)), "CreditCardId", "CreditCardNumber");
-            ViewData["MailingAddresses"] = new SelectList(_context.Address.Include(a => a.AddressType).Where(a => a.AddressTypeId == 1), "AddressId", "Street1");
-            ViewData["ShippingAddresses"] = new SelectList(_context.Address.Include(a => a.AddressType).Where(a => a.AddressTypeId == 2), "AddressId", "Street1");
+            ViewData["CreditCardId"] = new SelectList(_context.CreditCard.Where(c => c.UserId == UserHelper.GetSessionUserId(this)), "CreditCardId", "CreditCardNumber");
+            ViewData["MailingAddressId"] = new SelectList(_context.Address.Include(a => a.AddressType).Where(a => a.AddressTypeId == 1), "AddressId", "Street1");
+            ViewData["ShippingAddressId"] = new SelectList(_context.Address.Include(a => a.AddressType).Where(a => a.AddressTypeId == 2), "AddressId", "Street1");
 
             return View(order);
         }
