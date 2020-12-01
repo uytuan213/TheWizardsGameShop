@@ -82,9 +82,13 @@ namespace TheWizardsGameShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind("OrderId, UserId, CreditCardId, MailingAddressId, ShippingAddressId, OrderStatusId, Total")] WizardsOrder order)
         {
+            var sessionUserId = UserHelper.GetSessionUserId(this);
+
             if (ModelState.IsValid)
             {
                 var cart = CartHelper.getCartFromSession(this);
+                order.UserId = (int)sessionUserId;
+                order.OrderStatusId = 1; //Default is processing
                 order.Total = calculateTotal(cart);
                 _context.Add(order);
                 await _context.SaveChangesAsync();
@@ -108,14 +112,13 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction("Index");
             }
 
-            var sessionUserId = UserHelper.GetSessionUserId(this);
             var cardList = _context.CreditCard.Where(c => c.UserId == sessionUserId);
             await cardList.ForEachAsync(c => c.CreditCardNumber = Base64Helper.decode(c.CreditCardNumber));
             ViewData["UserId"] = sessionUserId;
             ViewData["CreditCardId"] = new SelectList(cardList, "CreditCardId", "CreditCardNumber");
             ViewData["MailingAddressId"] = new SelectList(_context.Address.Include(a => a.AddressType).Where(a => a.AddressTypeId == 1 && a.UserId == sessionUserId), "AddressId", "Street1");
             ViewData["ShippingAddressId"] = new SelectList(_context.Address.Include(a => a.AddressType).Where(a => a.AddressTypeId == 2 && a.UserId == sessionUserId), "AddressId", "Street1");
-            ViewData["OrderStatusId"] = "1"; // Default to Processing
+            ViewData["OrderStatusId"] = 1; // Default to Processing
             ViewData["Total"] = calculateTotal(CartHelper.getCartFromSession(this));
 
             return View(order);
