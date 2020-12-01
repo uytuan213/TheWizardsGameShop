@@ -77,9 +77,10 @@ namespace TheWizardsGameShop.Controllers
         {
             if (ModelState.IsValid)
             {
+                var cart = CartHelper.getCartFromSession(this);
+                order.Total = calculateTotal(cart);
                 _context.Add(order);
                 await _context.SaveChangesAsync();
-                var cart = CartHelper.getCartFromSession(this);
                 foreach (var item in cart)
                 {
                     OrderDetail od = new OrderDetail() { OrderId = order.OrderId, GameId = item.Game.GameId, Quantity = item.Quantity, IsDigital = item.IsDigital };
@@ -147,50 +148,19 @@ namespace TheWizardsGameShop.Controllers
             return View(order);
         }
 
-        // GET: OrdersController/Delete/5
-        public async Task<ActionResult> Delete(int id)
-        {
-            if (!UserHelper.IsLoggedIn(this))
-            {
-                return UserHelper.RequireLogin(this);
-            }
-
-            var order = await _context.WizardsOrder
-                                      .FirstOrDefaultAsync(m => m.OrderId == id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            await DeleteConfirmed(id);
-            return RedirectToAction(nameof(Index));
-        }
-
-        // POST: OrdersController/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var order = await _context.WizardsOrder.FindAsync(id);
-            _context.WizardsOrder.Remove(order);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
         public bool OrderExists(int id)
         {
             return _context.WizardsOrder.Any(e => e.OrderId== id);
         }
 
-        private async Task<decimal> calculateTotal(int orderId)
+        private decimal calculateTotal(List<CartItem> cart)
         {
             decimal total = 0;
-            var ods = await _context.OrderDetail.Include(od => od.Game).Where(od => od.OrderId == orderId).ToListAsync();
 
             // calculate total before tax
-            foreach(var od in ods)
+            foreach(var item in cart)
             {
-                total += od.Game.GamePrice * od.Quantity;
+                total += item.Game.GamePrice * item.Quantity;
             }
 
             //total after tax
