@@ -15,9 +15,9 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>
+                    @*<th>
                         @Html.DisplayNameFor(model => model.CreditCard)
-                    </th>
+                    </th>*@
                     @*<th>
                         @Html.DisplayNameFor(model => model.MailingAddress)
                     </th>*@
@@ -40,9 +40,9 @@
                 @foreach (var item in Model)
                 {
                 <tr>
-                    <td>
+                    @*<td>
                         @item.CreditCard.CreditCardNumber.Substring(12, 4).PadLeft(16, '*')
-                    </td>
+                    </td>*@
                     @*<td>
                         @Html.DisplayFor(modelItem => item.MailingAddress.Street1) @Html.DisplayFor(modelItem => item.MailingAddress.Street2), @Html.DisplayFor(modelItem => item.MailingAddress.City)
                     </td>*@
