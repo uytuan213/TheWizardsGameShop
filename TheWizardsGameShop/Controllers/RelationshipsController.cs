@@ -52,6 +52,8 @@ namespace TheWizardsGameShop.Controllers
         // GET: Relationships/Create
         public IActionResult Create()
         {
+            var sessionUserId = UserHelper.GetSessionUserId(this);
+            ViewData["UserId"] = sessionUserId;
             return View();
         }
 
@@ -60,7 +62,7 @@ namespace TheWizardsGameShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Sender,Receiver,IsFamily,IsAccepted")] Relationship relationship)
+        public async Task<IActionResult> Create(string receiverUserName, [Bind("Sender,Receiver,IsFamily,IsAccepted")] Relationship relationship)
         {
             if (ModelState.IsValid)
             {
@@ -70,6 +72,8 @@ namespace TheWizardsGameShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            var sessionUserId = UserHelper.GetSessionUserId(this);
+            ViewData["UserId"] = sessionUserId;
             return View(relationship);
         }
 

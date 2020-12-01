@@ -996,7 +996,8 @@ input[type=number].form-control:read-only {
 
 /* Addresses, Credit Cards Page */
 #pageAddresses .page-header,
-#pageCreditCards .page-header {
+#pageCreditCards .page-header,
+#pagePeople .page-header {
     background-color: var(--color-brand);
     background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255,255,255,0.2));
     color: white;
@@ -1004,19 +1005,22 @@ input[type=number].form-control:read-only {
 }
 
 #pageAddresses .list,
-#pageCreditCards .list {
+#pageCreditCards .list,
+#pagePeople .list {
     margin: -1%;
 }
 
 #pageAddresses .list .item,
-#pageCreditCards .list .item {
+#pageCreditCards .list .item,
+#pagePeople .list .item {
     width: 31.33%;
     margin: 1%;
     min-height: 180px;
 }
 
 #pageAddresses .list .item.add,
-#pageCreditCards .list .item.add {
+#pageCreditCards .list .item.add,
+#pagePeople .list .item.add {
     border-style: dashed;
     border-width: 2px;
     font-size: 1.25em;
@@ -1024,12 +1028,14 @@ input[type=number].form-control:read-only {
 }
 
 #pageAddresses .list .item.add p,
-#pageCreditCards .list .item.add p {
+#pageCreditCards .list .item.add p,
+#pagePeople .list .item.add p {
     width: 100%;
 }
 
 #pageAddresses .list .item.add .material-icons,
-#pageCreditCards .list .item.add .material-icons {
+#pageCreditCards .list .item.add .material-icons,
+#pagePeople .list .item.add .material-icons {
     display: block;
     font-size: 2.5em;
     color: var(--color-brand);

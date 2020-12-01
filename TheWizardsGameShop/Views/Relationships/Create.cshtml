@@ -1,46 +1,42 @@
 ﻿@model TheWizardsGameShop.Models.Relationship
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Add a Friend/Family";
 }
 
-<h1>Create</h1>
-
-<h4>Relationship</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Sender" class="control-label"></label>
-                <select asp-for="Sender" class ="form-control" asp-items="ViewBag.Sender"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Receiver" class="control-label"></label>
-                <select asp-for="Receiver" class ="form-control" asp-items="ViewBag.Receiver"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="IsAccepted" class="control-label"></label>
-                <input asp-for="IsAccepted" class="form-control" />
-                <span asp-validation-for="IsAccepted" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsFamily" /> @Html.DisplayNameFor(model => model.IsFamily)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="page contents" id="pageCart" --data-theme="my-account">
+    <div class="page-header short flex-center-vertical">
+        <h1><span class="material-icons">shopping_cart</span>Checkout</h1>
+    </div>
+    <div class="row page-body">
+        <p class="page-submenu">
+            <a asp-controller="Relationships" asp-action="Index" class="item">&lt; Back to List</a>
+        </p>
+        <div class="col-md-4">
+            <form asp-action="Create" class="narrow text-center">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Sender" value="@ViewBag.UserId" />
+                <input type="hidden" asp-for="Receiver" />
+                <input type="hidden" asp-for="IsAccepted" />
+                <div class="form-group">
+                    <label class="control-label">Enter the username of your friend or family you want to add</label>
+                    <input name="receiverUserName" id="receiverUserName" class="form-control" />
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="IsFamily" /> @Html.DisplayNameFor(model => model.IsFamily)
+                    </label>
+                </div>
+                <span class="text-danger">@TempData["Message"]</span>
+                <div class="form-buttons text-center">
+                    <input type="submit" value="Invite" class="btn btn--primary" />
+                    <a asp-controller="Relationships" asp-action="Index" class="btn">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
